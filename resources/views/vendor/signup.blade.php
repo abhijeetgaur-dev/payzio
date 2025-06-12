@@ -105,18 +105,20 @@
 
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Name *</label>
-                                <input type="text" name="vendor_name"
+                                <label for="vendor_name" class="block text-sm font-medium text-gray-700 mb-1">Vendor
+                                    Name </label>
+                                <input type="text" name="vendor_name" id="vendor_name"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
-                                    placeholder="Your business name" value="{{ old('vendor_name') }}">
+                                    required placeholder="Your business name" value="{{ old('vendor_name') }}">
                                 @error('vendor_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Type *</label>
-                                <select name="vendor_type"
+                                <label for="vendor_type" class="block text-sm font-medium text-gray-700 mb-1">Vendor
+                                    Type </label>
+                                <select name="vendor_type" id="vendor_type" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border bg-white">
                                     <option value="">Select Type</option>
                                     <option value="individual" @if (old('vendor_type') == 'individual') selected @endif>
@@ -133,9 +135,10 @@
                         </div>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Business Category *</label>
-                            <input type="text" name="business_category"
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
+                            <label for="business_category" class="block text-sm font-medium text-gray-700 mb-1">Business
+                                Category </label>
+                            <input type="text" name="business_category" id="business_category"
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border" required
                                 placeholder="e.g. Retail, Restaurant, Services" value="{{ old('business_category') }}">
                             @error('business_category')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -143,8 +146,9 @@
                         </div>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Business Description</label>
-                            <textarea rows="3" name="business_description"
+                            <label for="business_description"
+                                class="block text-sm font-medium text-gray-700 mb-1">Business Description</label>
+                            <textarea rows="3" name="business_description" id="business_description"
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="Brief description of your business activities">{{ old('business_description') }}</textarea>
                         </div>
@@ -174,9 +178,10 @@
 
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Person *</label>
-                                <input type="text" name="contact_person"
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
+                                <label for="contact_person" class="block text-sm font-medium text-gray-700 mb-1">Contact
+                                    Person </label>
+                                <input type="text" name="contact_person" id="contact_person"
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border" required
                                     placeholder="Full name" value="{{ old('contact_person') }}">
                                 @error('contact_person')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -184,8 +189,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Designation</label>
-                                <input type="text" name="designation"
+                                <label for="designation"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Designation</label>
+                                <input type="text" name="designation" id="designation" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="Your position" value="{{ old('designation') }}">
                             </div>
@@ -193,8 +199,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                                <input type="email" name="email"
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email </label>
+                                <input type="email" name="email" id="email" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="business@example.com" value="{{ old('email') }}">
                                 @error('email')
@@ -203,8 +209,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
-                                <input type="tel" name="phone"
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone </label>
+                                <input type="tel" name="phone" id="phone" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="+91 9876543210" value="{{ old('phone') }}">
                                 @error('phone')
@@ -214,8 +220,8 @@
                         </div>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Website</label>
-                            <input type="url" name="website"
+                            <label for="website" class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                            <input type="url" name="website" id="website"
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="https://yourbusiness.com" value="{{ old('website') }}">
                         </div>
@@ -226,8 +232,8 @@
                         <p class="text-gray-600 mb-6">Where is your business located?</p>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Address *</label>
-                            <textarea rows="3" name="address"
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address </label>
+                            <textarea rows="3" name="address" id="address" required
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="Street address, building, floor, etc.">{{ old('address') }}</textarea>
                             @error('address')
@@ -237,8 +243,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">City *</label>
-                                <input type="text" name="city"
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City </label>
+                                <input type="text" name="city" id="city" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="City" value="{{ old('city') }}">
                                 @error('city')
@@ -247,8 +253,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">State *</label>
-                                <input type="text" name="state"
+                                <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State </label>
+                                <input type="text" name="state" id="state" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="State" value="{{ old('state') }}">
                                 @error('state')
@@ -259,8 +265,9 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Country *</label>
-                                <select name="country"
+                                <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country
+                                </label>
+                                <select name="country" id="country" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border bg-white">
                                     <option value="">Select Country</option>
                                     <option value="India" @if (old('country') == 'India') selected @endif>India
@@ -280,8 +287,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
-                                <input type="text" name="postal_code"
+                                <label for="postal_code" class="block text-sm font-medium text-gray-700 mb-1">Postal
+                                    Code </label>
+                                <input type="text" name="postal_code" id="postal_code" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="PIN/ZIP Code" value="{{ old('postal_code') }}">
                                 @error('postal_code')
@@ -325,18 +333,20 @@
 
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">PAN Number *</label>
-                                <input type="text" name="pan_number"
+                                <label for="pan_number" class="block text-sm font-medium text-gray-700 mb-1">PAN Number
+                                </label>
+                                <input type="text" name="pan_number" id="pan_number"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
-                                    placeholder="ABCDE1234F" value="{{ old('pan_number') }}">
+                                    required placeholder="ABCDE1234F" value="{{ old('pan_number') }}">
                                 @error('pan_number')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">GST Number</label>
-                                <input type="text" name="gst_number"
+                                <label for="gst_number" class="block text-sm font-medium text-gray-700 mb-1">GST
+                                    Number</label>
+                                <input type="text" name="gst_number" id="gst_number"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="22ABCDE1234F1Z5" value="{{ old('gst_number') }}">
                             </div>
@@ -348,8 +358,9 @@
                         <p class="text-gray-600 mb-6">Where should we transfer your settlements?</p>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Bank Name *</label>
-                            <input type="text" name="bank_name"
+                            <label for="bank_name" class="block text-sm font-medium text-gray-700 mb-1">Bank Name
+                            </label>
+                            <input type="text" name="bank_name" id="bank_name" required
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="e.g. State Bank of India" value="{{ old('bank_name') }}">
                             @error('bank_name')
@@ -359,8 +370,9 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Account Number *</label>
-                                <input type="text" name="account_number"
+                                <label for="account_number" class="block text-sm font-medium text-gray-700 mb-1">Account
+                                    Number </label>
+                                <input type="text" name="account_number" id="account_number" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="1234567890" value="{{ old('account_number') }}">
                                 @error('account_number')
@@ -369,9 +381,10 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Account Holder Name
-                                    *</label>
-                                <input type="text" name="account_holder"
+                                <label for="account_holder" class="block text-sm font-medium text-gray-700 mb-1">Account
+                                    Holder Name
+                                </label>
+                                <input type="text" name="account_holder" id="account_holder" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="As per bank records" value="{{ old('account_holder') }}">
                                 @error('account_holder')
@@ -382,8 +395,9 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">IFSC Code *</label>
-                                <input type="text" name="ifsc_code"
+                                <label for="ifsc_code" class="block text-sm font-medium text-gray-700 mb-1">IFSC Code
+                                </label>
+                                <input type="text" name="ifsc_code" id="ifsc_code" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="SBIN0001234" value="{{ old('ifsc_code') }}">
                                 @error('ifsc_code')
@@ -392,8 +406,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Branch Name</label>
-                                <input type="text" name="branch_name"
+                                <label for="branch_name" class="block text-sm font-medium text-gray-700 mb-1">Branch
+                                    Name</label>
+                                <input type="text" name="branch_name" id="branch_name" required
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="Main Branch" value="{{ old('branch_name') }}">
                             </div>
@@ -433,47 +448,51 @@
                         <p class="text-gray-600 mb-6">Upload required documents for KYC and compliance</p>
 
                         <div class="space-y-6">
-                            <div class="border border-gray-200 rounded-lg p-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">PAN Card *</label>
-                                <p class="text-xs text-gray-500 mb-3">Upload clear scan of your PAN card (PDF, JPG,
-                                    PNG)</p>
-                                <input type="file" name="pan_card_file"
-                                    class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
-                                    accept=".pdf,.jpg,.jpeg,.png">
-                                @error('pan_card_file')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="border border-gray-200 rounded-lg p-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">GST Certificate (if
-                                    applicable)</label>
-                                <p class="text-xs text-gray-500 mb-3">Upload your GST registration certificate</p>
-                                <input type="file" name="gst_certificate_file"
-                                    class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
-                                    accept=".pdf,.jpg,.jpeg,.png">
-                            </div>
-
-                            <div class="border border-gray-200 rounded-lg p-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Business Registration
-                                    Document</label>
-                                <p class="text-xs text-gray-500 mb-3">For companies/LLPs - Certificate of
-                                    Incorporation, Partnership Deed, etc.</p>
-                                <input type="file" name="registration_doc_file"
-                                    class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
-                                    accept=".pdf,.jpg,.jpeg,.png">
-                            </div>
-
-                            <div class="border border-gray-200 rounded-lg p-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Cancelled Cheque *</label>
-                                <p class="text-xs text-gray-500 mb-3">Upload clear image/scan of a cancelled cheque
-                                    with your account details</p>
-                                <input type="file" name="cancelled_cheque_file"
-                                    class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
-                                    accept=".pdf,.jpg,.jpeg,.png">
-                                @error('cancelled_cheque_file')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                            <div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label for="pan_card_file" class="block text-sm font-medium text-gray-700 mb-2">PAN
+                                        Card </label>
+                                    <p class="text-xs text-gray-500 mb-3">Upload clear scan of your PAN card (PDF, JPG,
+                                        PNG)</p>
+                                    <input type="file" name="pan_card_file" id="pan_card_file"
+                                        class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
+                                        accept=".pdf,.jpg,.jpeg,.png" required>
+                                    @error('pan_card_file')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label for="gst_certificate_file"
+                                        class="block text-sm font-medium text-gray-700 mb-2">GST Certificate (if
+                                        applicable)</label>
+                                    <p class="text-xs text-gray-500 mb-3">Upload your GST registration certificate</p>
+                                    <input type="file" name="gst_certificate_file" id="gst_certificate_file"
+                                        class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
+                                        accept=".pdf,.jpg,.jpeg,.png">
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label for="registration_doc_file"
+                                        class="block text-sm font-medium text-gray-700 mb-2">Business Registration
+                                        Document</label>
+                                    <p class="text-xs text-gray-500 mb-3">For companies/LLPs - Certificate of
+                                        Incorporation, Partnership Deed, etc.</p>
+                                    <input type="file" name="registration_doc_file" id="registration_doc_file"
+                                        class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
+                                        accept=".pdf,.jpg,.jpeg,.png">
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label for="cancelled_cheque_file"
+                                        class="block text-sm font-medium text-gray-700 mb-2">Cancelled Cheque
+                                    </label>
+                                    <p class="text-xs text-gray-500 mb-3">Upload clear image/scan of a cancelled cheque
+                                        with your account details</p>
+                                    <input type="file" name="cancelled_cheque_file" id="cancelled_cheque_file"
+                                        class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
+                                        accept=".pdf,.jpg,.jpeg,.png">
+                                    @error('cancelled_cheque_file')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -515,7 +534,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Tab navigation
             const tabs = document.querySelectorAll('.tab-content');
             const progressSteps = document.querySelectorAll('.progress-step');
@@ -525,7 +544,7 @@
 
             // Tab buttons
             document.querySelectorAll('[data-tab]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const tabIndex = parseInt(this.getAttribute('data-tab'));
 
                     // Hide all tabs
@@ -550,7 +569,7 @@
 
             // Next buttons
             document.querySelectorAll('.next-tab').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const nextTabIndex = parseInt(this.getAttribute('data-next'));
                     document.querySelector(`[data-tab="${nextTabIndex}"]`).click();
                 });
@@ -558,12 +577,25 @@
 
             // Previous buttons
             document.querySelectorAll('.prev-tab').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const prevTabIndex = parseInt(this.getAttribute('data-prev'));
                     document.querySelector(`[data-tab="${prevTabIndex}"]`).click();
                 });
             });
+
+            // Add red * mark on label of each form elements (input, select, textarea)
+            document.querySelectorAll('input[required], select[required], textarea[required]').forEach(function (element) {
+                const label = element.previousElementSibling;
+                if (label && label.tagName === 'LABEL' && !label.textContent.includes('*')) {
+                    const asterisk = document.createElement('span');
+                    asterisk.textContent = ' *';
+                    asterisk.style.color = 'red';
+                    label.appendChild(asterisk);
+                }
+            });
+
         });
+
     </script>
 </body>
 
