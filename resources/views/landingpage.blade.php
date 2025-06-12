@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XYZ Payment</title>
+    <title>Payzio</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -21,7 +21,7 @@
                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h1 class="text-xl font-bold text-gray-800">XYZ Payment</h1>
+                <h1 class="text-xl font-bold text-gray-800">Payzio</h1>
             </div>
             <a href={{ route('vendor.signup') }}
                 class="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300">
@@ -39,7 +39,7 @@
                         Seamless QR Code Payments for Your Business
                     </h1>
                     <p class="text-lg text-gray-600 mb-8">
-                        XYZ Payment Infrastructure provides a secure, scalable platform for vendors to accept digital
+                        Payzio Infrastructure provides a secure, scalable platform for vendors to accept digital
                         payments with ease.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
@@ -97,8 +97,8 @@
                         <div class="p-8">
                             <div class="flex items-center mb-6">
                                 <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -121,8 +121,8 @@
                         <div class="p-8">
                             <div class="flex items-center mb-6">
                                 <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                     </svg>
@@ -144,7 +144,7 @@
         <!-- Features Section -->
         <section class="py-16 px-4 bg-white">
             <div class="container mx-auto px-30">
-                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose XYZ Payment?</h2>
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose Payzio?</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Feature 1 -->
                     <div class="bg-blue-50 rounded-xl  shadow-sm p-6 hover:shadow-md transition duration-300">
@@ -162,8 +162,8 @@
                     <!-- Feature 2 -->
                     <div class="bg-blue-50 rounded-xl  shadow-sm p-6 hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
@@ -175,8 +175,8 @@
                     <!-- Feature 3 -->
                     <div class="bg-blue-50 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
@@ -188,8 +188,8 @@
                     <!-- Feature 4 -->
                     <div class="bg-blue-50 rounded-xl p-6  shadow-sm hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                             </svg>
@@ -207,7 +207,7 @@
         <div class="pl-20 container mx-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">XYZ Payment</h3>
+                    <h3 class="text-xl font-bold mb-4">Payzio</h3>
                     <p class="text-gray-400">Enabling smooth, secure, and scalable digital transactions for businesses.
                     </p>
                 </div>
@@ -262,7 +262,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© {{ date('Y') }} XYZ Payment Infrastructure. Developed by Ananta Business Services.</p>
+                <p>© {{ date('Y') }} Payzio Infrastructure. Developed by Ananta Business Services.</p>
             </div>
         </div>
     </footer>
