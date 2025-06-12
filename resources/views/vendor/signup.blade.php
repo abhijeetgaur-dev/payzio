@@ -54,6 +54,8 @@
             </p>
         </div>
 
+        @include('partials.messages')
+
         <form action={{ route('vendor.store') }} method="POST" enctype="multipart/form-data"
             class="bg-gray-200 text-gray-800 shadow-xl rounded-2xl overflow-hidden">
             @csrf
@@ -138,8 +140,9 @@
                             <label for="business_category" class="block text-sm font-medium text-gray-700 mb-1">Business
                                 Category </label>
                             <input type="text" name="business_category" id="business_category"
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border" required
-                                placeholder="e.g. Retail, Restaurant, Services" value="{{ old('business_category') }}">
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
+                                required placeholder="e.g. Retail, Restaurant, Services"
+                                value="{{ old('business_category') }}">
                             @error('business_category')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -181,8 +184,8 @@
                                 <label for="contact_person" class="block text-sm font-medium text-gray-700 mb-1">Contact
                                     Person </label>
                                 <input type="text" name="contact_person" id="contact_person"
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border" required
-                                    placeholder="Full name" value="{{ old('contact_person') }}">
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
+                                    required placeholder="Full name" value="{{ old('contact_person') }}">
                                 @error('contact_person')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
