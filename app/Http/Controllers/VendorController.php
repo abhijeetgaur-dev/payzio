@@ -13,7 +13,7 @@ class VendorController extends Controller
 {
     public function index()
     {
-
+        //
     }
 
     public function store(Request $request)
@@ -89,14 +89,14 @@ class VendorController extends Controller
 
     public function success()
     {
-        return view('vendor/signup-success');
+        return view('vendor.signup-success');
     }
 
     public function signup()
     {
-        return view('vendor/signup');
+        return view('vendor.signup');
     }
 
-    
+
 
 }
