@@ -2,15 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('landingpage');
 })->name('home');
 
-
-Route::get('/admin/login', function() {
-    return view('admin.login');
-})->name('admin.login');
+Route::prefix('admin')->group(function () {
+    Route::post('/auth', [AdminController::class, 'auth'])->name('admin.auth');
+    Route::get('/login', [AdminController::class, 'login'])->name('admin.login');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
+Route::resource('/admin', AdminController::class);
 
 
 Route::prefix('vendor')->group(function () {
