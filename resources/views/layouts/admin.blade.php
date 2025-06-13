@@ -4,29 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Payzio') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sidebar.collapsed {
+            width: 20px;
+        }
+
+        .sidebar {
+            width: 80px;
+        }
+    </style>
 </head>
 
 <body class="min-h-screen">
     <!-- Sidebar (fixed position) -->
     <div class="fixed top-0 left-0 z-50 text-gray-700 shadow-2xl">
-        @include('admin.includes.sidebar', [
-            'isMobile' => $isMobile ?? false,
-            'isCollapsed' => $isCollapsed ?? false,
-        ])
+        @include('admin.includes.sidebar')
     </div>
 
     <!-- Main content area -->
-    <div class="flex min-h-screen">
-        <div class="flex flex-col flex-1 ml-20 bg-gray-100 transition-all duration-300">
-            <div class="flex-grow">
+    <div class="flex flex-col min-h-screen">
+        <div class="flex flex-col flex-1 transition-all duration-300">
+            <div class="flex-grow ml-20 ">
                 @yield('content')
             </div>
-            <div>
-                @include('admin.includes.footer')
-            </div>
         </div>
+    </div>
+    <div>
+        @include('admin.includes.footer')
     </div>
 
     <!-- Responsive behavior script -->

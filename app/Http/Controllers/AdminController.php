@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\admin;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -85,6 +86,12 @@ class AdminController extends Controller
     {
         // Assuming the admin is authenticated, return the dashboard view
         return view('admin.dashboard');
+    }
+
+    public function generateQr()
+    {
+        $vendors = Vendor::select('id', 'vendor_name', 'email', 'phone')->get();
+        return view('admin.generateQR', compact('vendors'));
     }
 
 }
