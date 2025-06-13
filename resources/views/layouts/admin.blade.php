@@ -14,6 +14,13 @@
         .sidebar {
             width: 80px;
         }
+
+        input[readonly]:not([type="file"]) {
+            background-color: #f0f0f0;
+            color: #525252;
+            pointer-events: none;
+            opacity: 0.6;
+        }
     </style>
 </head>
 
@@ -25,7 +32,7 @@
 
     <!-- Main content area -->
     <div class="flex flex-col min-h-screen">
-        <div class="flex flex-col flex-1 transition-all duration-300">
+        <div class="bg-gray-300 flex flex-col flex-1 transition-all duration-300">
             <div class="flex-grow ml-20 ">
                 @yield('content')
             </div>

@@ -11,10 +11,10 @@
                     class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Vendor</h2>
+                <h2 class="text-2xl font-bold text-gray-800 ">Edit Vendor</h2>
             </div>
             <div>
-                <button onclick="window.location.href='{{ route('admin.vendor.show', $vendor->id) }}'"
+                <button onclick="window.location.href='{{ route('admin.vendor.view', $vendor->id) }}'"
                     class="flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                     <i class="fas fa-eye mr-2"></i>
                     View Vendor
@@ -108,7 +108,7 @@
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email
                             *</label>
                         <input type="email" id="email" name="email" value="{{ old('email', $vendor->email) }}"
-                            required
+                            readonly
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                     </div>
 
@@ -117,7 +117,7 @@
                         <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone
                             *</label>
                         <input type="tel" id="phone" name="phone" value="{{ old('phone', $vendor->phone) }}"
-                            required
+                            readonly
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                     </div>
 
@@ -319,8 +319,7 @@
 
                 <!-- Form Actions -->
                 <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-right">
-                    <button type="button"
-                        onclick="window.location.href='{{ route('admin.vendors.show', $vendor->id) }}'"
+                    <button type="button" onclick="window.location.href='{{ route('admin.vendor.view', $vendor->id) }}'"
                         class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Cancel
                     </button>

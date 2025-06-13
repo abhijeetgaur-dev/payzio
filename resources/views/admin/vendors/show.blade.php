@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('title', 'Vendor Details')
+<style>
+    span {
+        overflow: auto;
+    }
+</style>
 
 @section('content')
     <div class="p-6">
@@ -38,7 +43,8 @@
                                 class="fas fa-{{ $vendor->vendor_type === 'company' ? 'building' : ($vendor->vendor_type === 'partner' ? 'handshake' : 'user') }}"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ $vendor->vendor_name }}</h3>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ $vendor->vendor_name }}
+                            </h3>
                             <div class="flex items-center space-x-2 mt-1">
                                 <span
                                     class="text-sm text-gray-500 dark:text-gray-400 capitalize">{{ $vendor->vendor_type }}</span>
@@ -59,7 +65,8 @@
                                     : ($vendor->status === 'suspended'
                                         ? 'bg-red-100 text-red-800 border-red-300'
                                         : 'bg-yellow-100 text-yellow-800 border-yellow-300') }}">
-                            <option value="pending" {{ $vendor->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="pending" {{ $vendor->status === 'pending' ? 'selected' : '' }}>Pending
+                            </option>
                             <option value="active" {{ $vendor->status === 'active' ? 'selected' : '' }}>Active</option>
                             <option value="suspended" {{ $vendor->status === 'suspended' ? 'selected' : '' }}>Suspended
                             </option>

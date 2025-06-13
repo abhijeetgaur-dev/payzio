@@ -8,12 +8,8 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 text-gray-800">
             <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Vendors List</h2>
             <div class="flex space-x-3">
-                <button
-                    class="cursor-pointer flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-download mr-2"></i>
-                    Export
-                </button>
-                <a href="/vendor/signup"
+
+                <a href={{ route('admin.vendor.create') }}
                     class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                     <i class="fas fa-plus mr-2"></i>
                     Add Vendor
@@ -32,13 +28,6 @@
                         class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                 </div>
                 <div class="flex space-x-3">
-                    <select
-                        class="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option>All Status</option>
-                        <option>Active</option>
-                        <option>Pending</option>
-                        <option>Suspended</option>
-                    </select>
                     <button
                         class="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-filter mr-2"></i>
@@ -152,45 +141,85 @@
             </div>
 
             <!-- Pagination -->
-            @if (count($vendors) > 0)
+            @if ($vendors->hasPages())
                 <div
                     class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
                     <div class="flex-1 flex justify-between sm:hidden">
-                        <button id="prev-page-mobile"
-                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            Previous
-                        </button>
-                        <button id="next-page-mobile"
-                            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            Next
-                        </button>
+                        @if ($vendors->onFirstPage())
+                            <span
+                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
+                                Previous
+                            </span>
+                        @else
+                            <a href="{{ $vendors->previousPageUrl() }}"
+                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                Previous
+                            </a>
+                        @endif
+
+                        @if ($vendors->hasMorePages())
+                            <a href="{{ $vendors->nextPageUrl() }}"
+                                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                Next
+                            </a>
+                        @else
+                            <span
+                                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
+                                Next
+                            </span>
+                        @endif
                     </div>
                     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                         <div>
                             <p class="text-sm text-gray-700 dark:text-gray-300">
-                                Showing <span class="font-medium">1</span> to
-                                <span class="font-medium">{{ min(5, count($vendors)) }}</span> of
-                                <span class="font-medium">{{ count($vendors) }}</span> vendors
+                                Showing <span class="font-medium">{{ $vendors->firstItem() }}</span> to
+                                <span class="font-medium">{{ $vendors->lastItem() }}</span> of
+                                <span class="font-medium">{{ $vendors->total() }}</span> vendors
                             </p>
                         </div>
                         <div>
                             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <button id="prev-page"
-                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <span class="sr-only">Previous</span>
-                                    <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
-                                </button>
-                                @for ($i = 1; $i <= ceil(count($vendors) / 5); $i++)
-                                    <button data-page="{{ $i }}"
-                                        class="page-btn relative inline-flex items-center px-4 py-2 border text-sm font-medium {{ $i == 1 ? 'z-10 bg-indigo-50 dark:bg-indigo-900 border-indigo-500 text-indigo-600 dark:text-indigo-300' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600' }}">
-                                        {{ $i }}
-                                    </button>
-                                @endfor
-                                <button id="next-page"
-                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <span class="sr-only">Next</span>
-                                    <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
-                                </button>
+                                @if ($vendors->onFirstPage())
+                                    <span
+                                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                        <span class="sr-only">Previous</span>
+                                        <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
+                                    </span>
+                                @else
+                                    <a href="{{ $vendors->previousPageUrl() }}"
+                                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <span class="sr-only">Previous</span>
+                                        <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
+                                    </a>
+                                @endif
+
+                                @foreach ($vendors->getUrlRange(1, $vendors->lastPage()) as $page => $url)
+                                    @if ($page == $vendors->currentPage())
+                                        <span aria-current="page"
+                                            class="z-10 bg-indigo-50 dark:bg-indigo-900 border-indigo-500 text-indigo-600 dark:text-indigo-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            {{ $page }}
+                                        </span>
+                                    @else
+                                        <a href="{{ $url }}"
+                                            class="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            {{ $page }}
+                                        </a>
+                                    @endif
+                                @endforeach
+
+                                @if ($vendors->hasMorePages())
+                                    <a href="{{ $vendors->nextPageUrl() }}"
+                                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <span class="sr-only">Next</span>
+                                        <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
+                                    </a>
+                                @else
+                                    <span
+                                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                        <span class="sr-only">Next</span>
+                                        <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
+                                    </span>
+                                @endif
                             </nav>
                         </div>
                     </div>
@@ -199,56 +228,7 @@
         </div>
     </div>
 
-    <!-- Add Vendor Modal -->
-    {{-- <div id="add-vendor-modal"
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Add New Vendor</h3>
-                    <button id="close-modal" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-                        <i class="fas fa-times cursor-pointer" style="font-size: 24px;"></i>
-                    </button>
-                </div>
-                <form id="add-vendor-form" action="{{ route('vendors.store') }}" method="POST">
-                    @csrf
-                    <div class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Business Name
-                            </label>
-                            <input type="text" id="name" name="name" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Email Address
-                            </label>
-                            <input type="email" id="email" name="email" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Phone Number
-                            </label>
-                            <input type="tel" id="phone" name="phone" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                        <div class="flex justify-end space-x-3 pt-4">
-                            <button type="button" id="cancel-add-vendor"
-                                class="cursor-pointer px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Cancel
-                            </button>
-                            <button type="submit"
-                                class="cursor-pointer px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Add Vendor
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> --}}
+
 
     <div id="delete-vendor-modal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
@@ -366,98 +346,6 @@
                     });
                 }
 
-                // Pagination functionality (simplified)
-                const pageButtons = document.querySelectorAll('.page-btn');
-                const prevPageBtn = document.getElementById('prev-page');
-                const nextPageBtn = document.getElementById('next-page');
-                const prevPageMobileBtn = document.getElementById('prev-page-mobile');
-                const nextPageMobileBtn = document.getElementById('next-page-mobile');
-
-                let currentPage = 1;
-                const itemsPerPage = 5;
-                const totalItems = {{ count($vendors) }};
-                const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-                function updatePagination() {
-                    // Update active page button
-                    pageButtons.forEach(btn => {
-                        if (parseInt(btn.dataset.page) === currentPage) {
-                            btn.classList.add('z-10', 'bg-indigo-50', 'dark:bg-indigo-900', 'border-indigo-500',
-                                'text-indigo-600', 'dark:text-indigo-300');
-                            btn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-500',
-                                'dark:text-gray-300');
-                        } else {
-                            btn.classList.remove('z-10', 'bg-indigo-50', 'dark:bg-indigo-900',
-                                'border-indigo-500', 'text-indigo-600', 'dark:text-indigo-300');
-                            btn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-500',
-                                'dark:text-gray-300');
-                        }
-                    });
-
-                    // Update disabled state of prev/next buttons
-                    const prevButtons = [prevPageBtn, prevPageMobileBtn];
-                    const nextButtons = [nextPageBtn, nextPageMobileBtn];
-
-                    prevButtons.forEach(btn => {
-                        if (btn) {
-                            btn.disabled = currentPage === 1;
-                        }
-                    });
-
-                    nextButtons.forEach(btn => {
-                        if (btn) {
-                            btn.disabled = currentPage === totalPages;
-                        }
-                    });
-
-                    // Update showing text
-                    const showingText = document.querySelector('.text-sm.text-gray-700.dark\\:text-gray-300');
-                    if (showingText) {
-                        const startItem = (currentPage - 1) * itemsPerPage + 1;
-                        const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-                        showingText.textContent = `Showing ${startItem} to ${endItem} of ${totalItems} vendors`;
-                    }
-                }
-
-                // Initialize pagination
-                if (pageButtons.length > 0) {
-                    pageButtons.forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            currentPage = parseInt(this.dataset.page);
-                            updatePagination();
-                        });
-                    });
-
-                    if (prevPageBtn) prevPageBtn.addEventListener('click', function() {
-                        if (currentPage > 1) {
-                            currentPage--;
-                            updatePagination();
-                        }
-                    });
-
-                    if (nextPageBtn) nextPageBtn.addEventListener('click', function() {
-                        if (currentPage < totalPages) {
-                            currentPage++;
-                            updatePagination();
-                        }
-                    });
-
-                    if (prevPageMobileBtn) prevPageMobileBtn.addEventListener('click', function() {
-                        if (currentPage > 1) {
-                            currentPage--;
-                            updatePagination();
-                        }
-                    });
-
-                    if (nextPageMobileBtn) nextPageMobileBtn.addEventListener('click', function() {
-                        if (currentPage < totalPages) {
-                            currentPage++;
-                            updatePagination();
-                        }
-                    });
-
-                    updatePagination();
-                }
             });
         </script>
     @endsection

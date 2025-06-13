@@ -136,12 +136,7 @@
         const dropdownul = document.querySelectorAll('#dd-ul');
 
         // Check localStorage for collapsed state
-        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-        if (isCollapsed) {
-            sidebar.classList.add('collapsed');
-        } else {
-            sidebar.classList.remove('collapsed');
-        }
+
 
         // Toggle sidebar collapse
         collapseBtn.addEventListener('click', function() {
