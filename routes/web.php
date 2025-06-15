@@ -5,6 +5,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\QrController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -16,6 +17,8 @@ Route::prefix('admin')
     ->group(function () {
         Route::post('/auth', [AdminController::class, 'auth'])->name('admin.auth');
         Route::get('/qr/generate', [AdminController::class, 'generateQr']);
+        Route::post('/qr/save/', [QrController::class, 'store'])->name('admin.qr.save');
+        Route::get('/qr/index/', [QrController::class, 'index'])->name('admin.qr.index');
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::delete('/vendor/delete/{vendor}', [AdminVendorController::class, 'destroy']);
         Route::get('/vendor/view/{vendor}', [AdminVendorController::class, 'view'])->name('admin.vendor.view');
@@ -25,12 +28,15 @@ Route::prefix('admin')
         Route::post('/vendor/store/', [AdminVendorController::class, 'store'])->name('admin.vendor.store');
         Route::put('/vendor/update/{vendor}', [AdminVendorController::class, 'update'])->name('admin.vendor.update');
         Route::get('/vendors', [AdminVendorController::class, 'index'])->name('admin.vendors');
+        Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+        Route::put('/settings/update', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
     });
 
     Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
     //Admin authentication routes
     Route::post('/admin/auth', [AuthController::class, 'login'])->name('admin.auth.login');
     Route::get('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
+
 
 Route::prefix('vendor')->group(function () {
     Route::get('/success', [VendorController::class, 'success'])->name('vendor.success');

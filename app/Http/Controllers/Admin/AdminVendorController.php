@@ -85,78 +85,87 @@ class AdminVendorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-public function update(Request $request, $id)
-{
-    $vendor = Vendor::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $vendor = Vendor::findOrFail($id);
 
-    $validator = Validator::make($request->all(), [
-        'vendor_name' => 'required|string|max:255',
-        'vendor_type' => 'nullable|string|max:100',
-        'business_category' => 'nullable|string|max:255',
-        'business_description' => 'nullable|string',
+        $validator = Validator::make($request->all(), [
+            'vendor_name' => 'required|string|max:255',
+            'vendor_type' => 'nullable|string|max:100',
+            'business_category' => 'nullable|string|max:255',
+            'business_description' => 'nullable|string',
 
-        'contact_person' => 'required|string|max:255',
-        'designation' => 'nullable|string|max:255',
-        'website' => 'nullable|url|max:255',
+            'contact_person' => 'required|string|max:255',
+            'designation' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
 
-        'address' => 'required|string',
-        'city' => 'required|string|max:100',
-        'state' => 'required|string|max:100',
-        'country' => 'required|string|max:100',
-        'postal_code' => 'required|string|max:20',
+            'address' => 'required|string',
+            'city' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+            'postal_code' => 'required|string|max:20',
 
-        'pan_number' => 'required|string|max:20',
-        'gst_number' => 'nullable|string|max:30',
+            'pan_number' => 'required|string|max:20',
+            'gst_number' => 'nullable|string|max:30',
 
-        'bank_name' => 'required|string|max:100',
-        'account_number' => 'required|string|max:30',
-        'account_holder' => 'required|string|max:100',
-        'ifsc_code' => 'required|string|max:20',
-        'branch_name' => 'nullable|string|max:100',
+            'bank_name' => 'required|string|max:100',
+            'account_number' => 'required|string|max:30',
+            'account_holder' => 'required|string|max:100',
+            'ifsc_code' => 'required|string|max:20',
+            'branch_name' => 'nullable|string|max:100',
 
-        'pan_card_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-        'gst_certificate_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-        'registration_doc_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-        'cancelled_cheque_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-    ]);
+            'pan_card_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'gst_certificate_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'registration_doc_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'cancelled_cheque_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
-
-    $data = $request->except([
-        'pan_card_file',
-        'gst_certificate_file',
-        'registration_doc_file',
-        'cancelled_cheque_file'
-    ]);
-
-    // Handle file uploads - only update if new file is provided
-    $fileFields = [
-        'pan_card_file',
-        'gst_certificate_file', 
-        'registration_doc_file',
-        'cancelled_cheque_file'
-    ];
-
-    foreach ($fileFields as $field) {
-        if ($request->hasFile($field)) {
-            // Delete old file if it exists
-            if ($vendor->$field) {
-                Storage::disk('public')->delete($vendor->$field);
-            }
-            // Store new file
-            $data[$field] = $request->file($field)->store('vendor_documents', 'public');
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
+
+        $data = $request->except([
+            'pan_card_file',
+            'gst_certificate_file',
+            'registration_doc_file',
+            'cancelled_cheque_file'
+        ]);
+
+        // Handle file uploads - only update if new file is provided
+        $fileFields = [
+            'pan_card_file',
+            'gst_certificate_file', 
+            'registration_doc_file',
+            'cancelled_cheque_file'
+        ];
+
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                // Delete old file if it exists
+                if ($vendor->$field) {
+                    Storage::disk('public')->delete($vendor->$field);
+                }
+                // Store new file
+                $data[$field] = $request->file($field)->store('vendor_documents', 'public');
+            }
+        }
+
+        $vendor->update($data);
+
+        return redirect()->route('admin.vendor.view', $vendor->id)
+            ->with('success', 'Vendor updated successfully!');
     }
 
-    $vendor->update($data);
-
-    return redirect()->route('admin.vendor.view', $vendor->id)
-        ->with('success', 'Vendor updated successfully!');
-}
+    public function updateStatus(Request $request, $id ){
+            $request->validate(['status' => 'required|in:0,1,2',]);
+            $vendor = Vendor::findOrFail($id);
+            $vendor->status = $request->input('status');
+            $vendor->save();
+            
+            return redirect()->back()->with('success', 'Vendor status updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.

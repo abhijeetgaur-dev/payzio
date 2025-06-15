@@ -17,7 +17,7 @@
             'icon' => 'fas fa-qrcode',
             'subItems' => [
                 ['text' => 'Generate QR', 'icon' => 'fas fa-plus-circle', 'path' => '/admin/qr/generate'],
-                ['text' => 'All Codes', 'icon' => 'fas fa-layer-group', 'path' => '#'],
+                ['text' => 'All Codes', 'icon' => 'fas fa-layer-group', 'path' => '/admin/qr/index'],
             ],
         ],
         [
@@ -31,7 +31,7 @@
         [
             'text' => 'Settings',
             'icon' => 'fas fa-cog',
-            'path' => '#',
+            'path' => '/admin/settings',
         ],
     ];
 

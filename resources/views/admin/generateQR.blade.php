@@ -126,7 +126,7 @@
                                 <button id="save-btn"
                                     class="cursor-pointer flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center justify-center">
                                     <i class="fas fa-save mr-2"></i>
-                                    Save to Vendor
+                                    Save QR
                                 </button>
                             </div>
                         </div>
@@ -248,9 +248,44 @@
                 document.getElementById('qr-result-container').classList.add('hidden');
             });
 
-            // Save to vendor handler (placeholder)
+            // Save to vendor handler 
             document.getElementById('save-btn').addEventListener('click', function() {
-                alert('Save functionality would be implemented here');
+                const qrDisplay = document.getElementById('qr-code-display');
+                const vendorId = document.getElementById('vendor-select').value;
+
+                if (!vendorId) {
+                    alert('Please select a vendor first.');
+                    return;
+                }
+
+                html2canvas(qrDisplay).then(canvas => {
+                    canvas.toBlob(function(blob) {
+                        const formData = new FormData();
+                        formData.append('vendor_id', vendorId);
+                        formData.append('qr_image', blob,
+                            `qr-${vendorId}-${Date.now()}.png`);
+
+                        fetch("{{ route('admin.qr.save') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content
+                                },
+                                body: formData
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('QR code saved successfully.');
+                                } else {
+                                    alert('Failed to save QR code.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Something went wrong.');
+                            });
+                    }, 'image/png');
+                });
             });
         });
     </script>
