@@ -63,12 +63,6 @@ class AdminController extends Controller
     {
         //
     }
-
-    public function login()
-    {
-        return view('admin.login');
-    }
-
     public function auth(Request $request)
     {
         // Handle authentication logic here
@@ -84,7 +78,7 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        // Assuming the admin is authenticated, return the dashboard view
+
         return view('admin.dashboard');
     }
 
@@ -92,6 +86,11 @@ class AdminController extends Controller
     {
         $vendors = Vendor::select('id', 'vendor_name', 'email', 'phone')->get();
         return view('admin.generateQR', compact('vendors'));
+    }
+
+    public function login()
+    {
+        return view('admin.login');
     }
 
 }

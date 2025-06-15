@@ -115,9 +115,9 @@
                 <i class="fas fa-user text-lg"></i>
             </div>
             <div class="sidebar-profile-text">
-                <p class="font-medium text-gray-800 dark:text-gray-200">Admin</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">admin@payzio.com</p>
-                <a href="{{ route('logout') }}">
+                <p class="font-medium text-gray-800 dark:text-gray-200">{{ auth('admin')->user()?->name }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth('admin')->user()?->email }}</p>
+                <a href="{{ route('admin.logout') }}">
                     @csrf
                     <button
                         class="text-sm font-bold cursor-pointer text-gray-500 dark:text-gray-400 py-1 hover:text-gray-300">

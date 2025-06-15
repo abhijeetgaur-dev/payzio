@@ -64,7 +64,7 @@
             </div>
 
             <!-- Login Form -->
-            <form method="POST" action="{{ route('admin.auth') }}" class="space-y-6">
+            <form method="POST" action="{{ route('admin.auth.login') }}" class="space-y-6">
                 @csrf
 
                 @if ($errors->any())
@@ -198,41 +198,8 @@
             <div class="mt-6">
                 <div class="relative">
                     <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                            Advanced security
-                        </span>
-                    </div>
-                </div>
-
-                <div class="mt-6 grid grid-cols-2 gap-3">
-                    <div>
-                        <a href=""
-                            class="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <svg class="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true">
-                                <path fill="#4285F4"
-                                    d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.4H272v95.4h146.9c-6.4 34.6-25.4 63.9-54 83.5v68h87.3c51.1-47.1 81.3-116.4 81.3-196.5z" />
-                                <path fill="#34A853"
-                                    d="M272 544.3c73.4 0 135-24.4 179.9-66.5l-87.3-68c-24.2 16.3-55.1 25.9-92.6 25.9-71 0-131-47.9-152.4-112.1H29.8v70.6C74.3 483 166.3 544.3 272 544.3z" />
-                                <path fill="#FBBC04"
-                                    d="M119.6 323.6c-10.2-30.5-10.2-63.4 0-93.9v-70.6H29.8c-41.1 82.1-41.1 179.3 0 261.4l89.8-70.6z" />
-                                <path fill="#EA4335"
-                                    d="M272 107.7c39.9 0 75.7 13.7 103.8 40.7l77.8-77.8C407 24.4 345.4 0 272 0 166.3 0 74.3 61.3 29.8 154.1l89.8 70.6C141 155.6 201 107.7 272 107.7z" />
-                            </svg>
-                        </a>
-                    </div>
-
-                    <div>
-                        <a href=""
-                            class="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                <path
-                                    d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
-                            </svg>
-                        </a>
                     </div>
                 </div>
             </div>
