@@ -54,21 +54,21 @@
                         </div>
                     </div>
                     <!-- Status Dropdown Only -->
-                    <form id="status-form" action="{{ route('admin.vendor.update.status', $vendor->id) }}" method="POST"
+                  <form id="status-form" action="{{ route('admin.vendor.update.status', $vendor->id) }}" method="POST"
                         class="ml-4">
                         @csrf
                         @method('PUT')
                         <select name="status" id="status-select"
                             class="appearance-none pl-3 pr-8 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-                                {{ $vendor->status === 'active'
+                                {{ $vendor->status == 1
                                     ? 'bg-green-100 text-green-800 border-green-300'
-                                    : ($vendor->status === 'suspended'
+                                    : ($vendor->status == 2
                                         ? 'bg-red-100 text-red-800 border-red-300'
                                         : 'bg-yellow-100 text-yellow-800 border-yellow-300') }}">
-                            <option value="pending" {{ $vendor->status === 'pending' ? 'selected' : '' }}>Pending
+                            <option value="0" {{ $vendor->status == 0 ? 'selected' : '' }}>Pending
                             </option>
-                            <option value="active" {{ $vendor->status === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="suspended" {{ $vendor->status === 'suspended' ? 'selected' : '' }}>Suspended
+                            <option value="1" {{ $vendor->status == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="2" {{ $vendor->status == 2 ? 'selected' : '' }}>Suspended
                             </option>
                         </select>
                     </form>

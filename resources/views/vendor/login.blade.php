@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Payzio Payment</title>
+    <title>Vendor Login - Payzio Payment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Include any additional CSS or JS files needed -->
 </head>
 
 <body
-    class="min-h-screen bg-gradient-to-br from-indigo-50 to-white dark:from-gray-900 dark:to-gray-700 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    class="min-h-screen bg-gradient-to-br from-slate-300 to-gray-700 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class='absolute top-0 right-0 p-4'>
         <a href="{{ route('vendor.signup') }}"
             class="font-semibold bg-gradient-to-br from-purple-500 to-pink-600 
@@ -27,19 +27,19 @@
             <!-- Logo would go here -->
         </div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-            Secure Admin Portal
+            Vendor Login
         </h2>
-        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p class="mt-2 text-center text-sm text-gray-200 ">
             Enter your credentials to access the dashboard
         </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
-            class="bg-white dark:bg-gray-800 py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-200 dark:border-gray-700">
+            class="bg-white dark:bg-slate-800 py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-200 dark:border-gray-700">
 
             <!-- Login Form -->
-            <form method="POST" action="{{ route('admin.auth.login') }}" class="space-y-6">
+            <form method="POST" action="{{ route('vendor.auth') }}" class="space-y-6">
                 @csrf
 
                 @if ($errors->any())
@@ -77,7 +77,7 @@
                         <input id="email" name="email" type="email" autocomplete="email" required
                             value="{{ old('email') }}"
                             class="py-3 pl-10 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                            placeholder="admin@email.com" />
+                            placeholder="user@email.com" />
                     </div>
                 </div>
                 <div>
@@ -160,7 +160,6 @@
 
         <div class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
             <p>
-                Need help?{' '}
                 <a href=""
                     class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
                     Contact our support team

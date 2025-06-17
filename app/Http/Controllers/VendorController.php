@@ -87,6 +87,8 @@ class VendorController extends Controller
             ->with('success', 'Vendor registration successful!');
     }
 
+
+
     public function success()
     {
         return view('vendor/signup-success');
@@ -97,6 +99,18 @@ class VendorController extends Controller
         return view('vendor/signup');
     }
 
+    public function login()
+    {
+        return view('vendor/login');
+    }
+
+    public function dashboard(){
+        return view('vendor/dashboard');
+    }
+
+    public function generateQr(){
+        return view('vendor/generateQr');
+    }
     
     
 

@@ -131,10 +131,12 @@
                             </div>
                             <p class="text-gray-600 mb-6">Access your vendor dashboard to view transactions, manage
                                 payouts, and track commissions.</p>
-                            <button href=""
-                                class="mt-5 cursor-pointer w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition duration-300">
-                                Login as Vendor
-                            </button>
+                            <a href="/vendor/login">
+                                <button
+                                    class="mt-5 cursor-pointer w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition duration-300">
+                                    Login as Vendor
+                                </button>
+                            </a>
                         </div>
                     </div>
                 </div>

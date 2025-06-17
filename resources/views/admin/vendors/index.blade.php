@@ -56,7 +56,7 @@
                                 Joined
                             </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                class="px-6 py-3 text-left text-xs font-mediu m text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Status
                             </th>
                             <th scope="col"
@@ -96,13 +96,27 @@
                                             $statusClasses = [
                                                 1 => 'bg-green-100 text-green-800',
                                                 0 => 'bg-yellow-100 text-yellow-800',
-                                                'suspended' => 'bg-red-100 text-red-800',
+                                                2 => 'bg-red-100 text-red-800',
                                             ];
                                         @endphp
-                                        <span
-                                            class="px-2 py-1 text-xs font-medium rounded-full {{ $statusClasses[$vendor->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                            {{ $vendor->status ? 'Active' : 'Pending' }}
-                                        </span>
+                                        <form id="status-form-{{ $vendor->id }}"
+                                            action="{{ route('admin.vendor.update.status', $vendor->id) }}" method="POST"
+                                            class="ml-4">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <select name="status" id="status-select-{{ $vendor->id }}"
+                                                class="appearance-none pl-3 pr-8 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 {{ $statusClasses[$vendor->status] }}"
+                                                onchange="document.getElementById('status-form-{{ $vendor->id }}').submit()">
+                                                <option value="0" {{ $vendor->status == 0 ? 'selected' : '' }}>Pending
+                                                </option>
+                                                <option value="1" {{ $vendor->status == 1 ? 'selected' : '' }}>Active
+                                                </option>
+                                                <option value="2" {{ $vendor->status == 2 ? 'selected' : '' }}>
+                                                    Suspended
+                                                </option>
+                                            </select>
+                                        </form>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end space-x-2">

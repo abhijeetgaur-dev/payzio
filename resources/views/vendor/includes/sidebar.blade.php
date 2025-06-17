@@ -1,54 +1,40 @@
-<!-- resources/views/components/sidebar.blade.php -->
-
 @php
     $menuItems = [
         [
             'text' => 'Dashboard',
             'icon' => 'fas fa-home',
-            'path' => '/admin/dashboard',
+            'path' => '/vendor/dashboard',
         ],
-        [
-            'text' => 'Vendors',
-            'icon' => 'fas fa-users',
-            'path' => '/admin/vendors',
-        ],
-        [
+                [
             'text' => 'QR Codes',
             'icon' => 'fas fa-qrcode',
             'subItems' => [
-                ['text' => 'Generate QR', 'icon' => 'fas fa-plus-circle', 'path' => '/admin/qr/generate'],
-                ['text' => 'All Codes', 'icon' => 'fas fa-layer-group', 'path' => '/admin/qr/index'],
+                ['text' => 'Generate QR', 'icon' => 'fas fa-plus-circle', 'path' => '/vendor/qr/generate'],
+                ['text' => 'My QR Codes', 'icon' => 'fas fa-layer-group', 'path' => '/vendor/qr'],
             ],
         ],
         [
             'text' => 'Transactions',
             'icon' => 'fas fa-exchange-alt',
             'subItems' => [
-                ['text' => 'All Transactions', 'icon' => 'fas fa-list', 'path' => '/admin/transactions/all'],
-                ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/admin/transactions/completed'],
+                ['text' => 'All Transactions', 'icon' => 'fas fa-list', 'path' => '/vendor/transactions'],
+                ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/vendor/transactions/completed'],
                 ['text' => 'Pending', 'icon' => 'fas fa-clock', 'path' => '/vendor/transactions/pending'],
             ],
         ],
         [
-            'text' => 'Reports',
-            'icon' => 'fa-solid fa-chart-pie',
-            'subItems' => [
-                ['text' => 'Commission Payment', 'icon' => 'fa-solid fa-coins', 'path' => '#'],
-                ['text' => 'Vendor Payment Report ', 'icon' => 'fa-solid fa-medal', 'path' => '#'],
-            ],
-        ],
-        [
             'text' => 'Settlements',
-            'icon' => 'fa-solid fa-hand-holding-dollar',
+            'icon' => 'fas fa-rupee-sign',
             'subItems' => [
                 ['text' => 'Pending', 'icon' => 'fas fa-hourglass-half', 'path' => '/vendor/settlements/pending'],
                 ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/vendor/settlements/completed'],
+                ['text' => 'Request', 'icon' => 'fas fa-hand-holding-usd', 'path' => '/vendor/settlements/request'],
             ],
         ],
         [
             'text' => 'Settings',
             'icon' => 'fas fa-cog',
-            'path' => '/admin/settings',
+            'path' => '/vendor/settings',
         ],
     ];
 
@@ -57,14 +43,14 @@
 @endphp
 
 <!-- Add Font Awesome to your layout -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
 <div id="sidebar"
     class="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out relative collapsed">
     <!-- Header -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-        <a href="/admin/dashboard" class="text-xl font-bold text-indigo-600 dark:text-indigo-400 sidebar-logo">
-            Payzio
+        <a href="/vendor/dashboard" class="text-xl font-bold text-indigo-600 dark:text-indigo-400 sidebar-logo">
+            Payzio Vendor
         </a>
         <button id="collapse-btn"
             class="cursor-pointer p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400">
@@ -129,12 +115,12 @@
         <div class="flex items-center p-3 pt-4">
             <div
                 class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold mr-3">
-                <i class="fas fa-user text-lg"></i>
+                <i class="fas fa-store text-lg"></i>
             </div>
             <div class="sidebar-profile-text">
-                <p class="font-medium text-gray-800 dark:text-gray-200">{{ auth('admin')->user()?->name }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth('admin')->user()?->email }}</p>
-                <a href="{{ route('admin.logout') }}">
+                <p class="font-medium text-gray-800 dark:text-gray-200">{{ auth('vendor')->user()?->business_name }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth('vendor')->user()?->email }}</p>
+                <a href="{{ route('vendor.logout') }}">
                     @csrf
                     <button
                         class="text-sm font-bold cursor-pointer text-gray-500 dark:text-gray-400 py-1 hover:text-gray-300">
@@ -152,11 +138,21 @@
         const collapseBtn = document.getElementById('collapse-btn');
         const dropdownul = document.querySelectorAll('#dd-ul');
 
+        // Check localStorage for collapsed state
+        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (isCollapsed) {
+            sidebar.classList.add('collapsed');
+            dropdownul.forEach(ul => {
+                ul.classList.add('hidden');
+            });
+        }
 
         // Toggle sidebar collapse
         collapseBtn.addEventListener('click', function() {
-            // Save state to localStorage
-            if (sidebar.classList.contains('collapsed')) {
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            localStorage.setItem('sidebarCollapsed', !isCollapsed);
+            
+            if (isCollapsed) {
                 sidebar.classList.remove('collapsed');
                 dropdownul.forEach(ul => {
                     if (ul.classList.contains('hidden')) {
@@ -168,7 +164,6 @@
                 dropdownul.forEach(ul => {
                     ul.classList.add('hidden');
                 });
-
             }
         });
 

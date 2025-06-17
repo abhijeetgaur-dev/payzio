@@ -63,18 +63,6 @@ class AdminController extends Controller
     {
         //
     }
-    public function auth(Request $request)
-    {
-        // Handle authentication logic here
-        $credentials = true; // This is a placeholder. Replace with actual authentication logic.
-        if ($credentials) {
-            // Assuming the admin is authenticated successfully
-            return redirect()->route('admin.dashboard');
-        } else {
-            // If authentication fails, redirect back with an error message
-            return redirect()->back()->withErrors(['error' => 'Invalid credentials']);
-        }
-    }
 
     public function dashboard()
     {
@@ -158,5 +146,14 @@ class AdminController extends Controller
 
         return redirect()->route('admin.settings')->with('success', 'Settings updated successfully!');
     }
+
+    public function transaction(){
+        return view('admin.transactions.allTransactions');
+    }
+
+    public function completedTransaction(){
+        return view('admin.transactions.completed');
+    }
+    
 
 }
