@@ -26,23 +26,43 @@
             'subItems' => [
                 ['text' => 'All Transactions', 'icon' => 'fas fa-list', 'path' => '/admin/transactions/all'],
                 ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/admin/transactions/completed'],
-                ['text' => 'Pending', 'icon' => 'fas fa-clock', 'path' => '/vendor/transactions/pending'],
+                ['text' => 'Pending', 'icon' => 'fas fa-clock', 'path' => '/admin/transactions/pending'],
             ],
         ],
         [
             'text' => 'Reports',
             'icon' => 'fa-solid fa-chart-pie',
             'subItems' => [
-                ['text' => 'Commission Payment', 'icon' => 'fa-solid fa-coins', 'path' => '#'],
-                ['text' => 'Vendor Payment Report ', 'icon' => 'fa-solid fa-medal', 'path' => '#'],
+                ['text' => 'Commission Payment', 'icon' => 'fa-solid fa-coins', 'path' => '/admin/reports/commissions'],
+                [
+                    'text' => 'Vendor Payment Report ',
+                    'icon' => 'fa-solid fa-medal',
+                    'path' => '/admin/reports/vendorpayment',
+                ],
             ],
         ],
         [
             'text' => 'Settlements',
             'icon' => 'fa-solid fa-hand-holding-dollar',
             'subItems' => [
-                ['text' => 'Pending', 'icon' => 'fas fa-hourglass-half', 'path' => '/vendor/settlements/pending'],
-                ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/vendor/settlements/completed'],
+                ['text' => 'Pending', 'icon' => 'fas fa-hourglass-half', 'path' => '/admin/settlements/pending'],
+                ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/admin/settlements/completed'],
+            ],
+        ],
+        [
+            'text' => 'Support Tickets',
+            'icon' => 'fas fa-ticket',
+            'subItems' => [
+                [
+                    'text' => 'Tickets Raised',
+                    'icon' => 'fas fa-exclamation-circle',
+                    'path' => '/admin/tickets/raised',
+                ],
+                [
+                    'text' => 'Tickets Closed',
+                    'icon' => 'fas fa-check-circle',
+                    'path' => '/admin/tickets/closed',
+                ],
             ],
         ],
         [
@@ -151,6 +171,7 @@
         const sidebar = document.getElementById('sidebar');
         const collapseBtn = document.getElementById('collapse-btn');
         const dropdownul = document.querySelectorAll('#dd-ul');
+        const isCollapsed = sidebar.classList.contains('collapsed');
 
 
         // Toggle sidebar collapse

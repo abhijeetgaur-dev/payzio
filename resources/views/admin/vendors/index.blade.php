@@ -2,6 +2,17 @@
 
 @section('title', 'Vendors List')
 
+@section('styles')
+    <style>
+        .table th {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
+@endsection
+
 @section('content')
     <div class="p-6">
         <!-- Page Header -->
@@ -17,25 +28,52 @@
             </div>
         </div>
 
-        <!-- Search and Filter Bar -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div class="relative flex-1 md:mr-4">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
-                    <input type="text" id="search-input" placeholder="Search vendors by name, email or phone..."
-                        class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                </div>
-                <div class="flex space-x-3">
-                    <button
-                        class="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-filter mr-2"></i>
-                        Filters
-                    </button>
-                </div>
-            </div>
+        <div>
+            @include('partials.flash')
         </div>
+
+        <!-- Search and Filter Bar -->
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+            <form action="" method="GET">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Vendor Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
+                        <div class="relative flex-1 md:mr-4">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="search-input" placeholder="Search QR codes by vendor name or token..."
+                                class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
+                        </div>
+                    </div>
+
+                    <!-- Date From -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">From Date</label>
+                        <input type="date" name="date_from" value="{{ request('date_from') }}"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+
+                    <!-- Date To -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">To Date</label>
+                        <input type="date" name="date_to" value="{{ request('date_to') }}"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-end space-x-2">
+                    <a href="{{ route('admin.reports.commissions') }}"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
+                    <button type="submit"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
+                        Filters</button>
+                </div>
+            </form>
+        </div>
+
 
         <!-- Vendors Table -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm ">
@@ -60,6 +98,10 @@
                                 Status
                             </th>
                             <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-mediu m text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Set Commission
+                            </th>
+                            <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Actions
                             </th>
@@ -78,7 +120,7 @@
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                    {{ $vendor->name }}</div>
+                                                    {{ $vendor->vendor_name }}</div>
                                                 <div class="text-sm text-gray-500 dark:text-gray-400">ID:
                                                     {{ $vendor->id }}</div>
                                             </div>
@@ -91,32 +133,44 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         {{ \Carbon\Carbon::parse($vendor->joined)->format('m/d/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @php
-                                            $statusClasses = [
-                                                1 => 'bg-green-100 text-green-800',
-                                                0 => 'bg-yellow-100 text-yellow-800',
-                                                2 => 'bg-red-100 text-red-800',
-                                            ];
-                                        @endphp
+                                    <td class="flex flex-row px-6 py-4 whitespace-nowrap">
                                         <form id="status-form-{{ $vendor->id }}"
                                             action="{{ route('admin.vendor.update.status', $vendor->id) }}" method="POST"
                                             class="ml-4">
                                             @csrf
                                             @method('PUT')
-
                                             <select name="status" id="status-select-{{ $vendor->id }}"
-                                                class="appearance-none pl-3 pr-8 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 {{ $statusClasses[$vendor->status] }}"
-                                                onchange="document.getElementById('status-form-{{ $vendor->id }}').submit()">
-                                                <option value="0" {{ $vendor->status == 0 ? 'selected' : '' }}>Pending
-                                                </option>
+                                                onchange="this.form.submit()"
+                                                class="appearance-none pl-3 pr-8 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                                {{ $vendor->status == 1
+                                                    ? 'bg-green-100 text-green-800 border-green-300'
+                                                    : ($vendor->status == 0
+                                                        ? 'bg-red-100 text-red-800 border-red-300'
+                                                        : 'bg-yellow-100 text-yellow-800 border-yellow-300') }} ">
+                                                @if ($vendor->status == 2)
+                                                    <option value="2" {{ $vendor->status == 2 ? 'selected' : '' }}>
+                                                        Pending
+                                                    </option>
+                                                @endif
                                                 <option value="1" {{ $vendor->status == 1 ? 'selected' : '' }}>Active
                                                 </option>
-                                                <option value="2" {{ $vendor->status == 2 ? 'selected' : '' }}>
-                                                    Suspended
+                                                <option value="0" {{ $vendor->status == 0 ? 'selected' : '' }}>
+                                                    Inactive
                                                 </option>
                                             </select>
                                         </form>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center justify-center items-center ">
+                                            <button
+                                                class="flex justify-center edit-status-btn px-2 text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
+                                                id="edit-status-btn-{{ $vendor->id }}"
+                                                data-vendor-id="{{ $vendor->id }}"
+                                                data-vendor-status="{{ $vendor->status }}">
+                                                <i class="fas
+                                                fa-edit"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end space-x-2">
@@ -192,7 +246,8 @@
                             </p>
                         </div>
                         <div>
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                                aria-label="Pagination">
                                 @if ($vendors->onFirstPage())
                                     <span
                                         class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-400 cursor-not-allowed">
@@ -243,6 +298,77 @@
     </div>
 
 
+    <div id="status-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Vendor Status</h3>
+                <div class="mt-2 px-7 py-3">
+                    <form id="status-form" action={{ route('admin.vendor.update.status', $vendor->id) }} method="POST">
+
+                        <input type="hidden" id="vendor-id" name="vendor_id">
+                        @php
+                            $statusClass = [
+                                1 => 'bg-green-100 text-green-800',
+                                0 => 'bg-yellow-100 text-yellow-800',
+                                2 => 'bg-red-100 text-red-800',
+                            ];
+                        @endphp
+                        <!-- Status Dropdown -->
+                        <div class="mb-4">
+                            <label for="status"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                            <select name="status" id="status"
+                                class="bg-red w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option class="{{ $statusClass[0] }}" value="0">Pending</option>
+                                <option class="{{ $statusClass[1] }}" value="1">Active</option>
+                                <option class="{{ $statusClass[2] }}" value="2">Suspended</option>
+                            </select>
+                        </div>
+
+                        <!-- Commission Field (shown only when Active is selected) -->
+                        <div id="commission-field" class="mb-4 hidden">
+                            <label for="commission"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Commission Rate
+                                (%)</label>
+                            <input type="number" id="commission" name="commission" min="0" max="100"
+                                step="0.01"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+
+                        <!-- Notes Field -->
+                        <div class="mb-4">
+                            <label for="notes"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes</label>
+                            <textarea id="notes" name="notes" rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                        </div>
+                        <div class="text-gray-400 ">
+                            <h3 class="font-bold">Updated By </h3>
+                            <span class=""> {{ auth('admin')->user()?->name }} (
+                                {{ auth('admin')->user()?->email }})</span>
+                        </div>
+                        <div class="text-gray-400 ">
+                            <h3 class="font-bold">Date & Time </h3>
+                            <span class="">
+                                {{ now()->format('d M Y, h:i A') }}
+                        </div>
+
+                    </form>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="save-status"
+                        class="px-4 py-2 bg-indigo-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Save Changes
+                    </button>
+                    <button id="cancel-status"
+                        class="ml-3 px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div id="delete-vendor-modal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
@@ -291,6 +417,84 @@
                 const addVendorModal = document.getElementById('add-vendor-modal');
                 const closeModalBtn = document.getElementById('close-modal');
                 const cancelAddVendorBtn = document.getElementById('cancel-add-vendor');
+
+                const statusModal = document.getElementById('status-modal');
+                const statusSelect = document.getElementById('status');
+                const commissionField = document.getElementById('commission-field');
+                const saveStatusBtn = document.getElementById('save-status');
+                const cancelStatusBtn = document.getElementById('cancel-status');
+
+                // Handle edit button clicks
+                document.querySelectorAll('.edit-status-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        statusModal.classList.remove('hidden');
+                        // Get vendor ID from button ID or data attribute
+                        const vendorId = this.getAttribute('data-vendor-id');
+                        console.log(vendorId);
+
+                        // Set current status in dropdown
+                        const currentStatus = this.getAttribute('data-vendor-status') || 'pending';
+                        statusSelect.value = currentStatus;
+
+                        // Show/hide commission field based on current status
+                        toggleCommissionField(currentStatus);
+
+
+                    });
+                });
+
+                // Toggle commission field when status changes
+                statusSelect.addEventListener('change', function() {
+                    toggleCommissionField(this.value);
+                });
+
+                function toggleCommissionField(status) {
+                    if (status === 'active') {
+                        commissionField.classList.remove('hidden');
+                    } else {
+                        commissionField.classList.add('hidden');
+                    }
+                }
+
+                // Handle save button
+                saveStatusBtn.addEventListener('click', function() {
+                    const formData = new FormData(document.getElementById('status-form'));
+
+                    // Here you would typically send the data to your server
+                    fetch('/vendors/update-status', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Close modal and refresh or update UI
+                                modal.classList.add('hidden');
+                                location.reload(); // Or update specific elements
+                            } else {
+                                alert('Error: ' + (data.message || 'Failed to update status'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while updating status');
+                        });
+                });
+
+                // Handle cancel button
+                cancelStatusBtn.addEventListener('click', function() {
+                    statusModal.classList.add('hidden');
+                });
+
+                // Close modal when clicking outside
+                window.addEventListener('click', function(event) {
+                    if (event.target === statusModal) {
+                        statusModal.classList.add('hidden');
+                    }
+                });
 
                 // Delete vendor modal
                 const deleteVendorModal = document.getElementById('delete-vendor-modal');

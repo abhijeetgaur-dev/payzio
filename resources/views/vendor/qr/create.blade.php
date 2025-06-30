@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
-@section('title', 'Generate QR code')
+@section('title', 'Generate QR Code')
 
 @section('content')
     <div class="p-6 bg-linear-120 to-zinc-200 from-gray-400">
@@ -14,10 +14,11 @@
                 </div>
             </div>
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800">Generate QR Code</h2>
                     <p class="text-gray-600">
-                        Create payment QR codes for your vendors
+                        Create your payment QR code to receive payments
                     </p>
                 </div>
                 <button id="reset-btn"
@@ -25,10 +26,6 @@
                     <i class="fas fa-sync-alt mr-2"></i>
                     Reset
                 </button>
-            </div>
-
-            <div>
-                @include('partials.flash')
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -40,33 +37,16 @@
                     </h3>
 
                     <form id="qr-form">
-                        <!-- Vendor Selection -->
+                        <!-- Static Vendor Info -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Search Vendor
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Your Business Information
                             </label>
-                            <div class="relative">
-                                <input type="text" id="vendor-search"
-                                    class="text-gray-200 w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                    placeholder="Type to search vendors..." autocomplete="off">
-
-                                <!-- Hidden input to store the selected vendor ID -->
-                                <input type="hidden" id="vendor-id" name="vendor_id">
-
-                                <!-- Dropdown results container -->
-                                <div id="vendor-results"
-                                    class="hidden absolute z-10 mt-1 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
-                                    <!-- Results will be populated here -->
-                                </div>
-                            </div>
-
-                            <!-- Selected vendor details (optional) -->
-                            <div id="selected-vendor-details" class="mt-2 hidden">
-                                <div class="text-gray-300 text-sm">
-                                    <span id="vendor-name-display"></span>
-                                    <span id="vendor-email-display" class="ml-2"></span>
-                                    <span id="vendor-phone-display" class="ml-2"></span>
-                                </div>
+                            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <p class="font-medium text-gray-800 dark:text-white">
+                                    {{ auth('vendor')->user()->business_name }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ auth('vendor')->user()->email }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ auth('vendor')->user()->phone }}</p>
                             </div>
                         </div>
 
@@ -77,7 +57,7 @@
                                 Payment Description (Optional)
                             </label>
                             <input type="text" id="description"
-                                class="w-full text-gray-200 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="e.g. Invoice #12345" />
                         </div>
 
@@ -92,7 +72,7 @@
                 <!-- QR Display Panel -->
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-6 flex items-center">
-                        <i class="fas fa-user mr-2 text-indigo-600 dark:text-indigo-400"></i>
+                        <i class="fas fa-qrcode mr-2 text-indigo-600 dark:text-indigo-400"></i>
                         QR Code Preview
                     </h3>
 
@@ -103,7 +83,7 @@
                                 <i class="fas fa-rupee-sign text-gray-400 dark:text-gray-500 text-4xl"></i>
                             </div>
                             <p class="text-gray-500 dark:text-gray-400 text-center">
-                                Configure the QR code settings and click "Generate" to create a payment QR code
+                                Configure your QR code and click "Generate" to create your payment QR code
                             </p>
                         </div>
                     </div>
@@ -114,16 +94,16 @@
                             <!-- QR Code Display -->
                             <div id="qr-code-display"
                                 class="p-4 bg-white rounded-lg border border-gray-200 dark:border-gray-700 mb-6 flex flex-col items-center">
-                                <div id="qr-svg-container" class="h-[200px] "></div>
-                                <div class="mt-40 text-center text-gray-500">
-                                    <p id="vendor-name-display-qr"
-                                        class="text-sm font-medium text-gray-900 dark:text-gray-800"></p>
-                                    <p id="vendor-email-display-qr" class="text-xs text-gray-500  mt-1 max-w-xs truncate">
-                                    </p>
-                                    <p id="vendor-phone-display-qr" class="text-xs text-gray-500 mt-1 max-w-xs truncate">
-                                    </p>
-                                    <p id="description-display" class="text-xs text-gray-500  mt-1 max-w-xs truncate">
-                                    </p>
+                                <div id="qr-svg-container" class="h-[200px]"></div>
+                                <div class="mt-4 text-center">
+                                    <p id="vendor-name-display"
+                                        class="text-sm font-medium text-gray-900 dark:text-gray-100"></p>
+                                    <p id="vendor-email-display"
+                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-xs truncate"></p>
+                                    <p id="vendor-phone-display"
+                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-xs truncate"></p>
+                                    <p id="description-display"
+                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-xs truncate"></p>
                                 </div>
                             </div>
 
@@ -163,28 +143,28 @@
             <!-- Usage Instructions -->
             <div class="mt-12 bg-gray-900/50 rounded-xl p-6">
                 <h3 class="text-lg font-semibold text-gray-100 mb-4">
-                    How to use these QR codes
+                    How to use your QR code
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
                         <div class="text-indigo-600 dark:text-indigo-400 font-bold text-lg mb-2">1</div>
                         <h4 class="font-medium text-gray-800 dark:text-white mb-2">Print & Display</h4>
                         <p class="text-gray-600 dark:text-gray-400 text-sm">
-                            Download the QR code and print it for your vendor to display at their checkout counter.
+                            Print your QR code and display it at your checkout counter for customers to scan.
                         </p>
                     </div>
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
                         <div class="text-indigo-600 dark:text-indigo-400 font-bold text-lg mb-2">2</div>
                         <h4 class="font-medium text-gray-800 dark:text-white mb-2">Digital Sharing</h4>
                         <p class="text-gray-600 dark:text-gray-400 text-sm">
-                            Send the QR code image digitally for online payments or invoice attachments.
+                            Add the QR code to your invoices, website, or share it digitally with customers.
                         </p>
                     </div>
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
                         <div class="text-indigo-600 dark:text-indigo-400 font-bold text-lg mb-2">3</div>
-                        <h4 class="font-medium text-gray-800 dark:text-white mb-2">POS Integration</h4>
+                        <h4 class="font-medium text-gray-800 dark:text-white mb-2">Multiple Uses</h4>
                         <p class="text-gray-600 dark:text-gray-400 text-sm">
-                            Integrate with POS systems using the QR data for seamless payment processing.
+                            Generate different QR codes for different purposes (e.g., donations, specific products).
                         </p>
                     </div>
                 </div>
@@ -215,116 +195,21 @@
                 errorEl.classList.add('hidden');
             }, 7000); // Hide after 7 seconds
         }
+
         document.addEventListener('DOMContentLoaded', function() {
-            //vendor search bar
-            const vendorSearch = document.getElementById('vendor-search');
-            const vendorResults = document.getElementById('vendor-results');
-            const vendorIdInput = document.getElementById('vendor-id');
-            const selectedVendorDetails = document.getElementById('selected-vendor-details');
+            const vendor = @json(auth('vendor')->user());
 
-            // This would come from your server - mock data for example
-            const vendors = [
-                @foreach ($vendors as $vendor)
-                    {
-                        id: "{{ $vendor->id }}",
-                        name: "{{ $vendor->vendor_name }}",
-                        email: "{{ $vendor->email }}",
-                        phone: "{{ $vendor->phone }}",
-                        displayText: "{{ $vendor->vendor_name }} ({{ $vendor->id }})"
-                    },
-                @endforeach
-            ];
-
-            function resetPage() {
-                document.getElementById('description').value = '';
-                document.getElementById('qr-preview-container').classList.remove('hidden');
-                document.getElementById('qr-result-container').classList.add('hidden');
-
-                document.getElementById('vendor-name-display').textContent = '';
-                document.getElementById('vendor-email-display').textContent = '';
-                document.getElementById('vendor-phone-display').textContent = '';
-                selectedVendorDetails.classList.add('hidden');
-                vendorSearch.value = '';
-                vendorIdInput.value = '';
-
-            }
-
-            vendorSearch.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-
-                if (searchTerm.length < 1) {
-                    vendorResults.classList.add('hidden');
-                    return;
-                }
-
-                const filteredVendors = vendors.filter(vendor =>
-                    vendor.name.toLowerCase().includes(searchTerm) ||
-                    vendor.id.toLowerCase().includes(searchTerm)
-                );
-
-                if (filteredVendors.length > 0) {
-                    vendorResults.innerHTML = filteredVendors.map(vendor => `
-                <div class="px-4 text-white py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer vendor-option" 
-                     data-id="${vendor.id}" 
-                     data-name="${vendor.name}"
-                     data-email="${vendor.email}"
-                     data-phone="${vendor.phone}">
-                    ${vendor.displayText}
-                </div>
-            `).join('');
-                    vendorResults.classList.remove('hidden');
-                } else {
-                    vendorResults.innerHTML =
-                        '<div class="px-4 text-gray-500 py-2 text-gray-500">No vendors found</div>';
-                    vendorResults.classList.remove('hidden');
-                }
-            });
-
-            ///////////////////// Handle click on a vendor option/////////////////////////////////
-            vendorResults.addEventListener('click', function(e) {
-                if (e.target.classList.contains('vendor-option')) {
-                    const vendor = e.target;
-                    vendorSearch.value = vendor.textContent.trim();
-                    vendorIdInput.value = vendor.dataset.id;
-
-                    // Update displayed vendor details
-                    document.getElementById('vendor-name-display').textContent = vendor.dataset.name;
-                    document.getElementById('vendor-email-display').textContent = vendor.dataset.email;
-                    document.getElementById('vendor-phone-display').textContent = vendor.dataset.phone;
-                    selectedVendorDetails.classList.remove('hidden');
-
-                    vendorResults.classList.add('hidden');
-                }
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!vendorSearch.contains(e.target) && !vendorResults.contains(e.target)) {
-                    vendorResults.classList.add('hidden');
-                }
-            });
 
             // Form submission handler
             document.getElementById('qr-form').addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                const vendorId = vendorIdInput.value;
-                const vendorEmail = document.getElementById('vendor-email-display').textContent
-                const vendorPhone = document.getElementById('vendor-phone-display').textContent
-                const vendorName = document.getElementById('vendor-name-display').textContent
                 const description = document.getElementById('description').value;
 
-                console.log(vendorEmail, vendorPhone, vendorName);
-
-                if (!vendorId) {
-                    alert('Please select a vendor');
-                    return;
-                }
-
                 // Generate QR data
-                let qrData = `payzio:/vendor/${vendorId}?phone=${vendorPhone}&email=${vendorEmail}`;
+                let qrData = `xyzpay:/vendor/${vendor.id}?phone=${vendor.phone}&email=${vendor.email}`;
                 if (description) {
-                    qrData += `?note=${encodeURIComponent(description)}`;
+                    qrData += `&note=${encodeURIComponent(description)}`;
                 }
 
                 // Generate QR code
@@ -334,9 +219,9 @@
 
                 // Display QR code
                 document.getElementById('qr-svg-container').innerHTML = qr.createSvgTag(6);
-                document.getElementById('vendor-name-display-qr').textContent = vendorName;
-                document.getElementById('vendor-email-display-qr').textContent = vendorEmail;
-                document.getElementById('vendor-phone-display-qr').textContent = vendorPhone;
+                document.getElementById('vendor-name-display').textContent = vendor.business_name;
+                document.getElementById('vendor-email-display').textContent = vendor.email;
+                document.getElementById('vendor-phone-display').textContent = vendor.phone;
                 document.getElementById('description-display').textContent = description ?
                     `Description: ${description}` : '';
                 document.getElementById('qr-data-text').textContent = qrData;
@@ -364,8 +249,7 @@
                 const qrDisplay = document.getElementById('qr-code-display');
                 html2canvas(qrDisplay).then(canvas => {
                     const link = document.createElement('a');
-                    const vendorId = document.getElementById('vendor-id').value;
-                    link.download = `QR-${vendorId}-${Date.now()}.png`;
+                    link.download = `QR-${vendor.id}-${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                 });
@@ -373,31 +257,30 @@
 
             // Reset form handler
             document.getElementById('reset-btn').addEventListener('click', function() {
-                resetPage();
+                document.getElementById('description').value = '';
+                document.getElementById('qr-preview-container').classList.remove('hidden');
+                document.getElementById('qr-result-container').classList.add('hidden');
             });
 
-            // Save to vendor handler 
+            // Save QR code handler
             document.getElementById('save-btn').addEventListener('click', function() {
                 const qrDisplay = document.getElementById('qr-code-display');
-                const vendorId = document.getElementById('vendor-id').value;
-
-                if (!vendorId) {
-                    alert('Please select a vendor first.');
-                    return;
-                }
+                const description = document.getElementById('description').value;
 
                 html2canvas(qrDisplay).then(canvas => {
                     canvas.toBlob(function(blob) {
                         const formData = new FormData();
-                        formData.append('vendor_id', vendorId);
+                        formData.append('description', description);
+                        formData.append('vendor_id', vendor.id);
                         formData.append('qr_image', blob,
-                            `qr-${vendorId}-${Date.now()}.png`);
+                            `qr-${vendor.id}-${Date.now()}.png`);
 
-                        fetch("{{ route('admin.qr.save') }}", {
+                        fetch("{{ route('vendor.qr.store') }}", {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector(
-                                        'meta[name="csrf-token"]').content
+                                        'meta[name="csrf-token"]').content,
+                                    'Accept': 'application/json'
                                 },
                                 body: formData
                             })

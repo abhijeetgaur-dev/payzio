@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vendor;
+use App\Models\VendorCommission;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use App\Mail\VendorStatusUpdated;
 
 
 class AdminVendorController extends Controller
@@ -158,13 +163,120 @@ class AdminVendorController extends Controller
             ->with('success', 'Vendor updated successfully!');
     }
 
-    public function updateStatus(Request $request, $id ){
-            $request->validate(['status' => 'required|in:0,1,2',]);
-            $vendor = Vendor::findOrFail($id);
-            $vendor->status = $request->input('status');
-            $vendor->save();
+    public function updateCommissionStatus(Request $request, $id ){
+            $request->validate([
+                'vendor_id' => 'required|exists:vendors,id',
+                'commission' => 'required|numeric|min:0',
+                'status' => 'required|in:0,1,2',
+                'updated_by' => 'required|exists:admins,id',
+                'status_reason' => 'nullable|string|max:255'
+        ]);
+
+            $data = $request->only([
+                'vendor_id',
+                'commission',
+                'status',
+                'updated_by',
+                'status_reason'
+            ]);
+
+             // Fetch latest active commission for this vendor
+            $lastCommission = VendorCommission::where('vendor_id', $data['vendor_id'])
+                ->orderByDesc('created_at')
+                ->first();
+
+            if ($lastCommission && $lastCommission->status === '1') {
+                if ($data['status'] === '2') {
+                    return response()->json([
+                        'message' => 'Invalid status change: Active commission cannot be suspended.'
+                    ], 422);
+                }
+
+            // If deactivating, set end_date
+                if ($data['status'] === '0') {
+                    $data['end_date'] = Carbon::now();
+                }
+            }
+
+            if ($data['status'] === '1') {
+                $data['active_date'] = Carbon::now();
+            }
+
+            $commission = VendorCommission::create($data);
+
+            return response()->json([
+                'message' => 'Vendor commission status updated successfully.',
+                'data' => $commission
+            ], 201);
+        }
+
+public function vendorUpdateStatus(Request $request, $id)
+        {
+        try{
+            $request->validate([
+                    'status' => 'required|in:0,1,2',
+                    'status_reason' => 'nullable|string|max:255'
+                ]);
+
+                $vendor = Vendor::findOrFail($id); // This was missing
+
+                $admin = auth('admin')->user();
+
+                if($vendor->status == '1' || $vendor->status == '0'){
+                    if ($request->status == '2') {
+                         return redirect()->back()->with('error', 'Invalid status change: Vendor cannot be suspended from active or inactive status.');
+                    }
+                }
+                // Assign new values
+                $vendor->status = $request->status;
+                $vendor->status_reason = $request?->status_reason;
+                $vendor->updated_by = $admin->id;
+
+                $vendor->save();
+
+            if ($this->sendVendorUpdateStatus($vendor)) {
+                Log::info('Mail sent to vendor successfully');
+                return redirect()->back()->with('success', 'Status updated successfully and mail sent to vendor');
+            } else {
+                Log::error('Mail not sent to vendor');
+                return redirect()->back()->with('error', 'Status updated but email not sent');
+                }
+            } catch (\Exception $e) {
+                Log::error('Vendor Status Update Error: ' . $e->getMessage());
+                return back()->with('error', 'Error updating vendor status');
+            }
+        }
+
+protected function sendVendorUpdateStatus(Vendor $vendor)
+    {
+        try {
             
-            return redirect()->back()->with('success', 'Vendor status updated successfully.');
+            $admin= auth('admin')->user();
+
+            
+            $data = [
+                'vendor_name' => $vendor->vendor_name,
+                'status' => $vendor->status,
+                'status_reason' => $vendor->status_reason,
+                'admin_name' => $admin->name,
+                // 'link' => route('cold-mails.edit', $assignment->id),
+            ];
+
+            // $recipients = [
+            //     $vendor->email,
+            //     'coordinator@company.com',
+            //     'ceo@company.com'
+            // ];
+
+            Mail::to($vendor->email)
+                // ->cc(array_slice($recipients, 1))
+                ->send(new VendorStatusUpdated($data));
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Vendor status update email error: ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**

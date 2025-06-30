@@ -5,30 +5,58 @@
             'icon' => 'fas fa-home',
             'path' => '/vendor/dashboard',
         ],
-                [
+        [
             'text' => 'QR Codes',
             'icon' => 'fas fa-qrcode',
-            'subItems' => [
-                ['text' => 'Generate QR', 'icon' => 'fas fa-plus-circle', 'path' => '/vendor/qr/generate'],
-                ['text' => 'My QR Codes', 'icon' => 'fas fa-layer-group', 'path' => '/vendor/qr'],
-            ],
+            'path' => '/vendor/qr/index',
         ],
         [
             'text' => 'Transactions',
             'icon' => 'fas fa-exchange-alt',
             'subItems' => [
-                ['text' => 'All Transactions', 'icon' => 'fas fa-list', 'path' => '/vendor/transactions'],
+                ['text' => 'All Transactions', 'icon' => 'fas fa-list', 'path' => '/vendor/transactions/all'],
                 ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/vendor/transactions/completed'],
                 ['text' => 'Pending', 'icon' => 'fas fa-clock', 'path' => '/vendor/transactions/pending'],
             ],
         ],
         [
+            'text' => 'Reports',
+            'icon' => 'fa-solid fa-chart-pie',
+            'subItems' => [
+                [
+                    'text' => 'Commission Payment',
+                    'icon' => 'fa-solid fa-coins',
+                    'path' => '/vendor/reports/commissions',
+                ],
+                [
+                    'text' => 'Payment Report ',
+                    'icon' => 'fa-solid fa-medal',
+                    'path' => '/vendor/reports/vendorpayment',
+                ],
+            ],
+        ],
+        [
             'text' => 'Settlements',
-            'icon' => 'fas fa-rupee-sign',
+            'icon' => 'fas fa-inr',
             'subItems' => [
                 ['text' => 'Pending', 'icon' => 'fas fa-hourglass-half', 'path' => '/vendor/settlements/pending'],
                 ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/vendor/settlements/completed'],
-                ['text' => 'Request', 'icon' => 'fas fa-hand-holding-usd', 'path' => '/vendor/settlements/request'],
+            ],
+        ],
+        [
+            'text' => 'Support Tickets',
+            'icon' => 'fas fa-ticket',
+            'subItems' => [
+                [
+                    'text' => 'Tickets Raised',
+                    'icon' => 'fas fa-exclamation-circle',
+                    'path' => '/vendor/tickets/raised',
+                ],
+                [
+                    'text' => 'Tickets Closed',
+                    'icon' => 'fas fa-check-circle',
+                    'path' => '/vendor/tickets/closed',
+                ],
             ],
         ],
         [
@@ -46,10 +74,10 @@
 
 
 <div id="sidebar"
-    class="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out relative collapsed">
+    class="bg-purple-400 text-white h-screen shadow-lg transition-all duration-300 ease-in-out relative collapsed">
     <!-- Header -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-        <a href="/vendor/dashboard" class="text-xl font-bold text-indigo-600 dark:text-indigo-400 sidebar-logo">
+        <a href="/vendor/dashboard" class="text-xl font-bold text-gray-700 dark:text-indigo-400 sidebar-logo">
             Payzio Vendor
         </a>
         <button id="collapse-btn"
@@ -118,7 +146,8 @@
                 <i class="fas fa-store text-lg"></i>
             </div>
             <div class="sidebar-profile-text">
-                <p class="font-medium text-gray-800 dark:text-gray-200">{{ auth('vendor')->user()?->business_name }}</p>
+                <p class="font-medium text-gray-800 dark:text-gray-200">{{ auth('vendor')->user()?->business_name }}
+                </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth('vendor')->user()?->email }}</p>
                 <a href="{{ route('vendor.logout') }}">
                     @csrf
@@ -151,7 +180,7 @@
         collapseBtn.addEventListener('click', function() {
             const isCollapsed = sidebar.classList.contains('collapsed');
             localStorage.setItem('sidebarCollapsed', !isCollapsed);
-            
+
             if (isCollapsed) {
                 sidebar.classList.remove('collapsed');
                 dropdownul.forEach(ul => {

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
 @section('title', 'Completed Transactions')
 
@@ -20,15 +20,14 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
             <form action="" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <!-- Vendor Filter -->
+                    <!-- Customer Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer</label>
                         <div class="relative flex-1 md:mr-4">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input type="text" id="search-input"
-                                placeholder="Search transactions by ID, vendor, or customer..."
+                            <input type="text" id="search-input" placeholder="Search by customer name or id..."
                                 class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                         </div>
                     </div>
@@ -141,7 +140,7 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor & Customer
+                                Customer
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -209,11 +208,6 @@
                                         data-transaction-id="TXN20230615001">
                                         <i class="fas fa-receipt"></i>
                                     </button>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN20230615001">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -264,11 +258,7 @@
                                         data-transaction-id="TXN20230615002">
                                         <i class="fas fa-receipt"></i>
                                     </button>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN20230615002">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
+
                                 </div>
                             </td>
                         </tr>
@@ -319,11 +309,7 @@
                                         data-transaction-id="TXN20230615003">
                                         <i class="fas fa-receipt"></i>
                                     </button>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN20230615003">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
+
                                 </div>
                             </td>
                         </tr>
@@ -374,11 +360,6 @@
                                         data-transaction-id="TXN20230615004">
                                         <i class="fas fa-receipt"></i>
                                     </button>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN20230615004">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -428,11 +409,6 @@
                                         class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
                                         data-transaction-id="TXN20230615005">
                                         <i class="fas fa-receipt"></i>
-                                    </button>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN20230615005">
-                                        <i class="fas fa-undo"></i>
                                     </button>
                                 </div>
                             </td>
@@ -501,7 +477,7 @@
     </div>
 
     <!-- Refund Confirmation Modal -->
-    <div id="refund-modal"
+    {{-- <div id="refund-modal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Process Refund</h3>
@@ -518,7 +494,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Receipt Modal -->
     <div id="receipt-modal"

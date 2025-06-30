@@ -35,6 +35,7 @@
     <div class="flex flex-col min-h-screen">
         <div class="bg-gray-300 flex flex-col flex-1 transition-all duration-300">
             <div class="flex-grow ml-20 ">
+
                 @yield('content')
             </div>
         </div>
@@ -66,6 +67,8 @@
             };
         });
     </script>
+    @stack('scripts')
 </body>
+
 
 </html>

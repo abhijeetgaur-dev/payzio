@@ -1,14 +1,14 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
-@section('title', 'QR Codes List')
+@section('title', 'Your QR Codes')
 
 @section('content')
-    <div class="p-6">
+    <div class="p-6  bg-linear-120 to-zinc-200 from-gray-400">
         <!-- Page Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">QR Codes Management</h2>
             <div class="flex space-x-3">
-                <a href="/admin/qr/generate"
+                <a href="{{ route('vendor.qr.create') }}"
                     class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                     <i class="fas fa-qrcode mr-2"></i>
                     Generate New QR
@@ -18,17 +18,17 @@
 
         <!-- Search and Filter Bar -->
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
             <form action="" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Vendor Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search QR</label>
                         <div class="relative flex-1 md:mr-4">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input type="text" id="search-input" placeholder="Search QR codes by vendor name or token..."
+                            <input type="text" id="search-input" placeholder="Search QR codes"
                                 class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="mt-4 flex justify-end space-x-2">
-                    <a href="{{ route('admin.reports.commissions') }}"
+                    <a href="{{ route('vendor.qr.index') }}"
                         class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
                     <button type="submit"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
@@ -68,10 +68,6 @@
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 QR Code
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -111,24 +107,11 @@
                                     </div>
                                 </td>
 
-                                <!-- Vendor Information -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($qrCode->vendor)
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $qrCode->vendor->vendor_name }}
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ $qrCode->vendor->email }}
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">Vendor not found</span>
-                                    @endif
-                                </td>
 
                                 <!-- Token -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900 dark:text-white font-mono">
-                                        {{ \Illuminate\Support\Str::limit($qrCode->qr_code_token, 10) }}
+                                        {{ \Illuminate\Support\Str::limit($qrCode->qr_code_token, 15) }}
                                     </div>
                                 </td>
 

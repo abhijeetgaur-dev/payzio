@@ -1,19 +1,17 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
-@section('title', 'Admin Settings')
+@section('title', 'Vendor Settings')
 
 @section('content')
     <div class="p-6 max-w-6xl mx-auto">
         <!-- Page Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-800">Admin Settings</h1>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-800">Vendor Settings</h1>
                 <p class="mt-1 text-sm text-gray-700 dark:text-gray-700">Manage your account settings and preferences</p>
             </div>
             <div class="flex items-center space-x-3">
-            </div>
-            <div>
-                @include('partials.flash');
+                @include('partials.flash')
             </div>
         </div>
 
@@ -29,7 +27,7 @@
                             <div
                                 class="w-40 h-40 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
                                 <img id="profile-preview"
-                                    src="{{ $admin->profile_image ? asset('storage/' . $admin->profile_image) : asset('storage/images/admin/default-image.jpg') }}"
+                                    src="{{ $vendor->profile_image ? asset('storage/' . $vendor->profile_image) : asset('storage/images/vendor/default-image.jpg') }}"
                                     alt="Profile Image"
                                     class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-75">
                             </div>
@@ -45,14 +43,14 @@
                                     accept="image/*">
                             </label>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $admin->name }}</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $admin->email }}</p>
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $vendor->vendor_name }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $vendor->email }}</p>
 
                         <div class="mt-4 text-center">
                             <p class="text-xs text-gray-500 dark:text-gray-100">
                                 Last login:
                                 <span class="font-medium text-gray-700 dark:text-gray-300">
-                                    {{ $admin->last_login_at ? $admin->last_login_at->format('M d, Y h:i A') : 'Never' }}
+                                    {{ $vendor->last_login_at ? $vendor->last_login_at->format('M d, Y h:i A') : 'Never' }}
                                 </span>
                             </p>
                         </div>
@@ -61,7 +59,7 @@
 
                 <!-- Account Settings Form -->
                 <div class="md:w-3/4 p-6">
-                    <form id="admin-settings-form" action="{{ route('admin.settings.update') }}" method="POST"
+                    <form id="vendor-settings-form" action="{{ route('vendor.settings.update') }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -87,7 +85,7 @@
                                         </label>
                                         <div class="relative">
                                             <input type="text" id="name" name="name"
-                                                value="{{ old('name', $admin->name) }}" required
+                                                value="{{ old('name', $vendor->vendor_name) }}" required
                                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                             <div
                                                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -108,7 +106,7 @@
                                         </label>
                                         <div class="relative">
                                             <input type="email" id="email" name="email"
-                                                value="{{ old('email', $admin->email) }}" required readonly
+                                                value="{{ old('email', $vendor->email) }}" required readonly
                                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white bg-gray-100 dark:bg-gray-600">
                                             <div
                                                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -131,7 +129,7 @@
                                         </label>
                                         <div class="relative">
                                             <input type="tel" id="phone" name="phone"
-                                                value="{{ old('phone', $admin->phone) }}"
+                                                value="{{ old('phone', $vendor->phone) }}"
                                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                             <div
                                                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -224,27 +222,12 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
-                            <div>
-                                <a href="{{ route('admin.settings.details.show') }}"
-                                    class="px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 flex items-center">
-                                    <!-- Pencil/Edit Icon -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20"
-                                        fill="currentColor">
-                                        <path
-                                            d="M17.414 2.586a2 2 0 010 2.828L8.414 14.414a1 1 0 01-.707.293H5a1 1 0 01-1-1v-2.707a1 1 0 01.293-.707L14.586 2.586a2 2 0 012.828 0zM5 13.586V15h1.414l9-9L14 4.586l-9 9z" />
-                                    </svg>
-
-                                    Edit Details
-                                </a>
-                            </div>
-
 
                             <!-- Form Actions -->
                             <div class="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <button type="button" onclick="window.location.href='{{ route('admin.dashboard') }}'"
+                                <button type="button" onclick="window.location.href='{{ route('vendor.dashboard') }}'"
                                     class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
                                     Cancel
                                 </button>

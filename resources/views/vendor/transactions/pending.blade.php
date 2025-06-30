@@ -1,12 +1,12 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
-@section('title', 'Transactions List')
+@section('title', 'Pending Transactions')
 
 @section('content')
     <div class="p-6">
         <!-- Page Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 text-gray-800">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Transactions List</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Pending Transactions List</h2>
             <div class="flex space-x-3">
                 {{-- <button id="filter-btn"
                     class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
@@ -22,14 +22,14 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
             <form action="" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <!-- Vendor Filter -->
+                    <!-- Customer Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer</label>
                         <div class="relative flex-1 md:mr-4">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input type="text" id="search-input" placeholder="Search by vendor name or id..."
+                            <input type="text" id="search-input" placeholder="Search by customer name or id..."
                                 class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                         </div>
                     </div>
@@ -71,66 +71,6 @@
             </form>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions</p>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-white">1,248</p>
-                    </div>
-                    <div class="p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300">
-                        <i class="fas fa-exchange-alt"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-green-600 dark:text-green-400 mt-2"><i class="fas fa-arrow-up mr-1"></i>12% from last
-                    month</p>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Volume</p>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-white">₹1,84,752</p>
-                    </div>
-                    <div class="p-3 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300">
-                        <i class="fas fa-rupee-sign"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-green-600 dark:text-green-400 mt-2"><i class="fas fa-arrow-up mr-1"></i>8% from last
-                    month</p>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Commission Earned</p>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-white">₹9,237</p>
-                    </div>
-                    <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
-                        <i class="fas fa-percentage"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-red-600 dark:text-red-400 mt-2"><i class="fas fa-arrow-down mr-1"></i>3% from last
-                    month</p>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Avg. Transaction</p>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-white">₹148</p>
-                    </div>
-                    <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-green-600 dark:text-green-400 mt-2"><i class="fas fa-arrow-up mr-1"></i>5% from last
-                    month</p>
-            </div>
-        </div>
-
-
 
         <!-- Transactions Table -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
@@ -144,7 +84,7 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor & Customer
+                                Customer
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -153,14 +93,6 @@
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Date & Time
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Actions
                             </th>
                         </tr>
                     </thead>
@@ -193,32 +125,6 @@
                                 <div class="text-sm text-gray-900 dark:text-white">15 Jun 2023</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">10:30 AM</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                    Success
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <a href="#">
-                                        <button
-                                            class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
-                                            data-transaction-id="TXN1001">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </a>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN1001">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
-                                    <button
-                                        class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                        data-transaction-id="TXN1001">
-                                        <i class="fas fa-receipt"></i>
-                                    </button>
-                                </div>
-                            </td>
                         </tr>
 
                         <!-- Dummy Data Row 2 -->
@@ -248,32 +154,7 @@
                                 <div class="text-sm text-gray-900 dark:text-white">14 Jun 2023</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">03:45 PM</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                    Success
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <a href="#">
-                                        <button
-                                            class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
-                                            data-transaction-id="TXN1002">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </a>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN1002">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
-                                    <button
-                                        class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                        data-transaction-id="TXN1002">
-                                        <i class="fas fa-receipt"></i>
-                                    </button>
-                                </div>
-                            </td>
+
                         </tr>
 
                         <!-- Dummy Data Row 3 -->
@@ -302,32 +183,6 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900 dark:text-white">14 Jun 2023</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">11:20 AM</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <a href="#">
-                                        <button
-                                            class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
-                                            data-transaction-id="TXN1003">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </a>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN1003">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
-                                    <button
-                                        class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                        data-transaction-id="TXN1003">
-                                        <i class="fas fa-receipt"></i>
-                                    </button>
-                                </div>
                             </td>
                         </tr>
 
@@ -358,32 +213,8 @@
                                 <div class="text-sm text-gray-900 dark:text-white">13 Jun 2023</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">05:15 PM</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                                    Failed
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <a href="#">
-                                        <button
-                                            class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
-                                            data-transaction-id="TXN1004">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </a>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN1004">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
-                                    <button
-                                        class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                        data-transaction-id="TXN1004">
-                                        <i class="fas fa-receipt"></i>
-                                    </button>
-                                </div>
-                            </td>
+
+
                         </tr>
 
                         <!-- Dummy Data Row 5 -->
@@ -413,32 +244,7 @@
                                 <div class="text-sm text-gray-900 dark:text-white">12 Jun 2023</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">09:30 AM</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
-                                    Refunded
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <a href="#">
-                                        <button
-                                            class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
-                                            data-transaction-id="TXN1005">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </a>
-                                    <button
-                                        class="refund-btn text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300"
-                                        data-transaction-id="TXN1005">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
-                                    <button
-                                        class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                        data-transaction-id="TXN1005">
-                                        <i class="fas fa-receipt"></i>
-                                    </button>
-                                </div>
-                            </td>
+
                         </tr>
                     </tbody>
                 </table>

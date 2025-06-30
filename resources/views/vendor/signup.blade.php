@@ -53,6 +53,9 @@
                 Register your business to start accepting QR code payments with competitive rates and fast settlements.
             </p>
         </div>
+        <div>
+            @include('partials.flash')
+        </div>
 
         <form action={{ route('vendor.store') }} method="POST" enctype="multipart/form-data"
             class="bg-gray-200 text-gray-800 shadow-xl rounded-2xl overflow-hidden">
@@ -74,6 +77,7 @@
                             data-tab="1">
                             2
                         </button>
+
                         <span class="mt-2 text-xs font-medium text-gray-500">Contact</span>
                     </div>
                     <div class="flex flex-col items-center">

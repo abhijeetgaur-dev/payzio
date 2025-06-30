@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\QrCode;
+use App\Models\Vendor;
+use App\Mail\SaveQR;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Log;
 
 class QrController extends Controller
 {
@@ -16,6 +18,7 @@ class QrController extends Controller
 
     public function store(Request $request)
     {
+        try{
         $request->validate([
             'vendor_id' => 'required|exists:vendors,id',
             'qr_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -33,9 +36,54 @@ class QrController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->back()->with('success', 'QR code saved successfully.');
+        
+        if ($this->sendSaveQRmail($qrCode)) {
+            Log::info('QR code saved successfully');
+            return response()
+            ->json([
+                'success' => true, 
+                'message' => 'You have Registered Successfully. A mail has been sent to your registered email address.'
+            ]);
+        } else {
+            Log::error('Failed to save QR code');
+            return response()
+                ->json([
+                    'success' => false, 
+                    'message' => 'Failed to save QR code. Please try again.'
+                ]);
+        }
+    } catch (\Exception $e){
+        Log::error('Error saving qr code: ' . $e->getMessage());
+        return response()
+        ->json([
+            'success' => false,
+            'message' => 'An error occured while sending the email. Please try again later.'
+        ]);
     }
+}
 
+
+protected function sendSaveQRmail(QrCode $qrCode){
+    try{
+
+        $vendor = Vendor::findOrFail($qrCode->vendor_id);
+        $data = [
+            'vendor_name' => $vendor->vendor_name,
+            'email'=> $vendor->email,
+            'qr_code_url' => $qrCode->qr_code_url
+        ];
+
+        \Mail::to($vendor->email)
+        ->send(new SaveQR($data));
+
+        return true;
+
+    }catch(\Exception $e){
+        Log::error('Vendor Signup email error: ' . $e->getMessage());
+        return false;
+
+    }
+}
     public function index()
     {
          $qrCodes = QrCode::with('vendor')

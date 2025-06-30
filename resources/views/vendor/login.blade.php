@@ -26,7 +26,7 @@
         <div class="flex justify-center">
             <!-- Logo would go here -->
         </div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 ">
             Vendor Login
         </h2>
         <p class="mt-2 text-center text-sm text-gray-200 ">
@@ -115,22 +115,6 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember-me" name="remember" type="checkbox"
-                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700" />
-                        <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                            Remember me
-                        </label>
-                    </div>
-
-                    <div class="text-sm">
-                        <a href=""
-                            class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
-                            Forgot password?
-                        </a>
-                    </div>
-                </div>
 
                 <div>
                     <button type="submit"

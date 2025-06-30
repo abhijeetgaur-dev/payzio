@@ -23,7 +23,7 @@
                 </div>
                 <h1 class="text-xl font-bold text-gray-800">XYZ Payment</h1>
             </div>
-            <a href={{ route('vendor.signup') }}
+            <a href="/vendor/signup"
                 class="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300">
                 Vendor Sign Up
             </a>

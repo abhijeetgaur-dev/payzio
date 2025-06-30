@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-gray-50">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +10,10 @@
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-    @stack('styles')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
+
 <body class="h-full">
     <div class="flex h-full">
         <!-- Vendor Sidebar Component -->
@@ -40,17 +42,23 @@
                         <div class="relative">
                             <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
                                 <span class="text-gray-700">{{ auth('vendor')->user()->vendor_name }}</span>
-                                <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                <div
+                                    class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
                                     <i class="fas fa-user"></i>
                                 </div>
                             </button>
                             <!-- Dropdown menu -->
-                            <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                                <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                <a href="{{route('vendor.logout')}}">
+                            <div id="user-menu"
+                                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your
+                                    Profile</a>
+                                <a href=""
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                <a href="{{ route('vendor.logout') }}">
                                     @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>
+                                    <button type="submit"
+                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign
+                                        out</button>
                                 </a>
                             </div>
                         </div>
@@ -59,7 +67,7 @@
             </header>
 
             <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <main class="flex-1 overflow-y-auto p-6 bg-gradient-to-r from-gray-200 via-indigo-100 to-gray-200">
                 @yield('content')
             </main>
         </div>
@@ -68,10 +76,12 @@
     <!-- Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+
             // Toggle sidebar on mobile
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebar = document.getElementById('sidebar');
-            
+
             sidebarToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('-translate-x-full');
             });
@@ -79,7 +89,13 @@
             // Toggle user dropdown
             const userMenuButton = document.getElementById('user-menu-button');
             const userMenu = document.getElementById('user-menu');
-            
+
+            if (sidebar.classList.contains('collapsed')) {
+                if (!userMenu.classList.contains('hidden')) {
+                    userMenu.classList.add('hidden');
+                }
+            }
+
             userMenuButton.addEventListener('click', function() {
                 userMenu.classList.toggle('hidden');
             });
@@ -94,4 +110,5 @@
     </script>
     @stack('scripts')
 </body>
+
 </html>
