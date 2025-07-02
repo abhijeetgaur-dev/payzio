@@ -26,13 +26,17 @@ class AdminDetail extends Model
         'pan_card_file',
         'gst_certificate_file',
         'registration_doc_file',
-        'cancelled_cheque_file',
+        'other_docs',
         'status',
         'status_reason',
         'company_logo',
         'company_header',
         'company_footer',
-        'admin_type'
+        'alternate_phones',
+        'alternate_emails',
+        'alternate_contact_person',
+        'other_certificates',
+        'phone'
     ];
 
     public function bankAccounts()

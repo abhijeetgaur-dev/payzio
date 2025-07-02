@@ -68,7 +68,18 @@
         [
             'text' => 'Settings',
             'icon' => 'fas fa-cog',
-            'path' => '/admin/settings',
+            'subItems' => [
+                [
+                    'text' => 'Create Company',
+                    'icon' => 'fas fa-exclamation-circle',
+                    'path' => '/admin/settings/edit',
+                ],
+                [
+                    'text' => 'Change Password',
+                    'icon' => 'fas fa-check-circle',
+                    'path' => '/admin/settings/change-password',
+                ],
+            ],
         ],
     ];
 

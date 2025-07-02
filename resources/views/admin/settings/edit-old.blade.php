@@ -11,10 +11,6 @@
                 <p class="mt-1 text-sm text-gray-700 dark:text-gray-700">Update your profile information and documents</p>
             </div>
             <div class="flex items-center space-x-3">
-                <a href="{{ route('admin.settings') }}"
-                    class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                    Back to Profile
-                </a>
             </div>
         </div>
 
@@ -23,14 +19,13 @@
         </div>
 
         <!-- Main Form -->
-        <form action="{{ route('admin.settings.details.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.settings.edit') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
 
             <div class="space-y-6">
                 <!-- Basic Information Card -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+                <div class="bg-white dark:bg-gray-500 rounded-xl shadow-lg overflow-hidden border border-gray-200 ">
                     <div class="p-6">
                         <h2
                             class="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
@@ -42,47 +37,99 @@
                             Basic Information
                         </h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                            <!-- Company Logo -->
-                            <div class="md:col-span-2">
-                                <label for="company_logo"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
-                                    Logo</label>
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
+                        <div class="md:col-span-2">
+                            <label for="company_logo"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
+                                Logo</label>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    @if ($adminDetails && $adminDetails->company_logo)
                                         <img id="company-logo-preview"
-                                            src="{{ $adminDetails->company_logo ? asset('storage/' . $adminDetails->company_logo) : asset('storage/images/admin/default-image.jpg') }}"
-                                            alt="Company Logo"
+                                            src="{{ asset('storage/' . $adminDetails->company_logo) }}" alt="Company Logo"
                                             class="h-16 w-16 rounded-full object-cover border-2 border-gray-300">
-                                    </div>
-                                    <div class="flex-1">
                                         <input type="file" id="company_logo" name="company_logo"
-                                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                                    </div>
+                                            class="cursor-pointer block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                    @else
+                                        <div class="flex gap-6">
+                                            <img id="company-logo-preview" src="{{ asset('storage/') }}" alt="Company Logo"
+                                                class="h-16 w-16 rounded-full object-cover border-2 border-gray-300">
+                                            <input type="file" id="company_logo" name="company_logo"
+                                                class="cursor-pointer block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                                                required>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Organization Details Card -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
-                    <div class="p-6">
-                        <h2
-                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-indigo-600"
-                                viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Organization Details
-                        </h2>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Contact Person -->
+                            <div>
+                                <label for="company_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
+                                    Name</label>
+                                <input type="text" id="company_name" name="company_name"
+                                    value="{{ old('company_name', $admin->name ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('company_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="contact_person"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact
+                                    Person</label>
+                                <input type="text" id="contact_person" name="contact_person"
+                                    value="{{ old('contact_person', $adminDetails->contact_person ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('contact_person')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="phone"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
+                                    Phone</label>
+                                <input type="text" id="phone" name="phone"
+                                    value="{{ old('phone', $admin->phone ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('phone')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="alternate_emails"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alternate
+                                    Phones</label>
+                                <input type="text" id="alternateemails" name="alternate_emails"
+                                    value="{{ old('phone', $adminDetails->alternate_emails ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('alternate_emails')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="email"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
+                                    Email</label>
+                                <input type="text" id="email" name="email"
+                                    value="{{ old('phone', $admin->email ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                    read-only>
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="alternate_emails"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alternate
+                                    Emails</label>
+                                <input type="text" id="alternate_emails" name="alternate_emails"
+                                    value="{{ old('phone', $adminDetails->alternate_emails ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('alternate_emails')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <div>
                                 <label for="contact_person"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact
@@ -95,23 +142,33 @@
                                 @enderror
                             </div>
 
-                            <!-- Designation -->
+
+                            @php
+                                $selectedType = old('admin_type', $adminDetails->admin_type ?? '');
+                            @endphp
+
                             <div>
-                                <label for="designation"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Designation</label>
-                                <input type="text" id="designation" name="designation"
-                                    value="{{ old('designation', $adminDetails->designation ?? '') }}"
+                                <label for="admin_type"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
+                                    Type</label>
+                                <select name="admin_type"
                                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                @error('designation')
+                                    <option value="">Select Type</option>
+                                    <option value="individual" @if ($selectedType == 'individual') selected @endif>
+                                        Individual</option>
+                                    <option value="company" @if ($selectedType == 'company') selected @endif>
+                                        Company</option>
+                                    <option value="partner" @if ($selectedType == 'partner') selected @endif>
+                                        Partnership</option>
+                                </select>
+                                @error('admin_type')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-
-                            <!-- Website -->
                             <div>
                                 <label for="website"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Website</label>
-                                <input type="url" id="website" name="website"
+                                <input type="text" id="website" name="website"
                                     value="{{ old('website', $adminDetails->website ?? '') }}"
                                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                 @error('website')
@@ -119,86 +176,6 @@
                                 @enderror
                             </div>
 
-                            <!-- PAN Number -->
-                            <div>
-                                <label for="pan_number"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">PAN
-                                    Number</label>
-                                <input type="text" id="pan_number" name="pan_number"
-                                    value="{{ old('pan_number', $adminDetails->pan_number ?? '') }}"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                @error('pan_number')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- GST Number -->
-                            <div>
-                                <label for="gst_number"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GST
-                                    Number</label>
-                                <input type="text" id="gst_number" name="gst_number"
-                                    value="{{ old('gst_number', $adminDetails->gst_number ?? '') }}"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                @error('gst_number')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="admin_type"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Admin
-                                    Type</label>
-                                <select name="admin_type"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                    <option value="">Select Type</option>
-                                    <option value="individual" @if (old('admin_type') == 'individual') selected @endif>
-                                        Individual</option>
-                                    <option value="company" @if (old('admin_type') == 'company') selected @endif>Company
-                                    </option>
-                                    <option value="partner" @if (old('admin_type') == 'partner') selected @endif>
-                                        Partnership</option>
-                                </select>
-                                @error('admin_type')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Header And Footer For Bill Generation -->
-                            <div class="md:col-span-1">
-                                <label for="company_header"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
-                                    Header</label>
-                                <textarea id="company_header" name="company_header" rows="2"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_header', $adminDetails->company_header ?? '') }}</textarea>
-                                @error('company_header')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="md:col-span-1">
-                                <label for="company_footer"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
-                                    Footer</label>
-                                <textarea id="company_footer" name="company_footer" rows="2"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_footer', $adminDetails->company_footer ?? '') }}</textarea>
-                                @error('company_footer')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-
-                            <!-- Address -->
-                            <div class="md:col-span-2">
-                                <label for="address"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
-                                <textarea id="address" name="address" rows="2"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('address', $adminDetails->address ?? '') }}</textarea>
-                                @error('address')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- City, State, Country, Postal Code -->
                             <div>
                                 <label for="city"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City</label>
@@ -243,26 +220,153 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+
+                            <div class="md:col-span-2">
+                                <label for="address"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+                                <textarea id="address" name="address" rows="2"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('address', $adminDetails->address ?? '') }}</textarea>
+                                @error('address')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
 
-                <!-- Documents Card -->
+
+                <!-- Organization Details Card -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+                    class="bg-white dark:bg-gray-500 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-500">
                     <div class="p-6">
                         <h2
                             class="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-indigo-600"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
-                                    d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                    d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
                                     clip-rule="evenodd" />
                             </svg>
-                            Documents
+                            Organization Details
                         </h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Contact Person -->
+                            <div>
+                                <label for="alternate_contact_person"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alternate
+                                    Contact
+                                    Person</label>
+                                <input type="text" id="alternate_contact_person" name="alternate_contact_person"
+                                    value="{{ old('alternate_contact_person', $adminDetails->alternate_contact_person ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('alternate_contact_person')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Designation -->
+                            <div>
+                                <label for="designation"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Designation</label>
+                                <input type="text" id="designation" name="designation"
+                                    value="{{ old('designation', $adminDetails->designation ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('designation')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+
+                            <!-- PAN Number -->
+                            <div>
+                                <label for="pan_number"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">PAN
+                                    Number</label>
+                                <input type="text" id="pan_number" name="pan_number"
+                                    value="{{ old('pan_number', $adminDetails->pan_number ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('pan_number')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- GST Number -->
+                            <div>
+                                <label for="gst_number"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GST
+                                    Number</label>
+                                <input type="text" id="gst_number" name="gst_number"
+                                    value="{{ old('gst_number', $adminDetails->gst_number ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('gst_number')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="gst_number"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Other
+                                    Cetificates(Optional)</label>
+                                <input type="text" id="gst_number" name="gst_number"
+                                    value="{{ old('gst_number', $adminDetails->gst_number ?? '') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                @error('gst_number')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+
+
+                            <!-- Header And Footer For Bill Generation -->
+                            <div class="md:col-span-1">
+                                <label for="company_header"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Receipt
+                                    Header</label>
+                                <textarea id="company_header" name="company_header" rows="2"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_header', $adminDetails->company_header ?? '') }}</textarea>
+                                @error('company_header')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="md:col-span-1">
+                                <label for="company_footer"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Receipt
+                                    Footer</label>
+                                <textarea id="company_footer" name="company_footer" rows="2"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_footer', $adminDetails->company_footer ?? '') }}</textarea>
+                                @error('company_footer')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents Card -->
+                <div
+                    class="bg-white dark:bg-gray-500 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-500">
+                    <div class="p-6">
+                        <div
+                            class="flex justify-between items-center border-b border-b border-gray-200 dark:border-gray-700 mb-2">
+
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-indigo-600"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Documents
+                            </h2>
+
+                        </div>
+
+
+
+                        <div id="add-document-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- PAN Card -->
                             <div>
                                 <label for="pan_card_file"
@@ -335,36 +439,37 @@
                                 </div>
                             </div>
 
-                            <!-- Cancelled Cheque -->
+                            <!-- Other Docs Cheque -->
                             <div>
-                                <label for="cancelled_cheque_file"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cancelled
-                                    Cheque</label>
+                                <label for="other_docs"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Other
+                                    Documents</label>
                                 <div class="flex items-center space-x-4">
-                                    @if ($adminDetails && $adminDetails->cancelled_cheque_file)
+                                    @if ($adminDetails && $adminDetails->other_docs)
                                         <div class="flex-shrink-0">
-                                            <img src="{{ asset('storage/' . $adminDetails->cancelled_cheque_file) }}"
-                                                alt="Cancelled Cheque Preview"
+                                            <img src="{{ asset('storage/' . $adminDetails->other_docs) }}"
+                                                alt="Other Documents Preview"
                                                 class="h-16 w-16 object-contain border border-gray-300 rounded-md">
                                         </div>
                                     @endif
                                     <div class="flex-1">
-                                        <input type="file" id="cancelled_cheque_file" name="cancelled_cheque_file"
+                                        <input type="file" id="other_docs" name="other_docs"
                                             class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                                         <p class="text-xs text-gray-500 mt-1">PDF, JPG, PNG (Max: 5MB)</p>
-                                        @error('cancelled_cheque_file')
+                                        @error('other_docs')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
+                            <div></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Bank Accounts Card -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+                    class="bg-white dark:bg-gray-500 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-500">
                     <div class="p-6">
                         <div
                             class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
@@ -379,7 +484,8 @@
                                 Bank Accounts
                             </h2>
                             <button type="button" id="add-bank-account"
-                                class="text-sm text-indigo-600 hover:text-indigo-800">+ Add Test Account</button>
+                                class="px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">+
+                                Add Account</button>
                         </div>
 
                         <div id="bank-accounts-container" class="space-y-4">
@@ -497,16 +603,7 @@
 
 
                 <!-- Form Actions -->
-                <div class="flex justify-end pt-4">
-                    <button type="button"
-                        class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                        class="px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                        Save Changes
-                    </button>
-                </div>
+
             </div>
         </form>
     </div>
@@ -518,93 +615,117 @@
                 const profileImageInput = document.getElementById('profile_image');
                 const profileImagePreview = document.getElementById('profile-image-preview');
 
-                profileImageInput.addEventListener('change', function() {
-                    const file = this.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            profileImagePreview.src = e.target.result;
+                if (profileImageInput && profileImagePreview) {
+                    profileImageInput.addEventListener('change', function() {
+                        const file = this.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                profileImagePreview.src = e.target.result;
+                            }
+                            reader.readAsDataURL(file);
                         }
-                        reader.readAsDataURL(file);
-                    }
-                });
+                    });
+                }
 
                 // Bank account management
-                let bankAccountsContainer = document.getElementById('bank-accounts-container');
-                let bankAccountIndex = {{ $bankAccounts->count() }};
-                let addBankAccountBtn = document.getElementById('add-bank-account');
+                const bankAccountsContainer = document.getElementById('bank-accounts-container');
+                const addBankAccountBtn = document.getElementById('add-bank-account');
+
+                // Check if required elements exist
+                if (!bankAccountsContainer) {
+                    console.error('Bank accounts container not found!');
+                    return;
+                }
+
+                if (!addBankAccountBtn) {
+                    console.error('Add bank account button not found!');
+                    return;
+                }
+
+                // Initialize bank account index - count existing accounts
+                let bankAccountIndex = document.querySelectorAll('.bank-account').length;
+                console.log('Initial bank account index:', bankAccountIndex);
 
                 // Add new bank account
-                addBankAccountBtn.addEventListener('click', function() {
-                    console.log('Adding new bank account');
+                addBankAccountBtn.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent form submission if button is inside a form
+                    console.log('Adding new bank account, current index:', bankAccountIndex);
+
                     const template = `
-                        <div class="bank-account border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Bank Name -->
-                                <div>
-                                    <label for="bank_accounts_${bankAccountIndex}_bank_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bank Name</label>
-                                    <input type="text" id="bank_accounts_${bankAccountIndex}_bank_name" name="bank_accounts[${bankAccountIndex}][bank_name]" 
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                </div>
+            <div class="bank-account border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Bank Name -->
+                    <div>
+                        <label for="bank_accounts_${bankAccountIndex}_bank_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bank Name</label>
+                        <input type="text" id="bank_accounts_${bankAccountIndex}_bank_name" name="bank_accounts[${bankAccountIndex}][bank_name]" 
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                    </div>
 
-                                <!-- Account Number -->
-                                <div>
-                                    <label for="bank_accounts_${bankAccountIndex}_account_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Number</label>
-                                    <input type="text" id="bank_accounts_${bankAccountIndex}_account_number" name="bank_accounts[${bankAccountIndex}][account_number]" 
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                </div>
+                    <!-- Account Number -->
+                    <div>
+                        <label for="bank_accounts_${bankAccountIndex}_account_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Number</label>
+                        <input type="text" id="bank_accounts_${bankAccountIndex}_account_number" name="bank_accounts[${bankAccountIndex}][account_number]" 
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                    </div>
 
-                                <!-- Account Holder -->
-                                <div>
-                                    <label for="bank_accounts_${bankAccountIndex}_account_holder" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Holder</label>
-                                    <input type="text" id="bank_accounts_${bankAccountIndex}_account_holder" name="bank_accounts[${bankAccountIndex}][account_holder]" 
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                </div>
+                    <!-- Account Holder -->
+                    <div>
+                        <label for="bank_accounts_${bankAccountIndex}_account_holder" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Holder</label>
+                        <input type="text" id="bank_accounts_${bankAccountIndex}_account_holder" name="bank_accounts[${bankAccountIndex}][account_holder]" 
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                    </div>
 
-                                <!-- IFSC Code -->
-                                <div>
-                                    <label for="bank_accounts_${bankAccountIndex}_ifsc_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">IFSC Code</label>
-                                    <input type="text" id="bank_accounts_${bankAccountIndex}_ifsc_code" name="bank_accounts[${bankAccountIndex}][ifsc_code]" 
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                </div>
+                    <!-- IFSC Code -->
+                    <div>
+                        <label for="bank_accounts_${bankAccountIndex}_ifsc_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">IFSC Code</label>
+                        <input type="text" id="bank_accounts_${bankAccountIndex}_ifsc_code" name="bank_accounts[${bankAccountIndex}][ifsc_code]" 
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                    </div>
 
-                                <!-- Branch Name -->
-                                <div>
-                                    <label for="bank_accounts_${bankAccountIndex}_branch_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Branch Name</label>
-                                    <input type="text" id="bank_accounts_${bankAccountIndex}_branch_name" name="bank_accounts[${bankAccountIndex}][branch_name]" 
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                </div>
+                    <!-- Branch Name -->
+                    <div>
+                        <label for="bank_accounts_${bankAccountIndex}_branch_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Branch Name</label>
+                        <input type="text" id="bank_accounts_${bankAccountIndex}_branch_name" name="bank_accounts[${bankAccountIndex}][branch_name]" 
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                    </div>
 
-                                <!-- Notes -->
-                                <div>
-                                    <label for="bank_accounts_${bankAccountIndex}_notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes</label>
-                                    <input type="text" id="bank_accounts_${bankAccountIndex}_notes" name="bank_accounts[${bankAccountIndex}][notes]" 
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                </div>
+                    <!-- Notes -->
+                    <div>
+                        <label for="bank_accounts_${bankAccountIndex}_notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes</label>
+                        <input type="text" id="bank_accounts_${bankAccountIndex}_notes" name="bank_accounts[${bankAccountIndex}][notes]" 
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                    </div>
 
-                                <!-- Is Primary -->
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="bank_accounts_${bankAccountIndex}_is_primary" name="bank_accounts[${bankAccountIndex}][is_primary]" 
-                                           value="1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                    <label for="bank_accounts_${bankAccountIndex}_is_primary" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Primary Account</label>
-                                </div>
+                    <!-- Is Primary -->
+                    <div class="flex items-center">
+                        <input type="checkbox" id="bank_accounts_${bankAccountIndex}_is_primary" name="bank_accounts[${bankAccountIndex}][is_primary]" 
+                               value="1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="bank_accounts_${bankAccountIndex}_is_primary" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Primary Account</label>
+                    </div>
 
-                                <!-- Remove Button -->
-                                <div class="flex justify-end">
-                                    <button type="button" class="remove-bank-account text-sm text-red-600 hover:text-red-800">Remove</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    <!-- Remove Button -->
+                    <div class="flex justify-end">
+                        <button type="button" class="remove-bank-account text-sm text-red-600 hover:text-red-800">Remove</button>
+                    </div>
+                </div>
+            </div>
+        `;
 
                     bankAccountsContainer.insertAdjacentHTML('beforeend', template);
                     bankAccountIndex++;
+                    console.log('Bank account added, new index:', bankAccountIndex);
                 });
 
-                // Remove bank account
+                // Remove bank account (using event delegation)
                 bankAccountsContainer.addEventListener('click', function(e) {
                     if (e.target.classList.contains('remove-bank-account')) {
-                        e.target.closest('.bank-account').remove();
+                        e.preventDefault();
+                        const bankAccountDiv = e.target.closest('.bank-account');
+                        if (bankAccountDiv) {
+                            bankAccountDiv.remove();
+                            console.log('Bank account removed');
+                        }
                     }
                 });
             });

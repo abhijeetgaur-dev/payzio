@@ -20,12 +20,54 @@ class AdminVendorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {   
-        $vendors = Vendor::paginate(10); // 10 items per page
-        return view('admin.vendors.index', compact('vendors'));
+public function index(Request $request)
+{
+    $query = Vendor::query();
+    
+    // Search functionality
+    if ($request->filled('search')) {
+        $searchTerm = $request->get('search');
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('vendor_name', 'LIKE', '%' . $searchTerm . '%')
+              ->orWhere('email', 'LIKE', '%' . $searchTerm . '%')
+              ->orWhere('phone', 'LIKE', '%' . $searchTerm . '%');
+        });
     }
-
+    
+    // Date filtering
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->get('date_from'));
+    }
+    
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->get('date_to'));
+    }
+    
+    // Status filtering
+    if ($request->filled('status') && $request->get('status') !== '') {
+        $query->where('status', $request->get('status'));
+    }
+    
+    // Sorting functionality
+    $sortField = $request->get('sort', 'created_at');
+    $sortDirection = $request->get('direction', 'desc');
+    
+    // Validate sort field to prevent SQL injection
+    $allowedSortFields = ['vendor_name', 'email', 'phone', 'created_at', 'status'];
+    if (!in_array($sortField, $allowedSortFields)) {
+        $sortField = 'created_at';
+    }
+    
+    // Validate sort direction
+    $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? $sortDirection : 'desc';
+    
+    $query->orderBy($sortField, $sortDirection);
+    
+    // Paginate results and append query parameters
+    $vendors = $query->paginate(10)->appends($request->query());
+    
+    return view('admin.vendors.index', compact('vendors'));
+}
     /**
      * Show the form for creating a new resource.
      */
@@ -163,52 +205,52 @@ class AdminVendorController extends Controller
             ->with('success', 'Vendor updated successfully!');
     }
 
-    public function updateCommissionStatus(Request $request, $id ){
-            $request->validate([
-                'vendor_id' => 'required|exists:vendors,id',
-                'commission' => 'required|numeric|min:0',
-                'status' => 'required|in:0,1,2',
-                'updated_by' => 'required|exists:admins,id',
-                'status_reason' => 'nullable|string|max:255'
-        ]);
+    // public function updateCommissionStatus(Request $request, $id ){
+    //         $request->validate([
+    //             'vendor_id' => 'required|exists:vendors,id',
+    //             'commission' => 'required|numeric|min:0',
+    //             'status' => 'required|in:0,1,2',
+    //             'updated_by' => 'required|exists:admins,id',
+    //             'status_reason' => 'nullable|string|max:255'
+    //     ]);
 
-            $data = $request->only([
-                'vendor_id',
-                'commission',
-                'status',
-                'updated_by',
-                'status_reason'
-            ]);
+    //         $data = $request->only([
+    //             'vendor_id',
+    //             'commission',
+    //             'status',
+    //             'updated_by',
+    //             'status_reason'
+    //         ]);
 
-             // Fetch latest active commission for this vendor
-            $lastCommission = VendorCommission::where('vendor_id', $data['vendor_id'])
-                ->orderByDesc('created_at')
-                ->first();
+    //          // Fetch latest active commission for this vendor
+    //         $lastCommission = VendorCommission::where('vendor_id', $data['vendor_id'])
+    //             ->orderByDesc('created_at')
+    //             ->first();
 
-            if ($lastCommission && $lastCommission->status === '1') {
-                if ($data['status'] === '2') {
-                    return response()->json([
-                        'message' => 'Invalid status change: Active commission cannot be suspended.'
-                    ], 422);
-                }
+    //         if ($lastCommission && $lastCommission->status === '1') {
+    //             if ($data['status'] === '2') {
+    //                 return response()->json([
+    //                     'message' => 'Invalid status change: Active commission cannot be suspended.'
+    //                 ], 422);
+    //             }
 
-            // If deactivating, set end_date
-                if ($data['status'] === '0') {
-                    $data['end_date'] = Carbon::now();
-                }
-            }
+    //         // If deactivating, set end_date
+    //             if ($data['status'] === '0') {
+    //                 $data['end_date'] = Carbon::now();
+    //             }
+    //         }
 
-            if ($data['status'] === '1') {
-                $data['active_date'] = Carbon::now();
-            }
+    //         if ($data['status'] === '1') {
+    //             $data['active_date'] = Carbon::now();
+    //         }
 
-            $commission = VendorCommission::create($data);
+    //         $commission = VendorCommission::create($data);
 
-            return response()->json([
-                'message' => 'Vendor commission status updated successfully.',
-                'data' => $commission
-            ], 201);
-        }
+    //         return response()->json([
+    //             'message' => 'Vendor commission status updated successfully.',
+    //             'data' => $commission
+    //         ], 201);
+    //     }
 
 public function vendorUpdateStatus(Request $request, $id)
         {
@@ -278,6 +320,50 @@ protected function sendVendorUpdateStatus(Vendor $vendor)
             return false;
         }
     }
+
+   public function updateCommission(Request $request, $vendorId)
+    {
+        $validated = $request->validate([
+            // 'status' => 'required|string',
+            'commission' => 'required|numeric|min:0|max:100',
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        $vendor = Vendor::findOrFail($vendorId);
+
+        // Deactivate current active commission
+        $activeCommission = VendorCommission::where('vendor_id', $vendorId)
+            // ->where('status', '1') // assuming '1' is active
+            ->latest('active_date')
+            ->first();
+
+        if ($activeCommission) {
+            $activeCommission->update([
+                'status' => '0', // deactivated
+                'end_date' => now(),
+            ]);
+        }
+
+        // Create new commission entry
+        VendorCommission::create([
+            'vendor_id' => $vendorId,
+            'commission' => $validated['commission'] ?? 0,
+            // 'status' => $validated['status'],
+            'updated_by' => auth('admin')->id(),
+            'active_date' => now(),
+            'note' => $validated['note'] ?? null,
+        ]);
+
+        return redirect()->back()->with('success', 'Commission updated successfully.');
+    }
+
+    public function showVendorCommission($vendorId){
+
+            $vendor = Vendor::findOrFail($vendorId);
+            return view('admin.vendors.set_commission', compact('vendor'));
+    }
+
+        
 
     /**
      * Remove the specified resource from storage.

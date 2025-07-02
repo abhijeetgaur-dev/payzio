@@ -19,6 +19,8 @@ class VendorCommission extends Model
         'end_date',
         'status_reason',
         'updated_by',
+        'note',
+        'commission'
     ];
 
     protected $casts = [

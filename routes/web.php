@@ -5,12 +5,15 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\QrController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\SettlementController;
 use App\Http\Controllers\Vendor\QrController as VendorQrController;
 use App\Http\Controllers\Vendor\TransactionController as VendorTransactionController;
 use App\Http\Controllers\Vendor\SettlementController as VendorSettlementController;
 use App\Http\Controllers\Vendor\ReportController as VendorReportController;
 use App\Http\Controllers\Vendor\VendorAuthController;
 use App\Http\Controllers\Vendor\VendorController;
+
 
     Route::get('/', function () {
         return view('landingpage');
@@ -38,19 +41,24 @@ use App\Http\Controllers\Vendor\VendorController;
             Route::get('/vendor/create/', [AdminVendorController::class, 'create'])->name('admin.vendor.create');
             Route::post('/vendor/store/', [AdminVendorController::class, 'store'])->name('admin.vendor.store');
             Route::put('/vendor/update/{vendor}', [AdminVendorController::class, 'update'])->name('admin.vendor.update');
+            Route::put('/vendor/update-commission/{vendorId}', [AdminVendorController::class, 'updateCommission'])->name('admin.vendor.update-commission');
+            Route::get('/vendor/show-commission/{vendorId}', [AdminVendorController::class, 'showVendorCommission'])->name('admin.vendor.show-commission');
             Route::get('/vendors', [AdminVendorController::class, 'index'])->name('admin.vendors');
 
-            Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
-            Route::put('/settings/update', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
-            Route::get('/settings/details', [AdminController::class, 'showProfileDetails'])->name('admin.settings.details.show');
-            Route::post('/settings/details', [AdminController::class, 'updateProfileDetails'])->name('admin.settings.details.update');
-            Route::get('/settings/details/edit', [AdminController::class, 'editProfileDetails'])->name('admin.settings.details.edit');
+            Route::get('/settings/edit', [AdminSettingController::class, 'edit'])->name('admin.settings.edit');
+            Route::post('/settings/edit', [AdminSettingController::class, 'update'])->name('admin.settings.update');
+            Route::get('/settings/change-password', [AdminSettingController::class, 'changePassword'])->name('admin.settings.change-password');
+            Route::put('/settings/change-password', [AdminSettingController::class, 'changePasswordUpdate'])->name('admin.settings.change-password');
+
 
             Route::get('/reports/commissions', [AdminController::class, 'commissions'])->name('admin.reports.commissions');
             Route::get('/reports/vendorpayment', [AdminController::class, 'vendorPayment'])->name('admin.reports.vendorpayment');
 
-            Route::get('/settlements/pending', [AdminController::class, 'pendingSettlements'])->name('admin.settlements.pending');
+            // Route::get('/settlements/pending', [AdminController::class, 'pendingSettlements'])->name('admin.settlements.pending');
+            Route::get('/settlements/pending', [SettlementController::class, 'pending'])->name('admin.settlements.pending');
             Route::get('/settlements/completed', [AdminController::class, 'completedSettlements'])->name('admin.settlements.completed');
+            Route::get('/settlements/process/{vendorId}', [SettlementController::class, 'processShow'])->name('admin.settlements.process');
+            Route::post('/settlements/process/{vendorId}', [SettlementController::class, 'process'])->name('admin.settlements.process');
 
             Route::get('/tickets/raised', [AdminController::class, 'ticketsRaised'])->name('admin.tickets.raised');
             Route::get('/tickets/closed', [AdminController::class, 'ticketsClosed'])->name('admin.tickets.closed');

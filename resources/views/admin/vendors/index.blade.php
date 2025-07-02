@@ -9,7 +9,60 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Sortable column styles */
+        .sortable-column {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s ease;
+        }
+
+        .sortable-column:hover {
+            color: #4f46e5;
+            /* indigo-600 */
+        }
+
+        .sort-icon {
+            margin-left: 4px;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        /* Active sort indicator */
+        .sort-active {
+            color: #4f46e5 !important;
+        }
+
+        /* Filter badges */
+        .filter-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .dark .filter-badge {
+            background-color: #312e81;
+            color: #c7d2fe;
+        }
+
+        /* Search highlight (optional) */
+        .search-highlight {
+            background-color: #fef3c7;
+            padding: 1px 2px;
+            font-weight: 600;
+        }
+
+        .dark .search-highlight {
+            background-color: #451a03;
+            color: #fbbf24;
+        }
     </style>
+
 
 @endsection
 
@@ -35,18 +88,32 @@
         <!-- Search and Filter Bar -->
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-            <form action="" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Vendor Filter -->
+            <form action="{{ route('admin.vendors') }}" method="GET">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Search Input -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
-                        <div class="relative flex-1 md:mr-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search
+                            Vendors</label>
+                        <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input type="text" id="search-input" placeholder="Search QR codes by vendor name or token..."
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Search by name, email, or phone..."
                                 class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                         </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                        <select name="status"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">All Status</option>
+                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Pending</option>
+                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inactive</option>
+                        </select>
                     </div>
 
                     <!-- Date From -->
@@ -64,8 +131,12 @@
                     </div>
                 </div>
 
+                <!-- Hidden inputs to maintain sort parameters -->
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                <input type="hidden" name="direction" value="{{ request('direction') }}">
+
                 <div class="mt-4 flex justify-end space-x-2">
-                    <a href="{{ route('admin.reports.commissions') }}"
+                    <a href="{{ route('admin.vendors') }}"
                         class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
                     <button type="submit"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
@@ -81,24 +152,69 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
+                            <!-- Vendor Name Column (Sortable) -->
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'vendor_name', 'direction' => request('sort') == 'vendor_name' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Vendor
+                                    @if (request('sort') == 'vendor_name')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
+
+                            <!-- Contact Column (Sortable by email) -->
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Contact
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => request('sort') == 'email' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Contact
+                                    @if (request('sort') == 'email')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
+
+                            <!-- Joined Column (Sortable) -->
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Joined
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('sort') == 'created_at' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Joined
+                                    @if (request('sort') == 'created_at')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
+
+                            <!-- Status Column (Sortable) -->
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-mediu m text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'status', 'direction' => request('sort') == 'status' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Status
+                                    @if (request('sort') == 'status')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
+
+                            <!-- Non-sortable columns -->
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-mediu m text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Set Commission
                             </th>
                             <th scope="col"
@@ -131,7 +247,7 @@
                                         <div class="text-sm text-gray-500 dark:text-gray-400">{{ $vendor->phone }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                        {{ \Carbon\Carbon::parse($vendor->joined)->format('m/d/Y') }}
+                                        {{ \Carbon\Carbon::parse($vendor->created_at)->format('d/m/Y') }}
                                     </td>
                                     <td class="flex flex-row px-6 py-4 whitespace-nowrap">
                                         <form id="status-form-{{ $vendor->id }}"
@@ -162,14 +278,12 @@
                                     </td>
                                     <td>
                                         <div class="flex items-center justify-center items-center ">
-                                            <button
-                                                class="flex justify-center edit-status-btn px-2 text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                                id="edit-status-btn-{{ $vendor->id }}"
-                                                data-vendor-id="{{ $vendor->id }}"
-                                                data-vendor-status="{{ $vendor->status }}">
+
+                                            <a href="/admin/vendor/show-commission/{{ $vendor->id }}"
+                                                class="flex justify-center edit-status-btn px-2 text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                                 <i class="fas
                                                 fa-edit"></i>
-                                            </button>
+                                            </a>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -298,14 +412,17 @@
     </div>
 
 
-    <div id="status-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    {{-- <div id="status-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3 text-center">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Vendor Status</h3>
                 <div class="mt-2 px-7 py-3">
-                    <form id="status-form" action={{ route('admin.vendor.update.status', $vendor->id) }} method="POST">
-
+                    <!-- Remove the hardcoded vendor ID from action -->
+                    <form id="status-form" action="" method="POST">
+                        @csrf
+                        @method('PUT')
                         <input type="hidden" id="vendor-id" name="vendor_id">
+
                         @php
                             $statusClass = [
                                 1 => 'bg-green-100 text-green-800',
@@ -313,6 +430,7 @@
                                 2 => 'bg-red-100 text-red-800',
                             ];
                         @endphp
+
                         <!-- Status Dropdown -->
                         <div class="mb-4">
                             <label for="status"
@@ -326,7 +444,7 @@
                         </div>
 
                         <!-- Commission Field (shown only when Active is selected) -->
-                        <div id="commission-field" class="mb-4 hidden">
+                        <div id="commission-field" class="mb-4 ">
                             <label for="commission"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Commission Rate
                                 (%)</label>
@@ -342,19 +460,19 @@
                             <textarea id="notes" name="notes" rows="3"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                         </div>
-                        <div class="text-gray-400 ">
-                            <h3 class="font-bold">Updated By </h3>
-                            <span class=""> {{ auth('admin')->user()?->name }} (
-                                {{ auth('admin')->user()?->email }})</span>
-                        </div>
-                        <div class="text-gray-400 ">
-                            <h3 class="font-bold">Date & Time </h3>
-                            <span class="">
-                                {{ now()->format('d M Y, h:i A') }}
+
+                        <div class="text-gray-400">
+                            <h3 class="font-bold">Updated By</h3>
+                            <span>{{ auth('admin')->user()?->name }} ({{ auth('admin')->user()?->email }})</span>
                         </div>
 
+                        <div class="text-gray-400">
+                            <h3 class="font-bold">Date & Time</h3>
+                            <span>{{ now()->format('d M Y, h:i A') }}</span>
+                        </div>
                     </form>
                 </div>
+
                 <div class="items-center px-4 py-3">
                     <button id="save-status"
                         class="px-4 py-2 bg-indigo-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -367,8 +485,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    </div> --}}
 
     <div id="delete-vendor-modal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
@@ -414,9 +531,6 @@
                 }
 
                 // Modal functionality
-                const addVendorModal = document.getElementById('add-vendor-modal');
-                const closeModalBtn = document.getElementById('close-modal');
-                const cancelAddVendorBtn = document.getElementById('cancel-add-vendor');
 
                 const statusModal = document.getElementById('status-modal');
                 const statusSelect = document.getElementById('status');
@@ -432,137 +546,134 @@
                         const vendorId = this.getAttribute('data-vendor-id');
                         console.log(vendorId);
 
+                        document.getElementById('vendor-id').value = vendorId;
+
+
                         // Set current status in dropdown
                         const currentStatus = this.getAttribute('data-vendor-status') || 'pending';
                         statusSelect.value = currentStatus;
 
-                        // Show/hide commission field based on current status
-                        toggleCommissionField(currentStatus);
-
-
                     });
                 });
 
-                // Toggle commission field when status changes
-                statusSelect.addEventListener('change', function() {
-                    toggleCommissionField(this.value);
-                });
 
-                function toggleCommissionField(status) {
-                    if (status === 'active') {
-                        commissionField.classList.remove('hidden');
-                    } else {
-                        commissionField.classList.add('hidden');
-                    }
-                }
+                // // Handle save button
+                // saveStatusBtn.addEventListener('click', function() {
+                //     const formData = new FormData(document.getElementById('status-form'));
+                //     const vendorId = document.getElementById('vendor-id').value;
 
-                // Handle save button
-                saveStatusBtn.addEventListener('click', function() {
-                    const formData = new FormData(document.getElementById('status-form'));
+                //     // Here you would typically send the data to your server
+                //     fetch(`/admin/vendor/update-commission/${vendorId}`, {
+                //             method: 'PUT',
+                //             body: formData,
+                //             headers: {
+                //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                //             }
+                //         })
+                //         .then(async response => {
+                //             const contentType = response.headers.get('content-type');
 
-                    // Here you would typically send the data to your server
-                    fetch('/vendors/update-status', {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Close modal and refresh or update UI
-                                modal.classList.add('hidden');
-                                location.reload(); // Or update specific elements
-                            } else {
-                                alert('Error: ' + (data.message || 'Failed to update status'));
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while updating status');
-                        });
-                });
+                //             if (contentType && contentType.includes('application/json')) {
+                //                 const data = await response.json();
 
-                // Handle cancel button
-                cancelStatusBtn.addEventListener('click', function() {
-                    statusModal.classList.add('hidden');
-                });
+                //                 if (response.ok && data.success) {
+                //                     document.getElementById('status-modal').classList.add('hidden');
+                //                     location.reload();
+                //                 } else {
+                //                     alert(`⚠️ Error: ${data.message || 'Failed to update status.'}`);
+                //                 }
 
-                // Close modal when clicking outside
-                window.addEventListener('click', function(event) {
-                    if (event.target === statusModal) {
-                        statusModal.classList.add('hidden');
-                    }
-                });
+                //             } else {
+                //                 const text = await response.text();
+                //                 console.error('Server returned non-JSON:', text);
+                //                 alert('❌ Server error. Check console for details.');
+                //             }
+                //         })
+                //         .catch(error => {
+                //             console.error('Fetch error:', error);
+                //             alert(`❌ A network error occurred: ${error.message}`);
+                //         });
+                // });
 
-                // Delete vendor modal
-                const deleteVendorModal = document.getElementById('delete-vendor-modal');
-                const deleteVendorBtns = document.querySelectorAll('.delete-btn');
-                const cancelDeleteVendorBtn = document.getElementById('cancel-delete-vendor');
-                const confirmDeleteVendorBtn = document.getElementById('confirm-delete-vendor');
+                // // Handle cancel button
+                // cancelStatusBtn.addEventListener('click', function() {
+                //     statusModal.classList.add('hidden');
+                // });
 
-                let vendorToDelete = null;
+                // // Close modal when clicking outside
+                // window.addEventListener('click', function(event) {
+                //     if (event.target === statusModal) {
+                //         statusModal.classList.add('hidden');
+                //     }
+            });
 
-                deleteVendorBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        deleteVendorModal.classList.remove('hidden');
-                        const vendorId = this.getAttribute('data-vendor-id');
-                        vendorToDelete = vendorId;
-                        confirmDeleteVendorBtn.addEventListener('click', function() {
-                            console.log(`Deleting vendor with ID: ${vendorToDelete}`);
-                            fetch(`/admin/vendor/delete/${vendorToDelete}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'Content-Type': 'application/json'
-                                    }
-                                })
-                                .then(response => {
-                                    if (response.ok) {
-                                        console.log(
-                                            `Vendor with ID ${vendorToDelete} deleted successfully.`
-                                        );
-                                        // Optionally, you can remove the vendor row from the table here
-                                        document.querySelector(
-                                            `button.delete-btn[data-vendor-id="${vendorToDelete}"]`
-                                        ).closest('tr').remove();
-                                    } else {
-                                        console.error(
-                                            `Failed to delete vendor with ID ${vendorToDelete}.`
-                                        );
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                });
+            // Delete vendor modal
+            const deleteVendorModal = document.getElementById('delete-vendor-modal');
+            const deleteVendorBtns = document.querySelectorAll('.delete-btn');
+            const cancelDeleteVendorBtn = document.getElementById('cancel-delete-vendor');
+            const confirmDeleteVendorBtn = document.getElementById('confirm-delete-vendor');
 
-                            deleteVendorModal.classList.add('hidden');
-                        });
+            let vendorToDelete = null;
 
-                        cancelDeleteVendorBtn.addEventListener('click', function() {
-                            deleteVendorModal.classList.add('hidden');
-                        });
+            deleteVendorBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteVendorModal.classList.remove('hidden');
+                    const vendorId = this.getAttribute('data-vendor-id');
+                    vendorToDelete = vendorId;
+                    confirmDeleteVendorBtn.addEventListener('click', function() {
+                        console.log(`Deleting vendor with ID: ${vendorToDelete}`);
+                        fetch(`/admin/vendor/delete/${vendorToDelete}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log(
+                                        `Vendor with ID ${vendorToDelete} deleted successfully.`
+                                    );
+                                    // Optionally, you can remove the vendor row from the table here
+                                    document.querySelector(
+                                        `button.delete-btn[data-vendor-id="${vendorToDelete}"]`
+                                    ).closest('tr').remove();
+                                } else {
+                                    console.error(
+                                        `Failed to delete vendor with ID ${vendorToDelete}.`
+                                    );
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+
+                        deleteVendorModal.classList.add('hidden');
                     });
-                })
 
-                // Open modal (you'll need to add a button with id="open-modal" somewhere in your HTML)
-                document.getElementById('open-modal')?.addEventListener('click', function() {
-                    addVendorModal.classList.remove('hidden');
+                    cancelDeleteVendorBtn.addEventListener('click', function() {
+                        deleteVendorModal.classList.add('hidden');
+                    });
                 });
+            })
 
-                // Close modal
-                if (closeModalBtn) {
-                    closeModalBtn.addEventListener('click', function() {
-                        addVendorModal.classList.add('hidden');
-                    });
-                }
+            // Open modal (you'll need to add a button with id="open-modal" somewhere in your HTML)
+            document.getElementById('open-modal')?.addEventListener('click', function() {
+                addVendorModal.classList.remove('hidden');
+            });
 
-                if (cancelAddVendorBtn) {
-                    cancelAddVendorBtn.addEventListener('click', function() {
-                        addVendorModal.classList.add('hidden');
-                    });
-                }
+            // Close modal
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', function() {
+                    addVendorModal.classList.add('hidden');
+                });
+            }
+
+            if (cancelAddVendorBtn) {
+                cancelAddVendorBtn.addEventListener('click', function() {
+                    addVendorModal.classList.add('hidden');
+                });
+            }
 
             });
         </script>
