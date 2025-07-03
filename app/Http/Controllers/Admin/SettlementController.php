@@ -64,10 +64,12 @@ class SettlementController extends Controller
         });
 
         $totalAmount = $settlementsData->sum('amount');
+        $totalCommission = $settlementsData->sum('commission');
 
         return view('admin.settlements.pending', [
             'settlements' => $settlementsData,
             'totalAmount' => $totalAmount,
+            'totalCommission' => $totalCommission,
         ]);
     }
 
@@ -108,42 +110,29 @@ class SettlementController extends Controller
     }
 
     public function processShow($vendorId){
-        $vendor = Vendor::findorFail($vendorId);
+
+        $vendor = Vendor::findOrFail($vendorId);
+
+        // Get oldest 5 unsettled transactions for this vendor
+        $transactions = Transaction::where('vendor_id', $vendorId)
+            ->where('settled', '0')
+            ->orderBy('date', 'asc')
+            ->orderBy('time', 'asc')
+            ->take(5) // Only take 5 transactions
+            ->get();
+
         $adminId = auth('admin')->id();
         $admin = Admin::findorFail($adminId);
         $adminBank = AdminBankAccount::where('admin_id', $adminId)
                 ->where('is_primary', 1)
                 ->first();
 
-       $query = Transaction::where('settled', '0')
-            ->with('vendor')
-            ->selectRaw('vendor_id, 
-                COUNT(*) as transactions_count, 
-                MIN(date) as period_start, 
-                MAX(date) as period_end,
-                SUM(amount) as total_amount')
-            ->groupBy('vendor_id')
-            ->orderBy('transactions_count','desc');
 
-
-        $settlementsData = $query->get()->map(function($item) {
-            $vendor = Vendor::find($item->vendor_id);
-            
-            return [
-                'id' => $item->vendor_id, 
-                'vendor_id' => $item->vendor_id,
-                'vendor_name' => $vendor->vendor_name ?? 'Unknown Vendor',
-                'period_start' => Carbon::parse($item->period_start)->format('d M Y'),
-                'period_end' => Carbon::parse($item->period_end)->format('d M Y'),
-                'transactions_count' => $item->transactions_count,
-                'amount' =>  $item->total_amount,
-                'commission' => $this->calculateCommission($item->vendor_id, $item->total_amount),
-                'account_number' => $vendor->account_number ?? 'N/A',
-                'batches_available' => floor($item->transactions_count / 5),
-            ];
-        });
-
-        $totalCommission = $settlementsData->sum('commission');
+        $totalCommission = 0;
+        foreach ($transactions as $item) {
+            $totalCommission += ($item->commission * $item->amount);
+        }
+        $totalAmount = $settlementsData->sum('amount');
 
 
         return view('admin.settlements.pending',compact('vendor','adminBank','admin') ,[

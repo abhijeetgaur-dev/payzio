@@ -68,7 +68,7 @@ class SettingController extends Controller
 
         $validated = $request->validate([
 
-        
+        'company_name' => 'required|string|max:255',
         // Organization Details
         'contact_person' => 'nullable|string|max:255',
         'designation' => 'nullable|string|max:255',
@@ -78,20 +78,20 @@ class SettingController extends Controller
         'state' => 'nullable|string|max:100',
         'country' => 'nullable|string|max:100',
         'postal_code' => 'nullable|string|max:20',
-        'pan_number' => 'nullable|string|max:20',
-        'gst_number' => 'nullable|string|max:30',
+        'pan_number' => 'required|string|max:20',
+        'gst_number' => 'required|string|max:30',
         'other_certificates' => 'nullable|string|max:30',
         'admin_type' => 'nullable|string|max:100',
         'company_header' => 'nullable|string|max:500',
         'company_footer' => 'nullable|string|max:200',
         'alternate_phones' => 'nullable|string|max:200',
-        'phone' => 'nullable|string|max:200',
+        'phone' => 'required|string|max:200',
         'alternate_emails' => 'nullable|string|max:200',
         'alternate_contact_person' => 'nullable|string|max:200',
 
 
         // Profile Image
-        'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         
         // Documents
         'pan_card_file' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:5120',
@@ -113,8 +113,11 @@ class SettingController extends Controller
 
       try {
         DB::beginTransaction();
-        
-        $admin = Auth::guard('admin')->user();
+        $admin->name = $validated['company_name'];
+        $admin->phone = $validated['phone'];
+        $admin->save();
+
+
         // $adminDetails = AdminDetail::where('admin_id', $admin->id)->first();
         // if($adminDetails && $adminDetails->admin_type){
         //     throw new \Exception('Admin type cannot be changed once set.');
@@ -127,7 +130,6 @@ class SettingController extends Controller
                 'designation' => $validated['designation'] ?? null,
                 'website' => $validated['website'] ?? null,
                 'address' => $validated['address'] ?? null,
-                'phone' => $validated['phone'] ?? null,
                 'city' => $validated['city'] ?? null,
                 'state' => $validated['state'] ?? null,
                 'country' => $validated['country'] ?? null,
@@ -248,7 +250,7 @@ public function changePasswordUpdate(Request $request)
     $admin->password = Hash::make($validated['new_password']);
     $admin->save();
 
-    return redirect()->route('admin.settings')->with('success', 'Password updated successfully!');
+    return redirect()->route('admin.settings.edit')->with('success', 'Password updated successfully!');
 }
 
 

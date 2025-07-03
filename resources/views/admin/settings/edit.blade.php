@@ -133,8 +133,7 @@
                                                     </svg>
                                                 </div>
                                                 <input type="file" id="company_logo" name="company_logo"
-                                                    class="cursor-pointer block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                                                    required>
+                                                    class="cursor-pointer block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                                             </div>
                                         @endif
                                     </div>
@@ -144,9 +143,8 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="company_name"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                                        required>Company
-                                        Name</label>
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
+                                        Name <span class="text-red-500">*</span></label>
                                     <input type="text" id="company_name" name="company_name"
                                         value="{{ old('company_name', $admin->name ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
@@ -158,11 +156,10 @@
                                 <div>
                                     <label for="contact_person"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact
-                                        Person</label>
+                                        Person <span class="text-red-500">*</span></label>
                                     <input type="text" id="contact_person" name="contact_person"
                                         value="{{ old('contact_person', $adminDetails->contact_person ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        required>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('contact_person')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -170,11 +167,10 @@
                                 <div>
                                     <label for="phone"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
-                                        Phone</label>
+                                        Phone <span class="text-red-500">*</span></label>
                                     <input type="tel" id="phone" name="phone"
                                         value="{{ old('phone', $admin->phone ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        required>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('phone')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -195,7 +191,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
                                         Email</label>
                                     <input type="text" id="email" name="email"
-                                        value="{{ old('phone', $admin->email ?? '') }}"
+                                        value="{{ old('email', $admin->email ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                                         readonly>
                                     @error('email')
@@ -208,8 +204,7 @@
                                         Emails</label>
                                     <input type="email" id="alternate_emails" name="alternate_emails"
                                         value="{{ old('phone', $adminDetails->alternate_emails ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        required>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('alternate_emails')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -237,7 +232,7 @@
                                         Type</label>
                                     <select name="admin_type"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        required>
+                                        <span class="text-red-500">*</span>>
                                         <option value="">Select Type</option>
                                         <option value="individual" @if ($selectedType == 'individual') selected @endif>
                                             Individual</option>
@@ -384,11 +379,10 @@
                                 <div>
                                     <label for="pan_number"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">PAN
-                                        Number</label>
+                                        Number <span class="text-red-500">*</span></label>
                                     <input type="text" id="pan_number" name="pan_number"
                                         value="{{ old('pan_number', $adminDetails->pan_number ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        required>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('pan_number')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -398,11 +392,10 @@
                                 <div>
                                     <label for="gst_number"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GST
-                                        Number</label>
+                                        Number <span class="text-red-500">*</span></label>
                                     <input type="text" id="gst_number" name="gst_number"
                                         value="{{ old('gst_number', $adminDetails->gst_number ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        required>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('gst_number')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror

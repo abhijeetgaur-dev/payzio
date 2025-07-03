@@ -5,7 +5,7 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-800">Pending Settlements</h1>
             <div class="text-lg text-gray-800 font-bold">
-                Total Pending: ₹{{ number_format($totalAmount, 2) }}
+                Total Pending: ₹{{ number_format($totalCommission, 2) }}
             </div>
         </div>
 

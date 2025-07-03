@@ -73,11 +73,11 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Vendors List</h2>
             <div class="flex space-x-3">
 
-                <a href={{ route('admin.vendor.create') }}
+                {{-- <a href={{ route('admin.vendor.create') }}
                     class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                     <i class="fas fa-plus mr-2"></i>
                     Add Vendor
-                </a>
+                </a> --}}
             </div>
         </div>
 
@@ -412,81 +412,6 @@
     </div>
 
 
-    {{-- <div id="status-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
-            <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Vendor Status</h3>
-                <div class="mt-2 px-7 py-3">
-                    <!-- Remove the hardcoded vendor ID from action -->
-                    <form id="status-form" action="" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" id="vendor-id" name="vendor_id">
-
-                        @php
-                            $statusClass = [
-                                1 => 'bg-green-100 text-green-800',
-                                0 => 'bg-yellow-100 text-yellow-800',
-                                2 => 'bg-red-100 text-red-800',
-                            ];
-                        @endphp
-
-                        <!-- Status Dropdown -->
-                        <div class="mb-4">
-                            <label for="status"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                            <select name="status" id="status"
-                                class="bg-red w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option class="{{ $statusClass[0] }}" value="0">Pending</option>
-                                <option class="{{ $statusClass[1] }}" value="1">Active</option>
-                                <option class="{{ $statusClass[2] }}" value="2">Suspended</option>
-                            </select>
-                        </div>
-
-                        <!-- Commission Field (shown only when Active is selected) -->
-                        <div id="commission-field" class="mb-4 ">
-                            <label for="commission"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Commission Rate
-                                (%)</label>
-                            <input type="number" id="commission" name="commission" min="0" max="100"
-                                step="0.01"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-
-                        <!-- Notes Field -->
-                        <div class="mb-4">
-                            <label for="notes"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes</label>
-                            <textarea id="notes" name="notes" rows="3"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                        </div>
-
-                        <div class="text-gray-400">
-                            <h3 class="font-bold">Updated By</h3>
-                            <span>{{ auth('admin')->user()?->name }} ({{ auth('admin')->user()?->email }})</span>
-                        </div>
-
-                        <div class="text-gray-400">
-                            <h3 class="font-bold">Date & Time</h3>
-                            <span>{{ now()->format('d M Y, h:i A') }}</span>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="items-center px-4 py-3">
-                    <button id="save-status"
-                        class="px-4 py-2 bg-indigo-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        Save Changes
-                    </button>
-                    <button id="cancel-status"
-                        class="ml-3 px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
     <div id="delete-vendor-modal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
@@ -556,125 +481,55 @@
                     });
                 });
 
+                // Delete vendor modal
+                const deleteVendorModal = document.getElementById('delete-vendor-modal');
+                const deleteVendorBtns = document.querySelectorAll('.delete-btn');
+                const cancelDeleteVendorBtn = document.getElementById('cancel-delete-vendor');
+                const confirmDeleteVendorBtn = document.getElementById('confirm-delete-vendor');
 
-                // // Handle save button
-                // saveStatusBtn.addEventListener('click', function() {
-                //     const formData = new FormData(document.getElementById('status-form'));
-                //     const vendorId = document.getElementById('vendor-id').value;
+                let vendorToDelete = null;
 
-                //     // Here you would typically send the data to your server
-                //     fetch(`/admin/vendor/update-commission/${vendorId}`, {
-                //             method: 'PUT',
-                //             body: formData,
-                //             headers: {
-                //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                //             }
-                //         })
-                //         .then(async response => {
-                //             const contentType = response.headers.get('content-type');
+                deleteVendorBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        deleteVendorModal.classList.remove('hidden');
+                        const vendorId = this.getAttribute('data-vendor-id');
+                        vendorToDelete = vendorId;
+                        confirmDeleteVendorBtn.addEventListener('click', function() {
+                            console.log(`Deleting vendor with ID: ${vendorToDelete}`);
+                            fetch(`/admin/vendor/delete/${vendorToDelete}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        console.log(
+                                            `Vendor with ID ${vendorToDelete} deleted successfully.`
+                                        );
+                                        // Optionally, you can remove the vendor row from the table here
+                                        document.querySelector(
+                                            `button.delete-btn[data-vendor-id="${vendorToDelete}"]`
+                                        ).closest('tr').remove();
+                                    } else {
+                                        console.error(
+                                            `Failed to delete vendor with ID ${vendorToDelete}.`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
 
-                //             if (contentType && contentType.includes('application/json')) {
-                //                 const data = await response.json();
+                            deleteVendorModal.classList.add('hidden');
+                        });
 
-                //                 if (response.ok && data.success) {
-                //                     document.getElementById('status-modal').classList.add('hidden');
-                //                     location.reload();
-                //                 } else {
-                //                     alert(`⚠️ Error: ${data.message || 'Failed to update status.'}`);
-                //                 }
-
-                //             } else {
-                //                 const text = await response.text();
-                //                 console.error('Server returned non-JSON:', text);
-                //                 alert('❌ Server error. Check console for details.');
-                //             }
-                //         })
-                //         .catch(error => {
-                //             console.error('Fetch error:', error);
-                //             alert(`❌ A network error occurred: ${error.message}`);
-                //         });
-                // });
-
-                // // Handle cancel button
-                // cancelStatusBtn.addEventListener('click', function() {
-                //     statusModal.classList.add('hidden');
-                // });
-
-                // // Close modal when clicking outside
-                // window.addEventListener('click', function(event) {
-                //     if (event.target === statusModal) {
-                //         statusModal.classList.add('hidden');
-                //     }
-            });
-
-            // Delete vendor modal
-            const deleteVendorModal = document.getElementById('delete-vendor-modal');
-            const deleteVendorBtns = document.querySelectorAll('.delete-btn');
-            const cancelDeleteVendorBtn = document.getElementById('cancel-delete-vendor');
-            const confirmDeleteVendorBtn = document.getElementById('confirm-delete-vendor');
-
-            let vendorToDelete = null;
-
-            deleteVendorBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    deleteVendorModal.classList.remove('hidden');
-                    const vendorId = this.getAttribute('data-vendor-id');
-                    vendorToDelete = vendorId;
-                    confirmDeleteVendorBtn.addEventListener('click', function() {
-                        console.log(`Deleting vendor with ID: ${vendorToDelete}`);
-                        fetch(`/admin/vendor/delete/${vendorToDelete}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then(response => {
-                                if (response.ok) {
-                                    console.log(
-                                        `Vendor with ID ${vendorToDelete} deleted successfully.`
-                                    );
-                                    // Optionally, you can remove the vendor row from the table here
-                                    document.querySelector(
-                                        `button.delete-btn[data-vendor-id="${vendorToDelete}"]`
-                                    ).closest('tr').remove();
-                                } else {
-                                    console.error(
-                                        `Failed to delete vendor with ID ${vendorToDelete}.`
-                                    );
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            });
-
-                        deleteVendorModal.classList.add('hidden');
+                        cancelDeleteVendorBtn.addEventListener('click', function() {
+                            deleteVendorModal.classList.add('hidden');
+                        });
                     });
-
-                    cancelDeleteVendorBtn.addEventListener('click', function() {
-                        deleteVendorModal.classList.add('hidden');
-                    });
-                });
+                })
             })
-
-            // Open modal (you'll need to add a button with id="open-modal" somewhere in your HTML)
-            document.getElementById('open-modal')?.addEventListener('click', function() {
-                addVendorModal.classList.remove('hidden');
-            });
-
-            // Close modal
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', function() {
-                    addVendorModal.classList.add('hidden');
-                });
-            }
-
-            if (cancelAddVendorBtn) {
-                cancelAddVendorBtn.addEventListener('click', function() {
-                    addVendorModal.classList.add('hidden');
-                });
-            }
-
-            });
         </script>
     @endsection

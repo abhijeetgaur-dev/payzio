@@ -4,152 +4,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XYZ Payment</title>
-
+    <title>Payzio Payment</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <style>
+        .swiper {
+            width: 90%;
+            height: 90%;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .swiper-pagination-bullet-active {
+            background-color: #4f46e5 !important;
+        }
+
+
+        .container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 
-<body class="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 shadow-lg ">
+<body class="min-h-screen flex flex-col bg-gray-50 ">
     <!-- Header -->
-    <header class="bg-white shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+    <header class="bg-white shadow-sm px-5">
+        <div class="container px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h1 class="text-xl font-bold text-gray-800">XYZ Payment</h1>
+                <h1 class="text-xl font-bold text-gray-800">Payzio</h1>
             </div>
-            <a href="/vendor/signup"
-                class="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300">
-                Vendor Sign Up
-            </a>
+            <div class="flex items-center space-x-4">
+                <a href="/vendor/login"
+                    class="px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-indigo-600 hover:bg-indigo-50">
+                    Vendor Sign In
+                </a>
+                <a href="/vendor/signup"
+                    class="px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-indigo-600 hover:bg-indigo-700 text-white">
+                    Vendor Sign Up
+                </a>
+            </div>
         </div>
     </header>
 
-    <main class="flex-grow">
+    <main class="flex-grow ">
         <!-- Hero Section -->
-        <section class="py-16 px-4 shadow-lg">
-            <div class="container mx-auto flex flex-col md:flex-row items-center">
-                <div class="ml-30 mr-20 md:w-1/2 mb-10 md:mb-0">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-                        Seamless QR Code Payments for Your Business
+        <section class="py-12 px-20">
+            <div class="container flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 space-y-6 pl-20">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                        Modern QR Payments <br>for Your Business
                     </h1>
-                    <p class="text-lg text-gray-600 mb-8">
-                        XYZ Payment Infrastructure provides a secure, scalable platform for vendors to accept digital
-                        payments with ease.
+                    <p class="text-lg text-gray-600 max-w-lg">
+                        A secure, scalable platform for vendors to accept digital payments with minimal effort and
+                        maximum efficiency.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4 pt-2">
                         <a href="#"
-                            class="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
+                            class="px-6 py-3 rounded-lg font-medium transition-colors duration-200 bg-indigo-600 hover:bg-indigo-700 text-white text-center">
                             Get Started
                         </a>
                         <button
-                            class="cursor-pointer border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-lg font-medium transition duration-300">
+                            class="px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-indigo-600 text-indigo-600 hover:bg-indigo-50">
                             Learn More
                         </button>
                     </div>
                 </div>
-                <div class="md:w-1/2 flex justify-center">
-                    <div class="relative">
-                        <div class="w-64 h-64 bg-indigo-100 rounded-2xl shadow-lg flex items-center justify-center">
-                            <div class="w-48 h-48 bg-white p-4 rounded-lg">
-                                <div class="grid grid-cols-3 gap-1">
-                                    @for ($i = 0; $i < 9; $i++)
-                                        <div
-                                            class="h-4 w-4 rounded-sm {{ $i % 2 === 0 ? 'bg-indigo-600' : 'bg-gray-800' }}">
-                                        </div>
-                                    @endfor
+
+                <!-- Image Slider -->
+                <div class="lg:w-1/2 w-full">
+                    <div class="swiper max-w-md mx-auto">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="m-2">
+                                    <div class="bg-white p-6 rounded-2xl shadow-lg">
+                                        <img src="https://images.unsplash.com/photo-1706759755964-b0aa57a58c5a?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            alt="Image 1" class="w-full h-64 rounded-lg object-cover">
+
+                                    </div>
                                 </div>
-                                <p class="text-center mt-2 text-xs font-medium">Scan to Pay</p>
                             </div>
-                        </div>
-                        <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-md">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                            clip-rule="evenodd" />
-                                    </svg>
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                                    <img src="https://images.unsplash.com/photo-1706759755851-6163305080f0?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Mobile Payment" class="w-full h-64 rounded-lg object-cover">
                                 </div>
-                                <div>
-                                    <p class="text-xs text-gray-500">Transaction Fee</p>
-                                    <p class="font-bold">1.5%</p>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                        alt="Payment Processing" class="w-full h-64 rounded-lg object-cover">
                                 </div>
                             </div>
                         </div>
+                        <div class="swiper-pagination"></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Auth Cards -->
-        <section class="py-16 px-4 bg-gray-200">
-            <div class="container mx-auto max-w-4xl">
-                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Get Started</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                        <div class="p-8">
-                            <div class="flex items-center mb-6">
-                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <h3 class="text-xl font-semibold text-gray-800">Admin Login</h3>
-                            </div>
-                            <p class="text-gray-600 mb-6">Access the administrative dashboard to manage vendors,
-                                transactions, and system settings.</p>
+        <section class="py-16 px-6 bg-white">
+            <div class="container">
+                <div class="mx-[300px]">
 
-                            <a href='/admin/login'>
-                                <button
-                                    class="d-block mt-5 cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition duration-300">
-                                    Login as Admin
-                                </button>
+                    <!-- Signup Card -->
+                    <div
+                        class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+                        <div class="p-8 space-y-6">
+                            <div class="flex items-center justify-center">
 
-                            </a>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                        <div class="p-8">
-                            <div class="flex items-center mb-6">
-                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                    </svg>
-                                </div>
-                                <h3 class="text-xl font-semibold text-gray-800">Vendor Login</h3>
+
                             </div>
-                            <p class="text-gray-600 mb-6">Access your vendor dashboard to view transactions, manage
-                                payouts, and track commissions.</p>
-                            <a href="/vendor/login">
-                                <button
-                                    class="mt-5 cursor-pointer w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition duration-300">
-                                    Login as Vendor
-                                </button>
-                            </a>
+                            <p class="text-gray-700 text-center text-4xl font-extrabold">Are you looking for Payment
+                                Application
+                                Service from
+                                Payzio?</p>
+                            <div class="flex gap-4  items-center justify-center pt-10">
+                                <a href="/vendor/signup" class="block">
+                                    <button
+                                        class="font-extrabold px-3 w-full bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 py-3 rounded-lg font-medium transition-all duration-200 shadow hover:shadow-md">
+                                        <span class="font-extrabold">New User</span>
+                                    </button>
+                                </a>
+                                <a href="/vendor/login" class="block">
+                                    <button
+                                        class=" px-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition-all duration-200 shadow hover:shadow-md">
+                                        <span class="font-extrabold">Existing User</span>
+                                    </button>
+                                </a>
+
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
         <!-- Features Section -->
-        <section class="py-16 px-4 bg-white">
-            <div class="container mx-auto px-30">
-                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose XYZ Payment?</h2>
+        <section class="py-16 px-20 ">
+            <div class="container">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose Payzio Payment?</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Feature 1 -->
-                    <div class="bg-blue-50 rounded-xl  shadow-sm p-6 hover:shadow-md transition duration-300">
+                    <div class="bg-blue-50 rounded-xl p-6 hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -162,10 +174,10 @@
                     </div>
 
                     <!-- Feature 2 -->
-                    <div class="bg-blue-50 rounded-xl  shadow-sm p-6 hover:shadow-md transition duration-300">
+                    <div class="bg-blue-50 rounded-xl p-6 hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
@@ -175,7 +187,7 @@
                     </div>
 
                     <!-- Feature 3 -->
-                    <div class="bg-blue-50 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300">
+                    <div class="bg-blue-50 rounded-xl p-6 hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -188,7 +200,7 @@
                     </div>
 
                     <!-- Feature 4 -->
-                    <div class="bg-blue-50 rounded-xl p-6  shadow-sm hover:shadow-md transition duration-300">
+                    <div class="bg-blue-50 rounded-xl p-6 hover:shadow-md transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -205,11 +217,11 @@
     </main>
 
     <!-- Footer -->
-    <footer class="text-white py-12 px-4 bg-slate-950">
-        <div class="pl-20 container mx-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer class="text-white py-10 bg-slate-950">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pl-20 ">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">XYZ Payment</h3>
+                    <h3 class="text-xl font-bold mb-4">Payzio Payment</h3>
                     <p class="text-gray-400">Enabling smooth, secure, and scalable digital transactions for businesses.
                     </p>
                 </div>
@@ -253,21 +265,28 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
+
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© {{ date('Y') }} XYZ Payment Infrastructure. Developed by Ananta Business Services.</p>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 mx-5">
+                <p>©2025 Payzio Payment Infrastructure. Developed by Ananta Business Services.</p>
             </div>
         </div>
     </footer>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    </script>
 </body>
 
 </html>

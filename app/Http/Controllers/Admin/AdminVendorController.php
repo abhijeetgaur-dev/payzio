@@ -323,13 +323,18 @@ protected function sendVendorUpdateStatus(Vendor $vendor)
 
    public function updateCommission(Request $request, $vendorId)
     {
+        
+        $vendor = Vendor::findOrFail($vendorId);
+
+        if($vendor->status != 1){
+             return redirect()->back()->with('error', 'Please activate the vendor first');
+        }
+
         $validated = $request->validate([
             // 'status' => 'required|string',
             'commission' => 'required|numeric|min:0|max:100',
             'note' => 'nullable|string|max:255',
         ]);
-
-        $vendor = Vendor::findOrFail($vendorId);
 
         // Deactivate current active commission
         $activeCommission = VendorCommission::where('vendor_id', $vendorId)

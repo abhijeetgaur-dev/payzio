@@ -8,11 +8,7 @@
         <div class="bg-white shadow rounded-lg p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Set Commission for {{ $vendor->vendor_name }}</h1>
 
-            @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('partials.flash')
 
             <form action="{{ route('admin.vendor.update-commission', $vendor->id) }}" method="POST">
                 @csrf
