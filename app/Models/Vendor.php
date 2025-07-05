@@ -39,7 +39,14 @@ class Vendor extends Authenticatable
         'pan_card_file',
         'gst_certificate_file',
         'registration_doc_file',
-        'cancelled_cheque_file',
+        'other_docs',
+        'company_logo',
+        'alternate_phones',
+        'alternate_emails',
+        'company_header',
+        'company_footer',
+        'alternate_contact_person',
+        'other_certificates'
     ];
 
     protected $casts = [

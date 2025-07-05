@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
-@section('title', 'Edit Admin Profile')
+@section('title', 'Edit Vendor Profile')
 
 @section('styles')
     <style>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <!-- Main Form -->
-        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('vendor.settings.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <!-- Progress Steps -->
             <div class="px-6 py-4 border-b">
@@ -110,11 +110,10 @@
                                     Logo <span class="text-red-500">*</span></label>
                                 <div class="flex items-center space-x-4">
                                     <div class="flex-shrink-0">
-                                        @if ($adminDetails && $adminDetails->company_logo)
+                                        @if ($vendor && $vendor->company_logo)
                                             <div class="flex gap-6">
                                                 <img id="company-logo-preview"
-                                                    src="{{ asset('storage/' . $adminDetails->company_logo) }}"
-                                                    alt="Company Logo"
+                                                    src="{{ asset('storage/' . $vendor->company_logo) }}" alt="Company Logo"
                                                     class="h-16 w-16 rounded-full object-cover border-2 border-gray-300">
                                                 <input type="file" id="company_logo" name="company_logo"
                                                     class="cursor-pointer block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
@@ -146,8 +145,9 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
                                         Name <span class="text-red-500">*</span></label>
                                     <input type="text" id="company_name" name="company_name"
-                                        value="{{ old('company_name', $admin->name ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                                        value="{{ old('company_name', $vendor->vendor_name ?? '') }}"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                        readonly>
                                     @error('company_name')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -158,7 +158,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact
                                         Person <span class="text-red-500">*</span></label>
                                     <input type="text" id="contact_person" name="contact_person"
-                                        value="{{ old('contact_person', $adminDetails->contact_person ?? '') }}"
+                                        value="{{ old('contact_person', $vendor->contact_person ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('contact_person')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -169,7 +169,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
                                         Phone <span class="text-red-500">*</span></label>
                                     <input type="text" id="phone" name="phone"
-                                        value="{{ old('phone', $admin->phone ?? '') }}"
+                                        value="{{ old('phone', $vendor->phone ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('phone')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -180,7 +180,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alternate
                                         Phones</label>
                                     <input type="text" id="alternate_phones" name="alternate_phones"
-                                        value="{{ old('alternate_phones', $adminDetails->alternate_phones ?? '') }}"
+                                        value="{{ old('alternate_phones', $vendor->alternate_phones ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('alternate_phones')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -191,7 +191,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
                                         Email <span class="text-red-500">*</span></label>
                                     <input type="text" id="s" name="email"
-                                        value="{{ old('email', $admin->email ?? '') }}"
+                                        value="{{ old('email', $vendor->email ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                                         readonly>
                                     @error('email')
@@ -203,7 +203,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alternate
                                         Emails</label>
                                     <input type="text" id="alternate_emails" name="alternate_emails"
-                                        value="{{ old('alternat_emails', $adminDetails->alternate_emails ?? '') }}"
+                                        value="{{ old('alternat_emails', $vendor->alternate_emails ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('alternate_emails')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -214,7 +214,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact
                                         Person</label>
                                     <input type="text" id="contact_person" name="contact_person"
-                                        value="{{ old('contact_person', $adminDetails->contact_person ?? '') }}"
+                                        value="{{ old('contact_person', $vendor->contact_person ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('contact_person')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -222,34 +222,21 @@
                                 </div>
 
 
-                                @php
-                                    $selectedType = old('admin_type', $adminDetails->admin_type ?? '');
-                                @endphp
 
                                 <div>
-                                    <label for="admin_type"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
+                                    <label for="vendor_type"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor
                                         Type</label>
-                                    <select name="admin_type"
+                                    <input type="text" id="vendor_type" name="_type"
+                                        value="{{ old('vendor_type', $vendor->vendor_type ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                        <span class="text-red-500">*</span>>
-                                        <option value="">Select Type</option>
-                                        <option value="individual" @if ($selectedType == 'individual') selected @endif>
-                                            Individual</option>
-                                        <option value="company" @if ($selectedType == 'company') selected @endif>
-                                            Company</option>
-                                        <option value="partner" @if ($selectedType == 'partner') selected @endif>
-                                            Partnership</option>
-                                    </select>
-                                    @error('admin_type')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                        readonly>
                                 </div>
                                 <div>
                                     <label for="website"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Website</label>
                                     <input type="text" id="website" name="website"
-                                        value="{{ old('website', $adminDetails->website ?? '') }}"
+                                        value="{{ old('website', $vendor->website ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('website')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -260,7 +247,7 @@
                                     <label for="city"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City</label>
                                     <input type="text" id="city" name="city"
-                                        value="{{ old('city', $adminDetails->city ?? '') }}"
+                                        value="{{ old('city', $vendor->city ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('city')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -271,7 +258,7 @@
                                     <label for="state"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">State</label>
                                     <input type="text" id="state" name="state"
-                                        value="{{ old('state', $adminDetails->state ?? '') }}"
+                                        value="{{ old('state', $vendor->state ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('state')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -282,7 +269,7 @@
                                     <label for="country"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Country</label>
                                     <input type="text" id="country" name="country"
-                                        value="{{ old('country', $adminDetails->country ?? '') }}"
+                                        value="{{ old('country', $vendor->country ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('country')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -294,7 +281,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Postal
                                         Code</label>
                                     <input type="text" id="postal_code" name="postal_code"
-                                        value="{{ old('postal_code', $adminDetails->postal_code ?? '') }}"
+                                        value="{{ old('postal_code', $vendor->postal_code ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('postal_code')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -305,7 +292,7 @@
                                     <label for="address"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
                                     <textarea id="address" name="address" rows="2"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('address', $adminDetails->address ?? '') }}</textarea>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('address', $vendor->address ?? '') }}</textarea>
                                     @error('address')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -355,7 +342,7 @@
                                         Contact
                                         Person</label>
                                     <input type="text" id="alternate_contact_person" name="alternate_contact_person"
-                                        value="{{ old('alternate_contact_person', $adminDetails->alternate_contact_person ?? '') }}"
+                                        value="{{ old('alternate_contact_person', $vendor->alternate_contact_person ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('alternate_contact_person')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -367,7 +354,7 @@
                                     <label for="designation"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Designation</label>
                                     <input type="text" id="designation" name="designation"
-                                        value="{{ old('designation', $adminDetails->designation ?? '') }}"
+                                        value="{{ old('designation', $vendor->designation ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('designation')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -381,11 +368,10 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">PAN
                                         Number <span class="text-red-500">*</span></label>
                                     <input type="text" id="pan_number" name="pan_number"
-                                        value="{{ old('pan_number', $adminDetails->pan_number ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                    @error('pan_number')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                        value="{{ old('pan_number', $vendor->pan_number ?? '') }}"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                        readonly>
+
                                 </div>
 
                                 <!-- GST Number -->
@@ -394,18 +380,17 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GST
                                         Number <span class="text-red-500">*</span></label>
                                     <input type="text" id="gst_number" name="gst_number"
-                                        value="{{ old('gst_number', $adminDetails->gst_number ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                    @error('gst_number')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                        value="{{ old('gst_number', $vendor->gst_number ?? '') }}"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                        readonly>
+
                                 </div>
                                 <div>
                                     <label for="other_certificates"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Other
                                         Cetificates(Optional)</label>
                                     <input type="text" id="other_certificates" name="other_certificates"
-                                        value="{{ old('other_certificates', $adminDetails->other_certificates ?? '') }}"
+                                        value="{{ old('other_certificates', $vendor->other_certificates ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('other_certificates')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -420,7 +405,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Receipt
                                         Header</label>
                                     <textarea id="company_header" name="company_header" rows="2"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_header', $adminDetails->company_header ?? '') }}</textarea>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_header', $vendor->company_header ?? '') }}</textarea>
                                     @error('company_header')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -430,7 +415,7 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Receipt
                                         Footer</label>
                                     <textarea id="company_footer" name="company_footer" rows="2"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_footer', $adminDetails->company_footer ?? '') }}</textarea>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">{{ old('company_footer', $vendor->company_footer ?? '') }}</textarea>
                                     @error('company_footer')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -466,7 +451,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 3 - Documents -->
+                <!-- Tab 3 - Douments  -->
                 <div id="tab-2" class="space-y-6 tab-content hidden">
                     <div
                         class="bg-white dark:bg-gray-500 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-500">
@@ -495,9 +480,9 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">PAN
                                         Card</label>
                                     <div class="flex items-center space-x-4">
-                                        @if ($adminDetails && $adminDetails->pan_card_file)
+                                        @if ($vendor && $vendor->pan_card_file)
                                             <div class="flex-shrink-0">
-                                                <img src="{{ asset('storage/' . $adminDetails->pan_card_file) }}"
+                                                <img src="{{ asset('storage/' . $vendor->pan_card_file) }}"
                                                     alt="PAN Card Preview"
                                                     class="h-16 w-16 object-contain border border-gray-300 rounded-md">
                                             </div>
@@ -519,9 +504,9 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GST
                                         Certificate</label>
                                     <div class="flex items-center space-x-4">
-                                        @if ($adminDetails && $adminDetails->gst_certificate_file)
+                                        @if ($vendor && $vendor->gst_certificate_file)
                                             <div class="flex-shrink-0">
-                                                <img src="{{ asset('storage/' . $adminDetails->gst_certificate_file) }}"
+                                                <img src="{{ asset('storage/' . $vendor->gst_certificate_file) }}"
                                                     alt="GST Certificate Preview"
                                                     class="h-16 w-16 object-contain border border-gray-300 rounded-md">
                                             </div>
@@ -543,9 +528,9 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Registration
                                         Document</label>
                                     <div class="flex items-center space-x-4">
-                                        @if ($adminDetails && $adminDetails->registration_doc_file)
+                                        @if ($vendor && $vendor->registration_doc_file)
                                             <div class="flex-shrink-0">
-                                                <img src="{{ asset('storage/' . $adminDetails->registration_doc_file) }}"
+                                                <img src="{{ asset('storage/' . $vendor->registration_doc_file) }}"
                                                     alt="Registration Doc Preview"
                                                     class="h-16 w-16 object-contain border border-gray-300 rounded-md">
                                             </div>
@@ -567,9 +552,9 @@
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Other
                                         Documents</label>
                                     <div class="flex items-center space-x-4">
-                                        @if ($adminDetails && $adminDetails->other_docs)
+                                        @if ($vendor && $vendor->other_docs)
                                             <div class="flex-shrink-0">
-                                                <img src="{{ asset('storage/' . $adminDetails->other_docs) }}"
+                                                <img src="{{ asset('storage/' . $vendor->other_docs) }}"
                                                     alt="Other Documents Preview"
                                                     class="h-16 w-16 object-contain border border-gray-300 rounded-md">
                                             </div>
@@ -615,7 +600,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 4 - Bank Accounts -->
+                <!-- Tab 4 - Documents -->
                 <div id="tab-3" class="space-y-6 tab-content hidden">
                     <div
                         class="bg-white dark:bg-gray-500 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-500">

@@ -8,16 +8,16 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">QR Codes Management</h2>
             <div class="flex space-x-3">
-                <a href="{{ route('vendor.qr.create') }}"
-                    class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                    <i class="fas fa-qrcode mr-2"></i>
-                    Generate New QR
-                </a>
+
             </div>
         </div>
 
-        <!-- Search and Filter Bar -->
+        <div id="flashMessage" class="hidden p-4 rounded-md mb-4"></div>
+        <div>
+            @include('partials.flash')
+        </div>
 
+        <!-- Search and Filter Bar -->
         <div class="bg-white rounded-lg shadow p-4 mb-6">
             <form action="" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -131,23 +131,16 @@
                                 <!-- Actions -->
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
-                                        <a href=""
+                                        <a href="{{ route('vendor.qr.show', $qrCode->id) }}"
                                             class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href=""
-                                            class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-                                                onclick="return confirm('Are you sure you want to delete this QR code?')">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+
+                                        <button
+                                            class="delete-btn text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                                            data-qr-id="{{ $qrCode->id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -161,88 +154,140 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            @if ($qrCodes->hasPages())
-                <div
-                    class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
-                    <div class="flex-1 flex justify-between sm:hidden">
-                        @if ($qrCodes->onFirstPage())
-                            <span
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
-                                Previous
-                            </span>
-                        @else
-                            <a href="{{ $qrCodes->previousPageUrl() }}"
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                Previous
-                            </a>
-                        @endif
-
-                        @if ($qrCodes->hasMorePages())
-                            <a href="{{ $qrCodes->nextPageUrl() }}"
-                                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                Next
-                            </a>
-                        @else
-                            <span
-                                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
-                                Next
-                            </span>
-                        @endif
-                    </div>
-                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">
-                                Showing <span class="font-medium">{{ $qrCodes->firstItem() }}</span> to
-                                <span class="font-medium">{{ $qrCodes->lastItem() }}</span> of
-                                <span class="font-medium">{{ $qrCodes->total() }}</span> QR codes
-                            </p>
-                        </div>
-                        <div>
-                            {{ $qrCodes->links() }}
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Search functionality
-                const searchInput = document.getElementById('search-input');
-                const statusFilter = document.getElementById('status-filter');
-                const tableBody = document.querySelector('tbody');
+    <div id="delete-qr-modal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Delete Qr</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">Are you sure you want to delete this Qr? This
+                action cannot be undone.</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-delete-qr"
+                    class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+                <button id="confirm-delete-qr"
+                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Delete
+                </button>
+            </div>
+        </div>
 
-                // Function to filter QR codes
-                function filterQRCodes() {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const statusValue = statusFilter.value;
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
 
-                    document.querySelectorAll('tbody tr').forEach(row => {
-                        const vendorName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                        const token = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                        const status = row.querySelector('td:nth-child(5) span').textContent.toLowerCase();
+                    // Delete Qr modal
+                    const deleteQrModal = document.getElementById('delete-qr-modal');
+                    const deleteQrBtns = document.querySelectorAll('.delete-btn');
+                    const cancelDeleteQrBtn = document.getElementById('cancel-delete-qr');
+                    const confirmDeleteQrBtn = document.getElementById('confirm-delete-qr');
 
-                        const matchesSearch = vendorName.includes(searchTerm) || token.includes(searchTerm);
-                        const matchesStatus = statusValue === '' ||
-                            (statusValue === '1' && status.includes('active')) ||
-                            (statusValue === '0' && status.includes('inactive'));
+                    let qrToDelete = null;
 
-                        if (matchesSearch && matchesStatus) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                }
+                    deleteQrBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            console.log('button clicked');
+                            deleteQrModal.classList.remove('hidden');
+                            const qrId = this.getAttribute('data-qr-id');
+                            qrToDelete = qrId;
+                            confirmDeleteQrBtn.addEventListener('click', function() {
+                                console.log(`Deleting Qr with ID: ${qrToDelete}`);
 
-                // Event listeners
-                searchInput.addEventListener('input', filterQRCodes);
-                statusFilter.addEventListener('change', filterQRCodes);
-            });
-        </script>
-    @endpush
-@endsection
+                                fetch(`/vendor/qr/delete/${qrToDelete}`, {
+                                        method: 'DELETE',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) throw new Error(
+                                            'Failed to delete QR.');
+                                        return response.json(); // ✅
+                                    })
+                                    .then(data => {
+                                        showFlashMessage({
+                                            status: 'success',
+                                            message: data.success
+                                        });
+
+                                        // Optionally remove row
+                                        document.querySelector(
+                                            `button.delete-btn[data-qr-id="${qrToDelete}"]`
+                                        )?.closest('tr')?.remove();
+                                    })
+                                    .catch(error => {
+                                        showFlashMessage({
+                                            status: 'error',
+                                            message: error.message
+                                        });
+                                        console.error('Error:', error);
+                                    });
+
+                                deleteQrModal.classList.add('hidden');
+                            });
+
+                            cancelDeleteQrBtn.addEventListener('click', function() {
+                                deleteQrModal.classList.add('hidden');
+                            });
+                        });
+                    })
+
+                    function showFlashMessage(data) {
+                        const flashDiv = document.getElementById('flashMessage');
+
+                        let bgColor = {
+                            success: 'bg-green-100 text-green-800',
+                            error: 'bg-red-100 text-red-800',
+                            warning: 'bg-yellow-100 text-yellow-800',
+                            info: 'bg-blue-100 text-blue-800'
+                        } [data.status] || 'bg-gray-100 text-gray-800';
+
+                        flashDiv.className = `p-4 rounded-md mb-4 ${bgColor}`;
+                        flashDiv.innerText = data.message;
+                        flashDiv.classList.remove('hidden');
+
+                        // Optional auto-hide
+                        setTimeout(() => {
+                            flashDiv.classList.add('hidden');
+                        }, 4000);
+                    }
+
+                    // Search functionality
+                    const searchInput = document.getElementById('search-input');
+                    const statusFilter = document.getElementById('status-filter');
+                    const tableBody = document.querySelector('tbody');
+
+                    // Function to filter QR codes
+                    function filterQRCodes() {
+                        const searchTerm = searchInput.value.toLowerCase();
+                        const statusValue = statusFilter.value;
+
+                        document.querySelectorAll('tbody tr').forEach(row => {
+                            const vendorName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                            const token = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                            const status = row.querySelector('td:nth-child(5) span').textContent.toLowerCase();
+
+                            const matchesSearch = vendorName.includes(searchTerm) || token.includes(searchTerm);
+                            const matchesStatus = statusValue === '' ||
+                                (statusValue === '1' && status.includes('active')) ||
+                                (statusValue === '0' && status.includes('inactive'));
+
+                            if (matchesSearch && matchesStatus) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                    }
+
+                    // Event listeners
+                    searchInput.addEventListener('input', filterQRCodes);
+                    statusFilter.addEventListener('change', filterQRCodes);
+                });
+            </script>
+        @endpush
+    @endsection

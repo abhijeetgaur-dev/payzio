@@ -16,6 +16,7 @@
             </div>
         </div>
 
+        <div id="flashMessage" class="hidden p-4 rounded-md mb-4"></div>
         <div>
             @include('partials.flash')
         </div>
@@ -233,6 +234,7 @@
                             qrToDelete = qrId;
                             confirmDeleteQrBtn.addEventListener('click', function() {
                                 console.log(`Deleting Qr with ID: ${qrToDelete}`);
+
                                 fetch(`/admin/qr/delete/${qrToDelete}`, {
                                         method: 'DELETE',
                                         headers: {
@@ -241,21 +243,26 @@
                                         }
                                     })
                                     .then(response => {
-                                        if (response.ok) {
-                                            console.log(
-                                                `Qr with ID ${qrToDelete} deleted successfully.`
-                                            );
-                                            // Optionally, you can remove the qr row from the table here
-                                            document.querySelector(
-                                                `button.delete-btn[data-qr-id="${qrToDelete}"]`
-                                            ).closest('tr').remove();
-                                        } else {
-                                            console.error(
-                                                `Failed to delete qr with ID ${qrToDelete}.`
-                                            );
-                                        }
+                                        if (!response.ok) throw new Error(
+                                            'Failed to delete QR.');
+                                        return response.json(); // ✅
+                                    })
+                                    .then(data => {
+                                        showFlashMessage({
+                                            status: 'success',
+                                            message: data.success
+                                        });
+
+                                        // Optionally remove row
+                                        document.querySelector(
+                                            `button.delete-btn[data-qr-id="${qrToDelete}"]`
+                                        )?.closest('tr')?.remove();
                                     })
                                     .catch(error => {
+                                        showFlashMessage({
+                                            status: 'error',
+                                            message: error.message
+                                        });
                                         console.error('Error:', error);
                                     });
 
@@ -268,6 +275,25 @@
                         });
                     })
 
+                    function showFlashMessage(data) {
+                        const flashDiv = document.getElementById('flashMessage');
+
+                        let bgColor = {
+                            success: 'bg-green-100 text-green-800',
+                            error: 'bg-red-100 text-red-800',
+                            warning: 'bg-yellow-100 text-yellow-800',
+                            info: 'bg-blue-100 text-blue-800'
+                        } [data.status] || 'bg-gray-100 text-gray-800';
+
+                        flashDiv.className = `p-4 rounded-md mb-4 ${bgColor}`;
+                        flashDiv.innerText = data.message;
+                        flashDiv.classList.remove('hidden');
+
+                        // Optional auto-hide
+                        setTimeout(() => {
+                            flashDiv.classList.add('hidden');
+                        }, 4000);
+                    }
 
                     // Search functionality
 

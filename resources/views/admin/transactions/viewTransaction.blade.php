@@ -1,13 +1,18 @@
 @extends('layouts.admin')
+@php
+    $previousUrl = url()->previous();
+    $currentUrl = url()->current();
+    $backUrl = $previousUrl !== $currentUrl ? $previousUrl : route('admin.transactions.all');
+@endphp
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Transaction Details</h1>
-            <a href="{{ route('admin.transactions.all') }}"
-                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
-                Back to All Transactions
+        <div class="flex justify-start items-center mb-6 space-x-4">
+            <a href="{{ $backUrl }}"
+                class="text-indigo-600 dark:text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400">
+                <i class="fas fa-arrow-left text-2xl"></i>
             </a>
+            <h1 class="text-3xl font-bold text-gray-800">Transaction Details</h1>
         </div>
 
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -16,9 +21,11 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
                     Transaction #{{ $transaction->id }}
                 </h3>
-                <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                    Processed on {{ $transaction->created_at->format('M d, Y \a\t h:i A') }}
-                </p>
+                {{-- 
+                <p class="mt-1 max-w-2xl text-lg text-gray-500">
+                    Processed on {{ $transaction->created_at->format('d M Y') }}
+                    {{ $transaction->created_at->format('h:i A') }}
+                </p> --}}
             </div>
 
             <!-- Transaction Details -->
@@ -26,10 +33,10 @@
                 <dl class="divide-y divide-gray-200">
                     <!-- Customer Information -->
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">
+                        <dt class="text-lg font-medium text-gray-500">
                             Customer Information
                         </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <dd class="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
                             <div class="mb-2">Customer ID: {{ $transaction->cust_id }}</div>
                             <div>Machine ID: {{ $transaction->cust_machine_id }}</div>
                         </dd>
@@ -37,25 +44,25 @@
 
                     <!-- Date & Time -->
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">
+                        <dt class="text-lg font-medium text-gray-500">
                             Date & Time
                         </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <div class="mb-2">Date: {{ $transaction->date->format('M d, Y') }}</div>
-                            <div>Time: {{ $transaction->time }}</div>
+                        <dd class="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div class="mb-2">Date: {{ $transaction->created_at->format('d M Y') }}</div>
+                            <div>Time: {{ $transaction->created_at->format('h:i A') }}</div>
                         </dd>
                     </div>
 
                     <!-- Vendor Information -->
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">
+                        <dt class="text-lg font-medium text-gray-500">
                             Vendor Information
                         </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <dd class="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
                             <div class="mb-2">Vendor ID: {{ $transaction->vendor_id }}</div>
                             @if ($transaction->vendor)
-                                <div class="mb-2">Name: {{ $transaction->vendor->name }}</div>
-                                <div>Contact: {{ $transaction->vendor->contact_info ?? 'N/A' }}</div>
+                                <div class="mb-2">Name: {{ $transaction->vendor->vendor_name }}</div>
+                                <div>Contact: {{ $transaction->vendor->phone ?? 'N/A' }}</div>
                             @else
                                 <div>Vendor details not available</div>
                             @endif
@@ -64,11 +71,11 @@
 
                     <!-- Payment Details -->
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">
+                        <dt class="text-lg font-medium text-gray-500">
                             Payment Details
                         </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <div class="mb-2">Amount: ${{ number_format($transaction->amount, 2) }}</div>
+                        <dd class="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div class="mb-2">Amount: ₹{{ number_format($transaction->amount, 2) }}</div>
                             <div class="mb-2">Payment Method: {{ ucfirst($transaction->paid_by) }}</div>
                             <div>Commission: {{ $transaction->commission ? $transaction->commission . '%' : 'N/A' }}</div>
                         </dd>
@@ -76,22 +83,33 @@
 
                     <!-- Status Information -->
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">
+                        <dt class="text-lg font-medium text-gray-500">
                             Status Information
                         </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <dd class="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
                             <div class="mb-2">
                                 Status:
                                 <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->status == '1' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ $transaction->status == '1' ? 'Completed' : 'Pending' }}
+                                    class="px-2 inline-flex text-lg leading-5 font-semibold rounded-full 
+                                    @if ($transaction->status === 1) bg-green-100 text-green-800
+                                    @elseif($transaction->status === 2) bg-red-100 text-red-800
+                                    @else bg-yellow-100 text-yellow-800 @endif">
+                                    @if ($transaction->status === 1)
+                                        Approved
+                                    @elseif($transaction->status === 2)
+                                        Rejected
+                                    @else
+                                        Pending
+                                    @endif
                                 </span>
                             </div>
                             <div>
                                 Settlement:
                                 <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->settled == '1' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                    {{ $transaction->settled == '1' ? 'Settled' : 'Pending Settlement' }}
+                                    class="px-2
+                                    inline-flex text-lg leading-5 font-semibold rounded-full
+                                    {{ $transaction->settled == true ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-gray-800' }}">
+                                    {{ $transaction->settled == true ? 'Settled' : 'Pending Settlement' }}
                                 </span>
                             </div>
                         </dd>
@@ -99,10 +117,10 @@
 
                     <!-- Timestamps -->
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">
+                        <dt class="text-lg font-medium text-gray-500">
                             Timestamps
                         </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <dd class="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
                             <div class="mb-2">Created: {{ $transaction->created_at->format('M d, Y h:i A') }}</div>
                             <div>Last Updated: {{ $transaction->updated_at->format('M d, Y h:i A') }}</div>
                         </dd>
@@ -111,33 +129,7 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="px-4 py-4 bg-gray-50 text-right sm:px-6 flex justify-between">
-                <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this transaction?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                        Delete Transaction
-                    </button>
-                </form>
-                <div>
-                    <a href="{{ route('transactions.edit', $transaction->id) }}"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3">
-                        Edit Transaction
-                    </a>
-                    @if ($transaction->settled == '0')
-                        <form action="{{ route('transactions.markAsSettled', $transaction->id) }}" method="POST"
-                            class="inline">
-                            @csrf
-                            <button type="submit"
-                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                Mark as Settled
-                            </button>
-                        </form>
-                    @endif
-                </div>
-            </div>
+
         </div>
     </div>
 @endsection

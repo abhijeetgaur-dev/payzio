@@ -1,15 +1,9 @@
 @php
+    use Illuminate\Support\Facades\Request;
+
     $menuItems = [
-        [
-            'text' => 'Dashboard',
-            'icon' => 'fas fa-home',
-            'path' => '/vendor/dashboard',
-        ],
-        [
-            'text' => 'QR Codes',
-            'icon' => 'fas fa-qrcode',
-            'path' => '/vendor/qr/index',
-        ],
+        ['text' => 'Dashboard', 'icon' => 'fas fa-home', 'path' => '/vendor/dashboard'],
+        ['text' => 'QR Codes', 'icon' => 'fas fa-qrcode', 'path' => '/vendor/qr/index'],
         [
             'text' => 'Transactions',
             'icon' => 'fas fa-exchange-alt',
@@ -28,11 +22,7 @@
                     'icon' => 'fa-solid fa-coins',
                     'path' => '/vendor/reports/commissions',
                 ],
-                [
-                    'text' => 'Payment Report ',
-                    'icon' => 'fa-solid fa-medal',
-                    'path' => '/vendor/reports/vendorpayment',
-                ],
+                ['text' => 'Payment Report', 'icon' => 'fa-solid fa-medal', 'path' => '/vendor/reports/vendorpayment'],
             ],
         ],
         [
@@ -47,247 +37,111 @@
             'text' => 'Support Tickets',
             'icon' => 'fas fa-ticket',
             'subItems' => [
-                [
-                    'text' => 'Tickets Raised',
-                    'icon' => 'fas fa-exclamation-circle',
-                    'path' => '/vendor/tickets/raised',
-                ],
-                [
-                    'text' => 'Tickets Closed',
-                    'icon' => 'fas fa-check-circle',
-                    'path' => '/vendor/tickets/closed',
-                ],
+                ['text' => 'Tickets Raised', 'icon' => 'fas fa-exclamation-circle', 'path' => '/vendor/tickets/raised'],
+                ['text' => 'Tickets Closed', 'icon' => 'fas fa-check-circle', 'path' => '/vendor/tickets/closed'],
             ],
         ],
         [
             'text' => 'Settings',
             'icon' => 'fas fa-cog',
-            'path' => '/vendor/settings',
+            'subItems' => [
+                ['text' => 'Create Company', 'icon' => 'fas fa-building', 'path' => '/vendor/settings/edit'],
+                ['text' => 'Change Password', 'icon' => 'fas fa-key', 'path' => '/vendor/settings/change-password'],
+            ],
         ],
     ];
-
-    // Initialize open submenus state
-    $openSubmenus = session()->get('openSubmenus', []);
 @endphp
 
-<!-- Add Font Awesome to your layout -->
+@php
+    function isActiveRoute($route)
+    {
+        return Request::is(ltrim($route, '/'))
+            ? 'bg-purple-900 text-white font-semibold'
+            : 'text-gray-400 hover:text-white';
+    }
 
+    $openMenu =
+        collect($menuItems)
+            ->filter(
+                fn($item) => isset($item['subItems']) &&
+                    collect($item['subItems'])->pluck('path')->contains(fn($p) => Request::is(ltrim($p, '/'))),
+            )
+            ->first()['text'] ?? '';
+@endphp
 
-<div id="sidebar"
-    class="bg-purple-400 text-white h-screen shadow-lg transition-all duration-300 ease-in-out relative collapsed">
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-        <a href="/vendor/dashboard" class="text-xl font-bold text-gray-700 dark:text-indigo-400 sidebar-logo">
-            Payzio Vendor
-        </a>
-        <button id="collapse-btn"
-            class="cursor-pointer p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400">
-            <i class="fas fa-times text-lg collapse-icon hidden"></i>
-            <i class="fas fa-bars  text-lg expand-icon "></i>
-        </button>
+<aside x-data="{ openMenu: '{{ $openMenu }}' }" class="w-64 h-screen bg-gray-900 text-white border-r border-gray-800 fixed flex flex-col">
+
+    <!-- Logo -->
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+        <a href="/vendor/dashboard" class="text-xl font-bold text-purple-400">Payzio Vendor</a>
     </div>
 
     <!-- Navigation -->
-    <nav class="p-2">
+    <nav class="flex-1 overflow-y-auto px-2 py-4">
         <ul class="space-y-1">
             @foreach ($menuItems as $item)
-                <li key="{{ $item['text'] }}">
-                    @if (isset($item['subItems']))
-                        <button onclick="toggleSubmenu('{{ $item['text'] }}')"
-                            class="flex items-center justify-between w-full p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 {{ in_array($item['text'], $openSubmenus) ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300' }}">
-                            <div class="flex items-center">
-                                <span class="sidebar-icon-only mx-auto">
-                                    <i class="{{ $item['icon'] }} text-lg"></i>
-                                </span>
-                                <span class="font-medium sidebar-text">{{ $item['text'] }}</span>
-                            </div>
-                            <span class="sidebar-text" id="dd-btn">
-                                @if (in_array($item['text'], $openSubmenus))
-                                    <i class="fas fa-chevron-down text-sm"></i>
-                                @else
-                                    <i class="fas fa-chevron-right text-sm"></i>
-                                @endif
+                @php
+                    $isSubMenuActive =
+                        isset($item['subItems']) &&
+                        collect($item['subItems'])->pluck('path')->contains(fn($p) => Request::is(ltrim($p, '/')));
+                @endphp
+
+                @if (isset($item['subItems']))
+                    <li class="mb-1">
+                        <button
+                            @click="openMenu === '{{ $item['text'] }}' ? openMenu = null : openMenu = '{{ $item['text'] }}'"
+                            class="flex items-center justify-between w-full px-3 py-2 rounded-md transition-all duration-200 
+                            {{ $isSubMenuActive ? 'bg-purple-900 text-white font-semibold' : 'text-gray-300 hover:text-white hover:bg-gray-800' }}">
+                            <span class="flex items-center">
+                                <i class="{{ $item['icon'] }} text-base mr-2"></i>
+                                {{ $item['text'] }}
                             </span>
+                            <i :class="openMenu === '{{ $item['text'] }}' ? 'fa-chevron-down' : 'fa-chevron-right'"
+                                class="fas text-xs"></i>
                         </button>
 
-                        <ul class="ml-8 mt-1 space-y-1 sidebar-submenu""
-                            style="{{ in_array($item['text'], $openSubmenus) ? '' : 'display: none;' }}">
+                        <ul x-show="openMenu === '{{ $item['text'] }}'" x-transition.duration.200ms
+                            class="mt-1 space-y-1 ml-5 border-l border-gray-700 pl-3" x-cloak>
                             @foreach ($item['subItems'] as $subItem)
-                                <li key="{{ $subItem['text'] }}" id="dd-ul">
+                                <li>
                                     <a href="{{ $subItem['path'] }}"
-                                        class="flex items-center w-full p-2 pl-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
-                                        <span class="mr-2">
-                                            <i class="{{ $subItem['icon'] }} text-sm"></i>
-                                        </span>
-                                        <span class="sidebar-submenu-text">{{ $subItem['text'] }}</span>
+                                        class="flex items-center px-2 py-2 rounded-md text-sm transition 
+                                        {{ isActiveRoute($subItem['path']) }}">
+                                        <i class="{{ $subItem['icon'] }} text-xs mr-2"></i>
+                                        {{ $subItem['text'] }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
-                    @else
+                    </li>
+                @else
+                    <li>
                         <a href="{{ $item['path'] }}"
-                            class="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors duration-200">
-                            <span class="sidebar-icon-only">
-                                <i class="{{ $item['icon'] }} text-lg"></i>
-                            </span>
-                            <span class="font-medium sidebar-text">{{ $item['text'] }}</span>
+                            class="flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
+                            {{ isActiveRoute($item['path']) }}">
+                            <i class="{{ $item['icon'] }} text-base mr-3"></i>
+                            {{ $item['text'] }}
                         </a>
-                    @endif
-                </li>
+                    </li>
+                @endif
             @endforeach
         </ul>
     </nav>
 
-    <!-- User Profile -->
-    <div class="absolute bottom-0 left-0 right-0 h-20 border-t border-gray-200 dark:border-gray-800 sidebar-profile">
-        <div class="flex items-center p-3 pt-4">
-            <div
-                class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold mr-3">
-                <i class="fas fa-store text-lg"></i>
+    <!-- Footer -->
+    <div class="px-4 py-3 border-t border-gray-800 bg-gray-900">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-purple-800 rounded-full flex items-center justify-center">
+                <i class="fas fa-store text-purple-300 text-lg"></i>
             </div>
-            <div class="sidebar-profile-text">
-                <p class="font-medium text-gray-800 dark:text-gray-200">{{ auth('vendor')->user()?->business_name }}
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth('vendor')->user()?->email }}</p>
-                <a href="{{ route('vendor.logout') }}">
+            <div>
+                <p class="text-sm font-medium text-white">{{ auth('vendor')->user()?->business_name }}</p>
+                <p class="text-xs text-gray-400">{{ auth('vendor')->user()?->email }}</p>
+                <form method="GET" action="{{ route('vendor.logout') }}" class="mt-1">
                     @csrf
-                    <button
-                        class="text-sm font-bold cursor-pointer text-gray-500 dark:text-gray-400 py-1 hover:text-gray-300">
-                        Logout
-                    </button>
-                </a>
+                    <button class="text-xs text-red-400 hover:underline">Logout</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.getElementById('sidebar');
-        const collapseBtn = document.getElementById('collapse-btn');
-        const dropdownul = document.querySelectorAll('#dd-ul');
-
-        // Check localStorage for collapsed state
-        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-        if (isCollapsed) {
-            sidebar.classList.add('collapsed');
-            dropdownul.forEach(ul => {
-                ul.classList.add('hidden');
-            });
-        }
-
-        // Toggle sidebar collapse
-        collapseBtn.addEventListener('click', function() {
-            const isCollapsed = sidebar.classList.contains('collapsed');
-            localStorage.setItem('sidebarCollapsed', !isCollapsed);
-
-            if (isCollapsed) {
-                sidebar.classList.remove('collapsed');
-                dropdownul.forEach(ul => {
-                    if (ul.classList.contains('hidden')) {
-                        ul.classList.remove('hidden');
-                    }
-                });
-            } else {
-                sidebar.classList.add('collapsed');
-                dropdownul.forEach(ul => {
-                    ul.classList.add('hidden');
-                });
-            }
-        });
-
-        // Initialize submenu states
-        const openSubmenus = JSON.parse(localStorage.getItem('openSubmenus') || '[]');
-        openSubmenus.forEach(itemText => {
-            const submenu = document.querySelector(`button[onclick="toggleSubmenu('${itemText}')"]`);
-            if (submenu) {
-                const submenuList = submenu.nextElementSibling;
-
-                if (isCollapsed) {
-                    submenuList.style.display = 'none';
-                } else if (submenuList && submenuList.classList.contains('sidebar-submenu')) {
-                    submenuList.style.display = 'block';
-                }
-            }
-        });
-    });
-
-    function toggleSubmenu(itemText) {
-        const submenu = document.querySelector(`button[onclick="toggleSubmenu('${itemText}')"]`);
-        if (!submenu) return;
-
-        const submenuList = submenu.nextElementSibling;
-        if (!submenuList || !submenuList.classList.contains('sidebar-submenu')) return;
-
-        const isOpen = submenuList.style.display === 'block';
-        submenuList.style.display = isOpen ? 'none' : 'block';
-
-        // Update the chevron icon
-        const chevron = submenu.querySelector('.fa-chevron-right, .fa-chevron-down');
-        if (chevron) {
-            if (isOpen) {
-                chevron.classList.replace('fa-chevron-down', 'fa-chevron-right');
-            } else {
-                chevron.classList.replace('fa-chevron-right', 'fa-chevron-down');
-            }
-        }
-
-        // Save open submenus to localStorage
-        const currentSubmenus = JSON.parse(localStorage.getItem('openSubmenus') || '[]');
-        const index = currentSubmenus.indexOf(itemText);
-
-        if (isOpen) {
-            if (index !== -1) {
-                currentSubmenus.splice(index, 1);
-            }
-        } else {
-            if (index === -1) {
-                currentSubmenus.push(itemText);
-            }
-        }
-
-        localStorage.setItem('openSubmenus', JSON.stringify(currentSubmenus));
-    }
-</script>
-
-<style>
-    #sidebar.collapsed {
-        width: 4.5rem;
-    }
-
-    #sidebar:not(.collapsed) {
-        width: 16rem;
-    }
-
-    #sidebar.collapsed .sidebar-text,
-    #sidebar.collapsed .sidebar-submenu-text,
-    #sidebar.collapsed .sidebar-profile-text,
-    #sidebar.collapsed .sidebar-logo,
-    #sidebar.collapsed .sidebar-submenu {
-        display: none;
-    }
-
-    #sidebar.collapsed .sidebar-icon-only {
-        margin-right: 0;
-    }
-
-    #sidebar:not(.collapsed) .sidebar-icon-only {
-        margin-right: 0.75rem;
-    }
-
-    #sidebar.collapsed .expand-icon {
-        display: inline-block;
-    }
-
-    #sidebar.collapsed .collapse-icon {
-        display: none;
-    }
-
-    #sidebar:not(.collapsed) .expand-icon {
-        display: none;
-    }
-
-    #sidebar:not(.collapsed) .collapse-icon {
-        display: inline-block;
-    }
-</style>
+</aside>

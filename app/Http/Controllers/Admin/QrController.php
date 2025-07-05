@@ -94,7 +94,7 @@ protected function sendSaveQRmail(QrCode $qrCode){
     }
 
     public function show($qrCodeId){
-        $qr = QRCode::findOrFail($qrCodeId);
+        $qr = QrCode::findOrFail($qrCodeId);
         $vendorId = $qr->vendor_id;
         $vendor = Vendor::findOrFail($vendorId);
 
@@ -121,7 +121,7 @@ protected function sendSaveQRmail(QrCode $qrCode){
     {
         \Log::info("Trying to delete QR with ID: " . $qrId);
 
-        $qr = QRCode::findOrFail($qrId); // Will throw 404 if not found
+        $qr = QrCode::findOrFail($qrId); // Will throw 404 if not found
 
         $qr->delete();
 

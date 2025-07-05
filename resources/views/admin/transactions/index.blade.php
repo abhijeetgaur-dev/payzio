@@ -71,6 +71,71 @@
             </form>
         </div>
 
+        @if ($showStats)
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-white">1,248</p>
+                        </div>
+                        <div class="p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-2"><i class="fas fa-arrow-up mr-1"></i>12% from
+                        last
+                        month</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Volume</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-white">₹1,84,752</p>
+                        </div>
+                        <div class="p-3 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-2"><i class="fas fa-arrow-up mr-1"></i>8% from
+                        last
+                        month</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Commission Earned</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-white">₹9,237</p>
+                        </div>
+                        <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-red-600 dark:text-red-400 mt-2"><i class="fas fa-arrow-down mr-1"></i>3% from
+                        last
+                        month</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Avg. Transaction</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-white">₹148</p>
+                        </div>
+                        <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-2"><i class="fas fa-arrow-up mr-1"></i>5% from
+                        last
+                        month</p>
+                </div>
+            </div>
+        @endif
+
 
         <!-- Transactions Table -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
@@ -163,14 +228,18 @@
                                         {{ $transaction->created_at->format('h:i A') }} </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($transaction->status == 1)
+                                    @if ((int) $transaction->status === 1)
                                         <span
                                             class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                            Success
+                                            Approved
+                                        </span>
+                                    @elseif((int) $transaction->status === 2)
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                                            Rejected
                                         </span>
                                     @else
                                         <span
-                                            class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yello-800">
+                                            class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
                                             Pending
                                         </span>
                                     @endif
@@ -178,17 +247,18 @@
                                 @if ($transaction->status)
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end space-x-2">
-                                            <a href="#">
+                                            <a href="{{ route('admin.transactions.show', $transaction->id) }}">
                                                 <button
                                                     class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                             </a>
-                                            <button
-                                                class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                                data-transaction-id="TXN1001">
-                                                <i class="fas fa-receipt"></i>
-                                            </button>
+                                            <a href="{{ route('admin.transactions.receipt', $transaction->id) }}">
+                                                <button
+                                                    class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                                                    <i class="fas fa-receipt"></i>
+                                                </button>
+                                            </a>
                                         </div>
                                     </td>
                                 @else
@@ -199,10 +269,12 @@
                                                 Approve
                                             </button>
                                         </a>
-                                        <button
-                                            class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
-                                            Reject
-                                        </button>
+                                        <a href="{{ route('admin.transactions.reject', $transaction->id) }}">
+                                            <button
+                                                class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
+                                                Reject
+                                            </button>
+                                        </a>
                                     </td>
                                 @endif
                             </tr>
@@ -235,27 +307,7 @@
     </div>
 
     <!-- Receipt Modal -->
-    <div id="receipt-modal"
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden text-gray-200">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Transaction Receipt</h3>
-                <button id="print-receipt"
-                    class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
-                    <i class="fas fa-print"></i>
-                </button>
-            </div>
-            <div id="receipt-content" class="space-y-4">
-                <!-- Sample receipt content will be inserted here by JavaScript -->
-            </div>
-            <div class="mt-6 flex justify-end">
-                <button id="close-receipt"
-                    class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -307,121 +359,6 @@
 
             cancelRefundBtn.addEventListener('click', function() {
                 refundModal.classList.add('hidden');
-            });
-
-            // Receipt modal functionality
-            const receiptModal = document.getElementById('receipt-modal');
-            const receiptBtns = document.querySelectorAll('.receipt-btn');
-            const closeReceiptBtn = document.getElementById('close-receipt');
-            const printReceiptBtn = document.getElementById('print-receipt');
-            const receiptContent = document.getElementById('receipt-content');
-
-            // Sample receipt templates for each transaction
-            const receiptTemplates = {
-                'TXN20230615001': `
-                    <div class="text-center">
-                        <h4 class="text-lg font-bold text-gray-900 dark:text-white">Payzio Payments</h4>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Transaction Receipt</p>
-                    </div>
-                    <div class="border-t border-b border-gray-200 dark:border-gray-700 py-4">
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Transaction ID:</span>
-                            <span class="font-medium">TXN20230615001</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Date:</span>
-                            <span>Today, 10:30 AM</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Vendor:</span>
-                            <span>Mohan Grocery Store</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Customer:</span>
-                            <span>+919876543210</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Payment Method:</span>
-                            <span>Google Pay (UPI)</span>
-                        </div>
-                    </div>
-                    <div class="border-b border-gray-200 dark:border-gray-700 py-4">
-                        <div class="flex justify-between font-bold text-lg">
-                            <span>Amount:</span>
-                            <span>₹450.00</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            <span>Commission (3%):</span>
-                            <span>₹13.50</span>
-                        </div>
-                    </div>
-                    <div class="text-center text-xs text-gray-500 dark:text-gray-400">
-                        <p>Thank you for using Payzio Payment System</p>
-                        <p>Transaction ID: TXN20230615001</p>
-                    </div>
-                `,
-                'TXN20230615002': `
-                    <div class="text-center">
-                        <h4 class="text-lg font-bold text-gray-900 dark:text-white">Payzio Payment System</h4>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Transaction Receipt</p>
-                    </div>
-                    <div class="border-t border-b border-gray-200 dark:border-gray-700 py-4">
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Transaction ID:</span>
-                            <span class="font-medium">TXN20230615002</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Date:</span>
-                            <span>Today, 11:45 AM</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Vendor:</span>
-                            <span>Suresh Electronics</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Customer:</span>
-                            <span>+919876543211</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Payment Method:</span>
-                            <span>PhonePe (UPI)</span>
-                        </div>
-                    </div>
-                    <div class="border-b border-gray-200 dark:border-gray-700 py-4">
-                        <div class="flex justify-between font-bold text-lg">
-                            <span>Amount:</span>
-                            <span>₹12,499.00</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            <span>Commission (3%):</span>
-                            <span>₹374.97</span>
-                        </div>
-                    </div>
-                    <div class="text-center text-xs text-gray-500 dark:text-gray-400">
-                        <p>Thank you for using Payzio Payment System</p>
-                        <p>Transaction ID: TXN20230615002</p>
-                    </div>
-                `,
-                // Add templates for other transactions similarly
-            };
-
-            receiptBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const transactionId = this.getAttribute('data-transaction-id');
-                    const template = receiptTemplates[transactionId] || receiptTemplates[
-                        'TXN20230615001'];
-                    receiptContent.innerHTML = template;
-                    receiptModal.classList.remove('hidden');
-                });
-            });
-
-            closeReceiptBtn.addEventListener('click', function() {
-                receiptModal.classList.add('hidden');
-            });
-
-            printReceiptBtn.addEventListener('click', function() {
-                console.log('Printing receipt...');
-                window.print();
             });
 
             // Export functionality

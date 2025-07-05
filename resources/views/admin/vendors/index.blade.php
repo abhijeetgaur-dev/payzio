@@ -321,95 +321,13 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            @if ($vendors->hasPages())
-                <div
-                    class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
-                    <div class="flex-1 flex justify-between sm:hidden">
-                        @if ($vendors->onFirstPage())
-                            <span
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
-                                Previous
-                            </span>
-                        @else
-                            <a href="{{ $vendors->previousPageUrl() }}"
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                Previous
-                            </a>
-                        @endif
-
-                        @if ($vendors->hasMorePages())
-                            <a href="{{ $vendors->nextPageUrl() }}"
-                                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                Next
-                            </a>
-                        @else
-                            <span
-                                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
-                                Next
-                            </span>
-                        @endif
-                    </div>
-                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">
-                                Showing <span class="font-medium">{{ $vendors->firstItem() }}</span> to
-                                <span class="font-medium">{{ $vendors->lastItem() }}</span> of
-                                <span class="font-medium">{{ $vendors->total() }}</span> vendors
-                            </p>
-                        </div>
-                        <div>
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                aria-label="Pagination">
-                                @if ($vendors->onFirstPage())
-                                    <span
-                                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                        <span class="sr-only">Previous</span>
-                                        <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
-                                    </span>
-                                @else
-                                    <a href="{{ $vendors->previousPageUrl() }}"
-                                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <span class="sr-only">Previous</span>
-                                        <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
-                                    </a>
-                                @endif
-
-                                @foreach ($vendors->getUrlRange(1, $vendors->lastPage()) as $page => $url)
-                                    @if ($page == $vendors->currentPage())
-                                        <span aria-current="page"
-                                            class="z-10 bg-indigo-50 dark:bg-indigo-900 border-indigo-500 text-indigo-600 dark:text-indigo-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                            {{ $page }}
-                                        </span>
-                                    @else
-                                        <a href="{{ $url }}"
-                                            class="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                            {{ $page }}
-                                        </a>
-                                    @endif
-                                @endforeach
-
-                                @if ($vendors->hasMorePages())
-                                    <a href="{{ $vendors->nextPageUrl() }}"
-                                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <span class="sr-only">Next</span>
-                                        <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
-                                    </a>
-                                @else
-                                    <span
-                                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                        <span class="sr-only">Next</span>
-                                        <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
-                                    </span>
-                                @endif
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            @endif
+        </div>
+        <div class="mt-6 text-gray-800">
+            {{ $vendors->links() }}
         </div>
     </div>
+
+
 
 
     <div id="delete-vendor-modal"

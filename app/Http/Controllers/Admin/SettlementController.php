@@ -18,6 +18,7 @@ class SettlementController extends Controller
     {
         // Get all vendors with unsettled transactions (grouped)
         $query = Transaction::where('settled', '0')
+            ->where('status','1')
             ->with('vendor')
             ->selectRaw('vendor_id, 
                 COUNT(*) as transactions_count, 
@@ -65,42 +66,6 @@ class SettlementController extends Controller
     ]);
 }
 
-    // public function process($vendorId)
-    // {
-    //     // Get vendor details
-    //     $vendor = Vendor::findOrFail($vendorId);
-
-    //     // Get oldest 5 unsettled transactions for this vendor
-    //     $transactions = Transaction::where('vendor_id', $vendorId)
-    //         ->where('settled', '0')
-    //         ->orderBy('date', 'asc')
-    //         ->orderBy('time', 'asc')
-    //         ->take(5) // Only take 5 transactions
-    //         ->get();
-
-    //     // Check if we have exactly 5 transactions to process
-    //     if ($transactions->count() < 5) {
-    //         return redirect()->back()
-    //             ->with('error', "Need 5 transactions to process. Only {$transactions->count()} available.");
-    //     }
-
-    //     // Calculate commission for this batch
-    //     $batchAmount = $transactions->sum('amount');
-    //     $batchCommission=$batchAmount*($vendor->commission_rate/100);    
-    //     // Mark transactions as settled
-    //     $batchIds = $transactions->pluck('id')->toArray();
-    //     Transaction::whereIn('id', $batchIds)
-    //         ->update([
-    //             'settled' => '1', 
-    //             'commission' => $batchCommission / 5 // Distribute commission evenly
-    //         ]);
-
-
-    //     return view('admin.settlements.process')
-    //         ->with('message', "Processed 5 transactions for vendor {$vendor->name}. Commission: " . number_format($batchCommission, 2))
-    //         ->with('processed_transactions', $batchIds);
-    // }
-
     public function processShow($vendorId){
 
         $vendor = Vendor::findOrFail($vendorId);
@@ -108,6 +73,7 @@ class SettlementController extends Controller
         // Get oldest 5 unsettled transactions for this vendor
         $transactions = Transaction::where('vendor_id', $vendorId)
             ->where('settled', '0')
+            ->where('status', '1')
             ->orderBy('date', 'asc')
             ->orderBy('time', 'asc')
             ->take(5) // Only take 5 transactions
@@ -146,6 +112,7 @@ class SettlementController extends Controller
         // Get oldest 5 unsettled transactions
         $transactions = Transaction::where('vendor_id', $vendorId)
             ->where('settled', '0')
+            ->where('status', '1')
             ->orderBy('date', 'asc')
             ->orderBy('time', 'asc')
             ->take(5)
@@ -168,6 +135,7 @@ class SettlementController extends Controller
     {
         // Get all vendors with unsettled transactions (grouped)
         $query = Transaction::where('settled', '1')
+            ->where('status','1')
             ->with('vendor')
             ->selectRaw('vendor_id, 
                 COUNT(*) as transactions_count, 

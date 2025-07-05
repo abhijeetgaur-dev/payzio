@@ -9,18 +9,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @yield('styles')
+    <style>
+        input[readonly]:not([type="file"]) {
+            background-color: #f0f0f0;
+            color: #282828;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .required:required::after {
+            content: " *" !important;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
 
 </head>
 
 <body class="h-full">
-    <div class="flex h-full">
+    <div class="min-h-screen ">
         <!-- Vendor Sidebar Component -->
-        @include('vendor.includes.sidebar')
+        <div class="fixed  left-0 z-50 text-gray-700 shadow-2xl">
+            @include('vendor.includes.sidebar')
+        </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        {{-- <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Navigation -->
             <header class="bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between px-6 py-4">
@@ -64,16 +81,22 @@
                         </div>
                     </div>
                 </div>
-            </header>
+            </header> --}}
 
-            <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gradient-to-r from-gray-200 via-indigo-100 to-gray-200">
-                @yield('content')
-            </main>
+        <!-- Main Content Area -->
+        <div class="ml-44 flex flex-col min-h-screen">
+            <div class="bg-gray-300 flex flex-col flex-1 transition-all duration-300">
+                <div class="flex-grow ml-20 ">
+
+                    @yield('content')
+                </div>
+            </div>
         </div>
+    </div>
     </div>
 
     <!-- Scripts -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 

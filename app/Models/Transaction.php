@@ -26,7 +26,7 @@ class Transaction extends Model
         'time' => 'datetime:H:i:s',
         'amount' => 'decimal:2',
         'commission' => 'decimal:2',
-        'status' => 'boolean',
+        'status' => 'int',
         'settled' => 'boolean',
     ];
 

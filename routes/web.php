@@ -14,6 +14,8 @@ use App\Http\Controllers\Vendor\SettlementController as VendorSettlementControll
 use App\Http\Controllers\Vendor\ReportController as VendorReportController;
 use App\Http\Controllers\Vendor\VendorAuthController;
 use App\Http\Controllers\Vendor\VendorController;
+use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
+
 
 
     Route::get('/', function () {
@@ -38,6 +40,8 @@ use App\Http\Controllers\Vendor\VendorController;
             Route::get('/transactions/pending', [TransactionController::class, 'pendingTransactions'])->name('admin.transactions.pending');
             Route::get('/transactions/view/{transactionId}', [TransactionController::class, 'show'])->name('admin.transactions.show');
             Route::get('/transactions/approve/{transactionId}', [TransactionController::class, 'approveTransaction'])->name('admin.transactions.approve');
+            Route::get('/transactions/reject/{transactionId}', [TransactionController::class, 'rejectTransaction'])->name('admin.transactions.reject');
+            Route::get('/transactions/receipt/{transactionId}', [TransactionController::class, 'receipt'])->name('admin.transactions.receipt');
 
             Route::delete('/vendor/delete/{vendor}', [AdminVendorController::class, 'destroy']);
             Route::get('/vendor/view/{vendor}', [AdminVendorController::class, 'view'])->name('admin.vendor.view');
@@ -87,9 +91,11 @@ use App\Http\Controllers\Vendor\VendorController;
     //Vendor authentication routes
         Route::middleware('vendor.auth')
             ->group(function () {
-                Route::get('dashboard',[VendorController::class, 'dashboard'])->name('vendor.dashboard'); 
+                Route::get('dashboard',[VendorController::class, 'dashboard'])->name('vendor.dashboard');
+
                 Route::get('qr/index', [VendorQrController::class, 'index'])->name('vendor.qr.index');
-                Route::post('qr/save', [VendorQrController::class, 'store'])->name('vendor.qr.store');
+                Route::get('qr/show/{qrId}', [VendorQrController::class, 'show'])->name('vendor.qr.show');
+                Route::delete('qr/delete/{qrId}', [VendorQrController::class, 'destroy']);
 
                 Route::get('/transactions/all', [VendorTransactionController::class, 'index'])->name('vendor.transactions.all');
                 Route::get('/transactions/completed', [VendorTransactionController::class, 'completedTransactions'])->name('vendor.transactions.completed');
@@ -104,8 +110,10 @@ use App\Http\Controllers\Vendor\VendorController;
                 Route::get('/tickets/raised', [VendorController::class, 'ticketsRaised'])->name('vendor.tickets.raised');
                 Route::get('/tickets/closed', [VendorController::class, 'ticketsClosed'])->name('vendor.tickets.closed');
 
-                Route::get('/settings', [VendorController::class, 'settings'])->name('vendor.settings');
-                Route::put('/settings/update', [VendorController::class, 'updateSettings'])->name('vendor.settings.update');
+                Route::get('/settings/edit', [VendorSettingController::class, 'edit'])->name('vendor.settings.edit');
+                Route::post('/settings/edit', [VendorSettingController::class, 'update'])->name('vendor.settings.update');
+                Route::get('/settings/change-password', [VendorSettingController::class, 'changePassword'])->name('vendor.settings.change-password');
+                Route::put('/settings/change-password', [VendorSettingController::class, 'changePasswordUpdate'])->name('vendor.settings.change-password');
 
 
             });
