@@ -65,6 +65,8 @@ class SettingController extends Controller
     public function  update(Request $request){
 
         $admin = auth('admin')->user();
+        $adminDetailVal = AdminDetail::where('admin_id', $admin->id)->firstOrFail();
+
 
         $validated = $request->validate([
 
@@ -91,8 +93,10 @@ class SettingController extends Controller
 
 
         // Profile Image
-        'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        
+        'company_logo' => ($adminDetailVal && $adminDetailVal->company_logo)
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            : 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            
         // Documents
         'pan_card_file' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:5120',
         'gst_certificate_file' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:5120',

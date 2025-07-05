@@ -107,7 +107,7 @@
                             <div class="md:col-span-2">
                                 <label for="company_logo"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company
-                                    Logo</label>
+                                    Logo <span class="text-red-500">*</span></label>
                                 <div class="flex items-center space-x-4">
                                     <div class="flex-shrink-0">
                                         @if ($adminDetails && $adminDetails->company_logo)
@@ -168,7 +168,7 @@
                                     <label for="phone"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
                                         Phone <span class="text-red-500">*</span></label>
-                                    <input type="tel" id="phone" name="phone"
+                                    <input type="text" id="phone" name="phone"
                                         value="{{ old('phone', $admin->phone ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('phone')
@@ -189,8 +189,8 @@
                                 <div>
                                     <label for="email"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary
-                                        Email</label>
-                                    <input type="text" id="email" name="email"
+                                        Email <span class="text-red-500">*</span></label>
+                                    <input type="text" id="s" name="email"
                                         value="{{ old('email', $admin->email ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                                         readonly>
@@ -202,8 +202,8 @@
                                     <label for="alternate_emails"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alternate
                                         Emails</label>
-                                    <input type="email" id="alternate_emails" name="alternate_emails"
-                                        value="{{ old('phone', $adminDetails->alternate_emails ?? '') }}"
+                                    <input type="text" id="alternate_emails" name="alternate_emails"
+                                        value="{{ old('alternat_emails', $adminDetails->alternate_emails ?? '') }}"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                                     @error('alternate_emails')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -316,7 +316,7 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-between pt-4">
+                    <div class="flex justify-end pt-4">
                         <button type="button"
                             class="next-tab cursor-pointer inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
                             data-next="1">

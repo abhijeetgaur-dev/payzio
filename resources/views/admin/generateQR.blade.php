@@ -149,11 +149,7 @@
                                     <i class="fas fa-download mr-2"></i>
                                     Download PNG
                                 </button>
-                                <button id="save-btn"
-                                    class="cursor-pointer flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i>
-                                    Save QR
-                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -216,6 +212,8 @@
             }, 7000); // Hide after 7 seconds
         }
         document.addEventListener('DOMContentLoaded', function() {
+            let qrGenerated = 0;
+            let venddorChangeFlag = 0;
             //vendor search bar
             const vendorSearch = document.getElementById('vendor-search');
             const vendorResults = document.getElementById('vendor-results');
@@ -308,16 +306,20 @@
             document.getElementById('qr-form').addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                const vendorId = vendorIdInput.value;
-                const vendorEmail = document.getElementById('vendor-email-display').textContent
-                const vendorPhone = document.getElementById('vendor-phone-display').textContent
-                const vendorName = document.getElementById('vendor-name-display').textContent
-                const description = document.getElementById('description').value;
 
-                console.log(vendorEmail, vendorPhone, vendorName);
+                const vendorId = vendorIdInput.value;
+                const vendorEmail = document.getElementById('vendor-email-display').textContent;
+                const vendorPhone = document.getElementById('vendor-phone-display').textContent;
+                const vendorName = document.getElementById('vendor-name-display').textContent;
+                const description = document.getElementById('description').value;
 
                 if (!vendorId) {
                     alert('Please select a vendor');
+                    return;
+                } else if (qrGenerated == 1 && vendorChangeFlag == vendorId) {
+                    alert(
+                        'QR code already generated and saved for this vendor. Please select another Vendor'
+                    );
                     return;
                 }
 
@@ -344,6 +346,46 @@
                 // Show result container and hide preview
                 document.getElementById('qr-preview-container').classList.add('hidden');
                 document.getElementById('qr-result-container').classList.remove('hidden');
+
+                // Auto-save QR code using html2canvas and AJAX
+                const qrDisplay = document.getElementById('qr-code-display');
+
+                // Wait a tick for the DOM to fully render QR
+                setTimeout(() => {
+                    html2canvas(qrDisplay).then(canvas => {
+                        canvas.toBlob(function(blob) {
+                            const formData = new FormData();
+                            formData.append('vendor_id', vendorId);
+                            formData.append('qr_image', blob,
+                                `qr-${vendorId}-${Date.now()}.png`);
+
+                            fetch("{{ route('admin.qr.save') }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                                'meta[name="csrf-token"]')
+                                            .content
+                                    },
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        qrGenerated = 1;
+                                        vendorChangeFlag = vendorId;
+                                        showSuccess(data.message);
+                                    } else {
+                                        showError(data.message ||
+                                            'Something went wrong.');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    showError('An unexpected error occurred.');
+                                });
+                        }, 'image/png');
+                    });
+                }, 200); // short delay to ensure SVG is rendered
             });
 
             // Copy QR data handler

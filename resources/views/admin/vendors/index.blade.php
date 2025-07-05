@@ -73,11 +73,11 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Vendors List</h2>
             <div class="flex space-x-3">
 
-                {{-- <a href={{ route('admin.vendor.create') }}
+                <a href={{ route('admin.vendor.create') }}
                     class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                     <i class="fas fa-plus mr-2"></i>
                     Add Vendor
-                </a> --}}
+                </a>
             </div>
         </div>
 

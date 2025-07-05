@@ -42,14 +42,14 @@ class QrController extends Controller
             return response()
             ->json([
                 'success' => true, 
-                'message' => 'You have Registered Successfully. A mail has been sent to your registered email address.'
+                'message' => 'QR code save successfully but error sending the mail. A mail has been sent to your registered email address.'
             ]);
         } else {
             Log::error('Failed to save QR code');
             return response()
                 ->json([
-                    'success' => false, 
-                    'message' => 'Failed to save QR code. Please try again.'
+                    'success' => true, 
+                    'message' => 'QR code save successfully but error sending the mail.'
                 ]);
         }
     } catch (\Exception $e){
@@ -57,7 +57,7 @@ class QrController extends Controller
         return response()
         ->json([
             'success' => false,
-            'message' => 'An error occured while sending the email. Please try again later.'
+            'message' => 'An error occured while saving the QR code. Please try again later.'
         ]);
     }
 }
@@ -93,47 +93,38 @@ protected function sendSaveQRmail(QrCode $qrCode){
     return view('admin.qr.index', compact('qrCodes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function show($qrCodeId){
+        $qr = QRCode::findOrFail($qrCodeId);
+        $vendorId = $qr->vendor_id;
+        $vendor = Vendor::findOrFail($vendorId);
+
+        return view('admin.qr.show', compact('qr', 'vendor'));
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function updateStatus(Request $request, $qrId){
+        $request->validate(['status' => 'required|in:0,1',]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        $qr = QrCode::findOrFail($qrId);
+
+        // Assign new values
+        $qr->is_active = $request->status;
+
+        $qr->save();
+
+        return redirect()->back()->with('success', 'QR Status updated successfully');
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($qrId)
     {
-        //
-    }
+        \Log::info("Trying to delete QR with ID: " . $qrId);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $qr = QRCode::findOrFail($qrId); // Will throw 404 if not found
+
+        $qr->delete();
+
+        return response()->json(['success' => 'Qr deleted successfully.']);
     }
 }

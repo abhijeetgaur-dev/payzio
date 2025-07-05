@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Payzio') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
@@ -35,12 +37,12 @@
 
 <body class="min-h-screen">
     <!-- Sidebar (fixed position) -->
-    <div class="fixed top-0 left-0 z-50 text-gray-700 shadow-2xl">
+    <div class="fixed  left-0 z-50 text-gray-700 shadow-2xl">
         @include('admin.includes.sidebar')
     </div>
 
     <!-- Main content area -->
-    <div class="flex flex-col min-h-screen">
+    <div class="ml-44 flex flex-col min-h-screen">
         <div class="bg-gray-300 flex flex-col flex-1 transition-all duration-300">
             <div class="flex-grow ml-20 ">
 
@@ -53,6 +55,7 @@
     </div>
 
     <!-- Responsive behavior script -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let isMobile = window.innerWidth < 768;

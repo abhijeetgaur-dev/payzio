@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\QrController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\SettlementController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Vendor\QrController as VendorQrController;
 use App\Http\Controllers\Vendor\TransactionController as VendorTransactionController;
 use App\Http\Controllers\Vendor\SettlementController as VendorSettlementController;
@@ -27,11 +28,16 @@ use App\Http\Controllers\Vendor\VendorController;
             Route::get('/qr/generate', [AdminController::class, 'generateQr']);
             Route::post('/qr/save/', [QrController::class, 'store'])->name('admin.qr.save');
             Route::get('/qr/index/', [QrController::class, 'index'])->name('admin.qr.index');
+            Route::put('/qr/update-status/{qrId}', [QrController::class, 'updateStatus'])->name('admin.vendor.status.update');
+            Route::get('/qr/show/{qrId}', [QrController::class, 'show'])->name('admin.qr.show');
+            Route::delete('/qr/delete/{qrId}', [QrController::class, 'destroy']);
             Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-            Route::get('/transactions/all', [AdminController::class, 'transaction'])->name('admin.transactions.all');
-            Route::get('/transactions/completed', [AdminController::class, 'completedTransaction'])->name('admin.transactions.completed');
-            Route::get('/transactions/pending', [AdminController::class, 'pendingTransaction'])->name('admin.transactions.pending');
+            Route::get('/transactions/all', [TransactionController::class, 'allTransactions'])->name('admin.transactions.all');
+            Route::get('/transactions/completed', [TransactionController::class, 'completedTransactions'])->name('admin.transactions.completed');
+            Route::get('/transactions/pending', [TransactionController::class, 'pendingTransactions'])->name('admin.transactions.pending');
+            Route::get('/transactions/view/{transactionId}', [TransactionController::class, 'show'])->name('admin.transactions.show');
+            Route::get('/transactions/approve/{transactionId}', [TransactionController::class, 'approveTransaction'])->name('admin.transactions.approve');
 
             Route::delete('/vendor/delete/{vendor}', [AdminVendorController::class, 'destroy']);
             Route::get('/vendor/view/{vendor}', [AdminVendorController::class, 'view'])->name('admin.vendor.view');
@@ -56,9 +62,9 @@ use App\Http\Controllers\Vendor\VendorController;
 
             // Route::get('/settlements/pending', [AdminController::class, 'pendingSettlements'])->name('admin.settlements.pending');
             Route::get('/settlements/pending', [SettlementController::class, 'pending'])->name('admin.settlements.pending');
-            Route::get('/settlements/completed', [AdminController::class, 'completedSettlements'])->name('admin.settlements.completed');
-            Route::get('/settlements/process/{vendorId}', [SettlementController::class, 'processShow'])->name('admin.settlements.process');
-            Route::post('/settlements/process/{vendorId}', [SettlementController::class, 'process'])->name('admin.settlements.process');
+            Route::get('/settlements/completed', [SettlementController::class, 'completed'])->name('admin.settlements.completed');
+            Route::get('/settlements/process/{vendorId}', [SettlementController::class, 'processShow'])->name('admin.settlements.process.show');
+            Route::post('/settlements/process/{vendorId}', [SettlementController::class, 'processSettlement'])->name('admin.settlements.process');
 
             Route::get('/tickets/raised', [AdminController::class, 'ticketsRaised'])->name('admin.tickets.raised');
             Route::get('/tickets/closed', [AdminController::class, 'ticketsClosed'])->name('admin.tickets.closed');

@@ -321,24 +321,35 @@ protected function sendVendorUpdateStatus(Vendor $vendor)
         }
     }
 
+    public function showVendorCommission($vendorId){
+
+            $activeCommission = VendorCommission::where('vendor_id', $vendorId)
+            ->where('status', '1') // assuming '1' is active
+            ->latest('active_date')
+            ->first();
+
+            $vendor = Vendor::findOrFail($vendorId);
+            return view('admin.vendors.set_commission', compact('vendor','activeCommission'));
+    }
+
+
    public function updateCommission(Request $request, $vendorId)
     {
         
         $vendor = Vendor::findOrFail($vendorId);
-
+        
         if($vendor->status != 1){
              return redirect()->back()->with('error', 'Please activate the vendor first');
         }
 
         $validated = $request->validate([
-            // 'status' => 'required|string',
             'commission' => 'required|numeric|min:0|max:100',
             'note' => 'nullable|string|max:255',
         ]);
 
         // Deactivate current active commission
         $activeCommission = VendorCommission::where('vendor_id', $vendorId)
-            // ->where('status', '1') // assuming '1' is active
+            ->where('status', '1') // assuming '1' is active
             ->latest('active_date')
             ->first();
 
@@ -353,20 +364,15 @@ protected function sendVendorUpdateStatus(Vendor $vendor)
         VendorCommission::create([
             'vendor_id' => $vendorId,
             'commission' => $validated['commission'] ?? 0,
-            // 'status' => $validated['status'],
+            'status' => '1',
             'updated_by' => auth('admin')->id(),
             'active_date' => now(),
             'note' => $validated['note'] ?? null,
         ]);
 
-        return redirect()->back()->with('success', 'Commission updated successfully.');
+        return redirect()->route('admin.vendors')->with('success', 'Commission updated successfully.');
     }
 
-    public function showVendorCommission($vendorId){
-
-            $vendor = Vendor::findOrFail($vendorId);
-            return view('admin.vendors.set_commission', compact('vendor'));
-    }
 
         
 

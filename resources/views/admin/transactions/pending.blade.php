@@ -84,11 +84,19 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor & Customer
+                                Vendor
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Paid By
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Amount
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Commission
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -105,8 +113,10 @@
                         <!-- Dummy Data Row 1 -->
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">#TXN1001</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">QR: QR1001</div>
+                                <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                                    #{{ $transaction->id }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Machine Id :
+                                    {{ $transaction->cust_machine_id }}</div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
@@ -115,15 +125,27 @@
                                         <i class="fas fa-store"></i>
                                     </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">Mohan Grocery Store
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ $transaction->vendor->vendor_name }}
                                         </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Customer: +919876543210</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $transaction->phone }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">₹450.00</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">Commission: ₹13.50</div>
+                                <div class="text-sm font-bold text-gray-900 dark:text-white uppercase">
+                                    {{ $transaction->paid_by }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                    ₹{{ $transaction->amount }}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    Commission
+                                    {{ $transaction->commission }}%
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900 dark:text-white">15 Jun 2023</div>
@@ -142,231 +164,16 @@
                             </td>
                         </tr>
 
-                        <!-- Dummy Data Row 2 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">#TXN1002</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">QR: QR1002</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-                                        <i class="fas fa-store"></i>
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">Suresh Electronics
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Customer: +919876543211</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">₹12,499.00</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">Commission: ₹374.97</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white">14 Jun 2023</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">03:45 PM</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button
-                                    class="approve-btn mr-2 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
-                                    Approve
-                                </button>
-                                <button
-                                    class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
-                                    Reject
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Dummy Data Row 3 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">#TXN1003</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">QR: QR1003</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-                                        <i class="fas fa-store"></i>
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">Priya Fashion
-                                            Boutique</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Customer: +919876543212</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">₹2,499.00</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">Commission: ₹74.97</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white">14 Jun 2023</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">11:20 AM</div>
-                            </td>
-
-                            <td class="ml-3 px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button
-                                    class="approve-btn mr-2 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
-                                    Approve
-                                </button>
-                                <button
-                                    class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
-                                    Reject
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Dummy Data Row 4 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">#TXN1004</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">QR: QR1004</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-                                        <i class="fas fa-store"></i>
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">Raju Kirana Store
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Customer: +919876543213</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">₹1,250.00</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">Commission: ₹37.50</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white">13 Jun 2023</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">05:15 PM</div>
-                            </td>
-
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button
-                                    class="approve-btn mr-2 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
-                                    Approve
-                                </button>
-                                <button
-                                    class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
-                                    Reject
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Dummy Data Row 5 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">#TXN1005</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">QR: QR1005</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-                                        <i class="fas fa-store"></i>
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">Geeta Medical Store
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Customer: +919876543214</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">₹650.00</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">Commission: ₹19.50</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white">12 Jun 2023</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">09:30 AM</div>
-                            </td>
-
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button
-                                    class="approve-btn mr-2 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
-                                    Approve
-                                </button>
-                                <button
-                                    class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
-                                    Reject
-                                </button>
-                            </td>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <div
-                class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
-                <div class="flex-1 flex justify-between sm:hidden">
-                    <span
-                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
-                        Previous
-                    </span>
-                    <a href="#"
-                        class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        Next
-                    </a>
-                </div>
-                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                        <p class="text-sm text-gray-700 dark:text-gray-300">
-                            Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of
-                            <span class="font-medium">1,248</span> transactions
-                        </p>
-                    </div>
-                    <div>
-                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                            <span
-                                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                <span class="sr-only">Previous</span>
-                                <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
-                            </span>
-                            <span aria-current="page"
-                                class="z-10 bg-indigo-50 dark:bg-indigo-900 border-indigo-500 text-indigo-600 dark:text-indigo-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                1
-                            </span>
-                            <a href="#"
-                                class="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                2
-                            </a>
-                            <a href="#"
-                                class="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                3
-                            </a>
-                            <span
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                ...
-                            </span>
-                            <a href="#"
-                                class="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                25
-                            </a>
-                            <a href="#"
-                                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <span class="sr-only">Next</span>
-                                <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
-                            </a>
-                        </nav>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 
     <!-- Refund Confirmation Modal -->
-    <div id="refund-modal"
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+    <div id="refund-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Process Refund</h3>
             <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">Are you sure you want to refund this transaction? This

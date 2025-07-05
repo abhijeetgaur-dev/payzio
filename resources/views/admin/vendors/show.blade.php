@@ -53,6 +53,11 @@
                                     class="text-sm text-gray-500 dark:text-gray-400 capitalize">{{ $vendor->vendor_type }}</span>
                                 <span class="text-gray-400">•</span>
                                 <span class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $vendor->id }}</span>
+                                @if ($vendor->business_category)
+                                    <span class="text-gray-400">•</span>
+                                    <span
+                                        class="text-sm text-gray-500 dark:text-gray-400">{{ $vendor->business_category }}</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -137,6 +142,124 @@
                                 <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
                                     {{ $vendor->phone ? '+' . $vendor->phone : 'Not provided' }}</p>
                             </div>
+                        </div>
+
+                        @if ($vendor->website)
+                            <div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Website</p>
+                                <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                    <a href="{{ $vendor->website }}" target="_blank"
+                                        class="text-indigo-300 hover:underline">{{ $vendor->website }}</a>
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="space-y-4 md:col-span-2">
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address
+                        Information</h4>
+                    <div class="space-y-3">
+                        @if ($vendor->address)
+                            <div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Address</p>
+                                <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                    {{ $vendor->address }}
+                                </p>
+                            </div>
+                        @endif
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            @if ($vendor->city)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">City</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->city }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->state)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">State</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->state }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->country)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Country</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->country }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->postal_code)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Postal Code</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->postal_code }}
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Information -->
+                <div class="space-y-4 md:col-span-2">
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bank
+                        Information</h4>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @if ($vendor->bank_name)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Bank Name</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->bank_name }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->account_holder)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Account Holder</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->account_holder }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->account_number)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Account Number</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->account_number }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->ifsc_code)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">IFSC Code</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->ifsc_code }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if ($vendor->branch_name)
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Branch Name</p>
+                                    <p class="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                                        {{ $vendor->branch_name }}
+                                    </p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

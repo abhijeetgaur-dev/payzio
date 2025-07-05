@@ -5,7 +5,7 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-800">Pending Settlements</h1>
             <div class="text-lg text-gray-800 font-bold">
-                Total Pending: ₹{{ number_format($totalCommission, 2) }}
+                Total Pending: ₹{{ number_format($totalCommission + $totalAmount, 2) }}
             </div>
         </div>
 
@@ -78,13 +78,13 @@
 
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Transactions</th>
+                                Total Transactions</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Amount</th>
+                                Amount (For 5 Transactions)</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Commission</th>
+                                Commission (For 5 Transactions)</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Account</th>
@@ -119,15 +119,15 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     @if ($settlement['transactions_count'] >= 5)
-                                        <a href="{{ route('admin.settlements.process', $settlement['vendor_id']) }}"
+                                        <a href="{{ route('admin.settlements.process.show', $settlement['vendor_id']) }}"
                                             class="process-btn mr-2 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
                                             Process
                                         </a>
 
-                                        <button data-settlement-id="{{ $settlement['id'] }}"
+                                        {{-- <button data-settlement-id="{{ $settlement['id'] }}"
                                             class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
                                             Reject
-                                        </button>
+                                        </button> --}}
                                     @else
                                         <span
                                             class="process-btn  px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
@@ -149,7 +149,7 @@
         </div>
 
         <!-- Rejection Modal -->
-        <div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        {{-- <div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
                 <div class="mt-3 text-center">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Reject Settlement</h3>
@@ -172,100 +172,100 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Process settlement
-                document.querySelectorAll('.process-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const settlementId = this.dataset.settlementId;
-                        processSettlement(settlementId);
-                    });
-                });
-
-                // Reject settlement - open modal
-                document.querySelectorAll('.reject-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const settlementId = this.dataset.settlementId;
-                        document.getElementById('settlementIdToReject').value = settlementId;
-                        document.getElementById('rejectModal').classList.remove('hidden');
-                    });
-                });
-
-                // Confirm rejection
-                document.getElementById('confirmRejectBtn').addEventListener('click', function() {
-                    const settlementId = document.getElementById('settlementIdToReject').value;
-                    const reason = document.getElementById('rejectionReason').value;
-                    rejectSettlement(settlementId, reason);
-                });
-
-                // Cancel rejection
-                document.getElementById('cancelRejectBtn').addEventListener('click', function() {
-                    document.getElementById('rejectModal').classList.add('hidden');
-                });
-
-                // Process settlement function
-                function processSettlement(settlementId) {
-                    fetch(`/settlements/${settlementId}/process`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Settlement processed successfully', 'success');
-                                // In a real app, you would update the UI or reload the data
-                                setTimeout(() => window.location.reload(), 1500);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showToast('An error occurred', 'error');
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Process settlement
+                    document.querySelectorAll('.process-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const settlementId = this.dataset.settlementId;
+                            processSettlement(settlementId);
                         });
-                }
+                    });
 
-                // Reject settlement function
-                function rejectSettlement(settlementId, reason) {
-                    fetch(`/settlements/${settlementId}/reject`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                reason: reason
+                    // Reject settlement - open modal
+                    document.querySelectorAll('.reject-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const settlementId = this.dataset.settlementId;
+                            document.getElementById('settlementIdToReject').value = settlementId;
+                            document.getElementById('rejectModal').classList.remove('hidden');
+                        });
+                    });
+
+                    // Confirm rejection
+                    document.getElementById('confirmRejectBtn').addEventListener('click', function() {
+                        const settlementId = document.getElementById('settlementIdToReject').value;
+                        const reason = document.getElementById('rejectionReason').value;
+                        rejectSettlement(settlementId, reason);
+                    });
+
+                    // Cancel rejection
+                    document.getElementById('cancelRejectBtn').addEventListener('click', function() {
+                        document.getElementById('rejectModal').classList.add('hidden');
+                    });
+
+                    // Process settlement function
+                    function processSettlement(settlementId) {
+                        fetch(`/settlements/${settlementId}/process`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                }
                             })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Settlement rejected', 'success');
-                                document.getElementById('rejectModal').classList.add('hidden');
-                                // In a real app, you would update the UI or reload the data
-                                setTimeout(() => window.location.reload(), 1500);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showToast('An error occurred', 'error');
-                            document.getElementById('rejectModal').classList.add('hidden');
-                        });
-                }
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    showToast('Settlement processed successfully', 'success');
+                                    // In a real app, you would update the UI or reload the data
+                                    setTimeout(() => window.location.reload(), 1500);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                showToast('An error occurred', 'error');
+                            });
+                    }
 
-                // Toast notification function
-                function showToast(message, type = 'info') {
-                    // Implement your toast notification here
-                    console.log(`${type}: ${message}`);
-                    // Example: Using Alpine.js or another toast library
-                }
-            });
-        </script>
-    @endpush
-@endsection
+                    // Reject settlement function
+                    function rejectSettlement(settlementId, reason) {
+                        fetch(`/settlements/${settlementId}/reject`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    reason: reason
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    showToast('Settlement rejected', 'success');
+                                    document.getElementById('rejectModal').classList.add('hidden');
+                                    // In a real app, you would update the UI or reload the data
+                                    setTimeout(() => window.location.reload(), 1500);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                showToast('An error occurred', 'error');
+                                document.getElementById('rejectModal').classList.add('hidden');
+                            });
+                    }
+
+                    // Toast notification function
+                    function showToast(message, type = 'info') {
+                        // Implement your toast notification here
+                        console.log(`${type}: ${message}`);
+                        // Example: Using Alpine.js or another toast library
+                    }
+                });
+            </script>
+        @endpush
+    @endsection
