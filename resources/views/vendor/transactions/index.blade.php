@@ -1,35 +1,35 @@
-@extends('layouts.admin')
+@extends('layouts.vendor')
 
-@section('title', 'Completed Transactions')
+@section('title', 'Transactions List')
 
 @section('content')
     <div class="p-6">
         <!-- Page Header -->
-        @include('partials.flash')
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 text-gray-800">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Completed Transactions</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Transactions List</h2>
             <div class="flex space-x-3">
                 {{-- <button id="filter-btn"
                     class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                     <i class="fas fa-filter mr-2"></i>
-                    Filter With Date
+                    Advanced Filters
                 </button> --}}
             </div>
         </div>
 
 
+        <!-- Search and Filter Bar -->
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
             <form action="" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <!-- Vendor Filter -->
+                    <!-- Customer Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer</label>
                         <div class="relative flex-1 md:mr-4">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input type="text" id="search-input" name="search" value="{{ request('search') }}"
-                                placeholder="Search transactions by ID, vendor, or customer..."
+                            <input type="text" id="search-input" placeholder="Search by customer name or id..."
                                 class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="mt-4 flex justify-end space-x-2">
-                    <a href="{{ route('admin.reports.commissions') }}"
+                    <a href="{{ route('vendor.transactions.all') }}"
                         class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
                     <button type="submit"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
@@ -70,8 +70,6 @@
                 </div>
             </form>
         </div>
-
-
 
         @if ($showStats)
             <!-- Stats Cards -->
@@ -152,6 +150,7 @@
             </div>
         @endif
 
+
         <!-- Transactions Table -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
             <div class="overflow-x-auto">
@@ -161,10 +160,6 @@
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Transaction ID
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -201,22 +196,6 @@
                                         #{{ $transaction->id }}</div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400">Machine Id :
                                         {{ $transaction->cust_machine_id }}</div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-                                            <i class="fas fa-store"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                {{ $transaction->vendor ? $transaction->vendor->vendor_name : 'N / A' }}
-                                            </div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                {{ $transaction->phone }}
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-bold text-gray-900 dark:text-white uppercase">
@@ -260,39 +239,22 @@
                                         </span>
                                     @endif
                                 </td>
-                                @if ($transaction->status)
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex justify-end space-x-2">
-                                            <a href="{{ route('admin.transactions.show', $transaction->id) }}">
-                                                <button
-                                                    class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                            </a>
-                                            <a href="{{ route('admin.transactions.receipt', $transaction->id) }}">
-                                                <button
-                                                    class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
-                                                    <i class="fas fa-receipt"></i>
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </td>
-                                @else
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route('admin.transactions.approve', $transaction->id) }}">
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end space-x-2">
+                                        <a href="{{ route('admin.transactions.show', $transaction->id) }}">
                                             <button
-                                                class="approve-btn mr-2 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
-                                                Approve
+                                                class="view-btn text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
+                                                <i class="fas fa-eye"></i>
                                             </button>
                                         </a>
-                                        <a href="{{ route('admin.transactions.reject', $transaction->id) }}">
+                                        <a href="{{ route('admin.transactions.receipt', $transaction->id) }}">
                                             <button
-                                                class="reject-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-xs">
-                                                Reject
+                                                class="receipt-btn text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                                                <i class="fas fa-receipt"></i>
                                             </button>
                                         </a>
-                                    </td>
-                                @endif
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -322,66 +284,6 @@
         </div>
     </div>
 
-    <!-- Receipt Modal -->
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            // Refund modal functionality
-            const refundModal = document.getElementById('refund-modal');
-            const refundBtns = document.querySelectorAll('.refund-btn');
-            const cancelRefundBtn = document.getElementById('cancel-refund');
-            const confirmRefundBtn = document.getElementById('confirm-refund');
-
-            let transactionToRefund = null;
-
-            refundBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    refundModal.classList.remove('hidden');
-                    const transactionId = this.getAttribute('data-transaction-id');
-                    transactionToRefund = transactionId;
-                    console.log('Preparing to refund transaction:', transactionId);
-                });
-            });
-
-            confirmRefundBtn.addEventListener('click', function() {
-                if (transactionToRefund) {
-                    console.log('Processing refund for transaction:', transactionToRefund);
-                    alert(`Refund processed for transaction ${transactionToRefund}`);
-                    // In a real app, you would make an AJAX call here
-                }
-                refundModal.classList.add('hidden');
-            });
-
-            cancelRefundBtn.addEventListener('click', function() {
-                refundModal.classList.add('hidden');
-            });
-
-            // Export functionality
-            const exportBtn = document.getElementById('export-btn');
-            if (exportBtn) {
-                exportBtn.addEventListener('click', function() {
-                    console.log('Exporting transaction data...');
-                    alert('Export functionality would download a CSV file in a real application');
-                });
-            }
-
-            // Filter functionality
-            const vendorFilter = document.getElementById('vendor-filter');
-            const amountFilter = document.getElementById('amount-filter');
-            const timeFilter = document.getElementById('time-filter');
-
-            [vendorFilter, amountFilter, timeFilter].forEach(filter => {
-                filter.addEventListener('change', function() {
-                    console.log('Filters changed:', {
-                        vendor: vendorFilter.value,
-                        amount: amountFilter.value,
-                        time: timeFilter.value
-                    });
-                    // In a real app, you would filter the data here
-                });
-            });
-        });
-    </script>
 @endsection

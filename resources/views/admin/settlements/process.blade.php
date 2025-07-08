@@ -29,7 +29,7 @@
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2">{{ $transaction->id }}</td>
                                         <td class="px-4 py-2">₹{{ number_format($transaction->amount, 2) }}</td>
-                                        <td class="px-4 py-2">₹{{ number_format($transaction->commission, 2) }}</td>
+                                        <td class="px-4 py-2">{{ number_format($transaction->commission, 2) }}%</td>
                                         <td class="px-4 py-2">
                                             ₹{{ number_format(($transaction->commission * $transaction->amount) / 100, 2) }}
                                         </td>
@@ -38,9 +38,10 @@
                             </tbody>
                             <tfoot class="bg-gray-50 font-semibold text-gray-700">
                                 <tr>
-                                    <td colspan="2" class="px-4 py-2 text-right">Total:</td>
+                                    <td colspan="1" class="px-4 py-2 text-right">Total:</td>
+                                    <td class="px-4 py-2">₹{{ number_format($totalAmount, 2) }}</td>
+                                    <td class="px-4 py-2"></td>
                                     <td class="px-4 py-2">₹{{ number_format($totalCommission, 2) }}</td>
-                                    <td class="px-4 py-2">₹{{ number_format($payoutAmount, 2) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -129,8 +130,12 @@
                             </a>
                             <form method="POST" action="{{ route('admin.settlements.process', $vendor->id) }}">
                                 @csrf
-                                <input type="hidden" name="transactions"
+                                <input type="hidden" name="transaction_ids"
                                     value="{{ json_encode($transactions->pluck('id')) }}">
+                                <input type="hidden" name="admin_bank_details" value="{{ $adminBank }}">
+                                <input type="hidden" name="total_commission" value="{{ $totalCommission }}">
+                                <input type="hidden" name="total_transaction_amount" value="{{ $totalAmount }}">
+                                <input type="hidden" name="total_payout_amount" value="{{ $payoutAmount }}">
 
                                 <button type="submit"
                                     class="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

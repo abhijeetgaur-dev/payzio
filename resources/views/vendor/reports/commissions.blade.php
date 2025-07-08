@@ -62,22 +62,49 @@
 
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <!-- Total Transactions (This Month) -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions</h3>
-                <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">{{ count($commissions) }}</p>
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions (This Month)</h3>
+                <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">{{ $thisMonthTransactions }}</p>
+                @if ($transactionChange !== 0)
+                    <span class="text-sm ml-2 {{ $transactionChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
+                        {{ abs($transactionChange) }}%
+                        <i class="fas {{ $transactionChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        from last month
+                    </span>
+                @endif
             </div>
+
+            <!-- Total Amount (This Month) -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Amount</h3>
-                <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">₹{{ number_format($totalAmount, 2) }}
-                </p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Commission</h3>
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Amount (This Month)</h3>
                 <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
-                    ₹24,244</p>
+                    ₹{{ number_format($thisMonthAmount, 2) }}
+                </p>
+                @if ($amountChange !== 0)
+                    <span class="text-sm ml-2 {{ $amountChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
+                        {{ abs($amountChange) }}%
+                        <i class="fas {{ $amountChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        from last month
+                    </span>
+                @endif
+            </div>
+
+            <!-- Total Commission (This Month) -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Commission (This Month)</h3>
+                <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
+                    ₹{{ number_format($thisMonthCommission, 2) }}
+                </p>
+                @if ($commissionChange !== 0)
+                    <span class="text-sm ml-2 {{ $commissionChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
+                        {{ abs($commissionChange) }}%
+                        <i class="fas {{ $commissionChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        from last month
+                    </span>
+                @endif
             </div>
         </div>
-
         <!-- Commission Table -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">
@@ -86,7 +113,11 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Date</th>
+                                Settlement Id</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Settlement Date</th>
+
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Transaction ID</th>
@@ -95,42 +126,67 @@
                                 Amount</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Commission Percentage</th>
+                                Commission %</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Commission Amount</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Net Amount</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status</th>
+                                Bank Account</th>
+                            {{-- <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Status</th> --}}
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse($commissions as $commission)
+                        @forelse($settlementData as $settlement)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ \Carbon\Carbon::parse($commission['created_at'])->format('M d, Y') }}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ $settlement['settlement_reference'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ $commission['transaction_id'] }}
+                                    <div class="text-sm text-gray-900 dark:text-white">
+                                        {{ $settlement['created_at']->format('d M Y') }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $settlement['created_at']->format('h:i A') }} </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    ₹{{ number_format($commission['amount'], 2) }}
+                                    {{ $settlement['transaction_id'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ number_format($commission['commissionPercentage'], 1) }}%
+                                    ₹{{ number_format($settlement['amount'], 2) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    ₹{{ number_format($commission['amount'] * (1 - $commission['commissionPercentage'] / 100)), 2 }}
+                                    {{ number_format($settlement['commission'], 1) }}%
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    ₹{{ number_format($settlement['commission_amount'], 2) }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    ₹{{ number_format($settlement['payout_amount'], 2) }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    <div class="text-xs">
+                                        <strong>Bank:</strong>
+                                        {{ $settlement['vendor_bank_details']['bank_name'] ?? 'N/A' }}<br>
+                                        <strong>Account No:</strong>
+                                        {{ $settlement['vendor_bank_details']['account_number'] ?? 'N/A' }}<br>
+                                        <strong>Holder:</strong>
+                                        {{ $settlement['vendor_bank_details']['account_holder'] ?? 'N/A' }}
+                                    </div>
+                                </td>
+                                {{-- <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $commission['status'] === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
-                                {{ $commission['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
-                                {{ $commission['status'] === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}">
+                                {{ $settlement['status'] === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
+                                {{$settlement['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
+                                {{ $settlement['status'] === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}">
                                         {{ ucfirst($commission['status']) }}
                                     </span>
-                                </td>
+                                </td> --}}
                             </tr>
                         @empty
                             <tr>
@@ -143,96 +199,4 @@
                 </table>
             </div>
         </div>
-
-        {{-- <!-- Chart Section -->
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Commission by Vendor</h2>
-                <canvas id="vendorChart" height="300"></canvas>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Commission by Status</h2>
-                <canvas id="statusChart" height="300"></canvas>
-            </div>
-        </div>
-    </div> --}}
-
-        @push('scripts')
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Vendor Chart
-                    const vendorCtx = document.getElementById('vendorChart').getContext('2d');
-                    const vendorChart = new Chart(vendorCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: {!! json_encode(array_column($vendors, 'name')) !!},
-                            datasets: [{
-                                label: 'Commission ($)',
-                                data: {!! json_encode(
-                                    array_map(function ($vendor) use ($commissions) {
-                                        return array_sum(
-                                            array_map(function ($c) use ($vendor) {
-                                                return $c['vendor_id'] === $vendor['id'] ? $c['commissionPercentage'] * $c['amount'] : 0;
-                                            }, $commissions),
-                                        );
-                                    }, $vendors),
-                                ) !!},
-                                backgroundColor: 'rgba(79, 70, 229, 0.7)',
-                                borderColor: 'rgba(79, 70, 229, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-
-                    // Status Chart
-                    const statusCtx = document.getElementById('statusChart').getContext('2d');
-                    const statusChart = new Chart(statusCtx, {
-                        type: 'pie',
-                        data: {
-                            labels: ['Paid', 'Pending', 'Cancelled'],
-                            datasets: [{
-                                data: [
-                                    {{ array_sum(array_map(function ($c) {return $c['status'] === 'paid' ? $c['commissionPercentage'] * $c['amount'] : 0;}, $commissions)) }},
-                                    {{ array_sum(array_map(function ($c) {return $c['status'] === 'pending' ? $c['commissionPercentage'] * $c['amount'] : 0;}, $commissions)) }},
-                                    {{ array_sum(array_map(function ($c) {return $c['status'] === 'cancelled' ? $c['commissionPercentage'] * $c['amount'] : 0;}, $commissions)) }}
-                                ],
-                                backgroundColor: [
-                                    'rgba(16, 185, 129, 0.7)',
-                                    'rgba(245, 158, 11, 0.7)',
-                                    'rgba(239, 68, 68, 0.7)'
-                                ],
-                                borderColor: [
-                                    'rgba(16, 185, 129, 1)',
-                                    'rgba(245, 158, 11, 1)',
-                                    'rgba(239, 68, 68, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'right',
-                                }
-                            }
-                        }
-                    });
-                });
-            </script>
-        @endpush
     @endsection

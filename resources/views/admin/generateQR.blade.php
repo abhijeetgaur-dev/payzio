@@ -220,7 +220,6 @@
             const vendorIdInput = document.getElementById('vendor-id');
             const selectedVendorDetails = document.getElementById('selected-vendor-details');
 
-            // This would come from your server - mock data for example
             const vendors = [
                 @foreach ($vendors as $vendor)
                     {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\QrController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\SettlementController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Vendor\QrController as VendorQrController;
@@ -61,8 +62,8 @@ use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
             Route::put('/settings/change-password', [AdminSettingController::class, 'changePasswordUpdate'])->name('admin.settings.change-password');
 
 
-            Route::get('/reports/commissions', [AdminController::class, 'commissions'])->name('admin.reports.commissions');
-            Route::get('/reports/vendorpayment', [AdminController::class, 'vendorPayment'])->name('admin.reports.vendorpayment');
+            Route::get('/reports/commissions', [AdminReportController::class, 'commissionReport'])->name('admin.reports.commissions');
+            Route::get('/reports/vendorpayment', [AdminReportController::class, 'vendorReport'])->name('admin.reports.vendorpayment');
 
             // Route::get('/settlements/pending', [AdminController::class, 'pendingSettlements'])->name('admin.settlements.pending');
             Route::get('/settlements/pending', [SettlementController::class, 'pending'])->name('admin.settlements.pending');
@@ -97,15 +98,15 @@ use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
                 Route::get('qr/show/{qrId}', [VendorQrController::class, 'show'])->name('vendor.qr.show');
                 Route::delete('qr/delete/{qrId}', [VendorQrController::class, 'destroy']);
 
-                Route::get('/transactions/all', [VendorTransactionController::class, 'index'])->name('vendor.transactions.all');
+                Route::get('/transactions/all', [VendorTransactionController::class, 'allTransactions'])->name('vendor.transactions.all');
                 Route::get('/transactions/completed', [VendorTransactionController::class, 'completedTransactions'])->name('vendor.transactions.completed');
                 Route::get('/transactions/pending', [VendorTransactionController::class, 'pendingTransactions'])->name('vendor.transactions.pending');
 
                 Route::get('/settlements/completed', [VendorSettlementController::class, 'completed'])->name('vendor.settlements.completed');
                 Route::get('/settlements/pending', [VendorSettlementController::class, 'pending'])->name('vendor.settlements.pending');
 
-                Route::get('/reports/commissions', [VendorReportController::class, 'commissions'])->name('vendor.reports.commissions');
-                Route::get('/reports/vendorpayment', [VendorReportController::class, 'vendorPayment'])->name('vendor.reports.vendorpayment');
+                Route::get('/reports/commissions', [VendorReportController::class, 'commissionReport'])->name('vendor.reports.commissions');
+                Route::get('/reports/vendorpayment', [VendorReportController::class, 'vendorReport'])->name('vendor.reports.vendorpayment');
 
                 Route::get('/tickets/raised', [VendorController::class, 'ticketsRaised'])->name('vendor.tickets.raised');
                 Route::get('/tickets/closed', [VendorController::class, 'ticketsClosed'])->name('vendor.tickets.closed');

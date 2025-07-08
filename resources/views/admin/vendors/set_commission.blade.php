@@ -23,10 +23,14 @@
                             <div class="flex justify-between items-center">
                                 <span class="font-medium">Commission Rate:</span>
                                 <span class="text-base font-bold text-green-600">{{ $activeCommission->commission }}%</span>
-                                @if ($activeCommission->note)
-                                    <span class="text-base font-bold text-green-600">{{ $activeCommission->note }}%</span>
-                                @endif
+
                             </div>
+                            @if ($activeCommission->note)
+                                <div class="flex justify-between items-center">
+                                    <span class="text-base">Note: </span>
+                                    <span class="text-base font-bold ">{{ $activeCommission->note }}</span>
+                                </div>
+                            @endif
                             <div class="flex justify-between items-center">
                                 <span class="font-medium">Active From:</span>
                                 <span>{{ $activeCommission->active_date->format('d M Y') }}

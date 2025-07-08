@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Vendor;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Vendor;
 use App\Models\Settlement;
 use App\Models\Transaction;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
     public function commissionReport(Request $request)
     {
-        $vendor = auth('vendor')->user();
-        $settlements = Settlement::where('vendor_id', $vendor->id)->latest();
+        $settlements = Settlement::with('vendor')->latest();
 
         // Filters
         if ($request->has('date_from')) {
@@ -43,11 +41,13 @@ class ReportController extends Controller
                 $transaction = Transaction::where('id', $transactionId)->first();
                 $settlementData[] = [
                     'created_at' => $settlement->settled_at,
+                    'vendor_name' => $settlement->vendor->vendor_name,
                     'transaction_id' => $transaction->id,
                     'amount' => $transaction->amount,
                     'commission' => $transaction->commission,
                     'commission_amount' => ($transaction->amount * $transaction->commission) / 100,
                     'payout_amount' => $transaction->amount + ($transaction->amount * $transaction->commission) / 100,
+                    'vendor_id' => $settlement->vendor_id,
                     'settlement_reference' => $settlement->settlement_reference,
                     'vendor_bank_details' => $settlement->vendor_bank_details,
                 ];
@@ -57,7 +57,7 @@ class ReportController extends Controller
         $thisMonthStart = now()->startOfMonth();
         $thisMonthEnd = now()->endOfMonth();
 
-        $thisMonthSettlements = Settlement::whereBetween('settled_at', [$thisMonthStart, $thisMonthEnd])->where('vendor_id', $vendor->id)->get();
+        $thisMonthSettlements = Settlement::whereBetween('settled_at', [$thisMonthStart, $thisMonthEnd])->get();
 
         $thisMonthTransactions = 0;
         $thisMonthAmount = 0;
@@ -79,7 +79,7 @@ class ReportController extends Controller
         $lastMonthStart = now()->subMonth()->startOfMonth();
         $lastMonthEnd = now()->subMonth()->endOfMonth();
 
-        $lastMonthSettlements = Settlement::whereBetween('settled_at', [$lastMonthStart, $lastMonthEnd])->where('vendor_id', $vendor->id)->get();
+        $lastMonthSettlements = Settlement::whereBetween('settled_at', [$lastMonthStart, $lastMonthEnd])->get();
 
         $lastMonthTransactions = 0;
         $lastMonthAmount = 0;
@@ -102,7 +102,7 @@ class ReportController extends Controller
         $amountChange = $lastMonthAmount > 0 ? round((($thisMonthAmount - $lastMonthAmount) / $lastMonthAmount) * 100, 2) : 0;
         $commissionChange = $lastMonthCommission > 0 ? round((($thisMonthCommission - $lastMonthCommission) / $lastMonthCommission) * 100, 2) : 0;
 
-        return view('vendor.reports.commissions', compact(
+        return view('admin.reports.commissions', compact(
             'settlementData',
             'thisMonthTransactions',
             'thisMonthAmount',
@@ -114,8 +114,7 @@ class ReportController extends Controller
 
     public function vendorReport(Request $request)
     {
-        $vendor = auth('vendor')->user();
-        $settlements = Settlement::where('vendor_id', $vendor->id)->latest();
+        $settlements = Settlement::with('admin', 'vendor')->latest();
 
         // Filters
         if ($request->has('date_from')) {
@@ -136,7 +135,6 @@ class ReportController extends Controller
 
         $settlements = $settlements->get();
 
-        return view('vendor.reports.vendorPayment', compact('settlements'));
+        return view('admin.reports.vendorPayment', compact('settlements'));
     }
-
 }

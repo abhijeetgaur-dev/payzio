@@ -71,19 +71,14 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                QR Code</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Period</th>
+
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Reference</th>
+                                Total Transactions</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Transactions</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Amount</th>
+                                Amount </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Commission</th>
@@ -92,22 +87,14 @@
                                 Account</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status</th>
+                                Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse($settlements as $settlement)
+                        @forelse($settlementData as $settlement)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                        <img src="{{ $settlement['qr_code'] }}" alt="QR Code" class="w-10 h-10">
-                                    </div>
-                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                     {{ $settlement['period_start'] }} to {{ $settlement['period_end'] }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $settlement['reference'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                     {{ $settlement['transactions_count'] }} transactions
@@ -119,17 +106,26 @@
                                     ₹{{ number_format($settlement['commission'], 2) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ $settlement['account_number'] }}
+                                    <div class="text-xs">
+                                        <strong>Bank:</strong>
+                                        {{ $settlement['vendor_bank_details']['bank_name'] ?? 'N/A' }}<br>
+                                        <strong>Account No:</strong>
+                                        {{ $settlement['vendor_bank_details']['account_number'] ?? 'N/A' }}<br>
+                                        <strong>Holder:</strong>
+                                        {{ $settlement['vendor_bank_details']['account_holder'] ?? 'N/A' }}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <span
-                                        class="text-xs px-3 py-2 bg-green-800 text-green-200 rounded-full">Completed</span>
+                                        class="process-btn  px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-xs">
+                                        Completed
+                                    </span>
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-300">
-                                    No pending settlements found
+                                    No completed settlements found
                                 </td>
                             </tr>
                         @endforelse
@@ -163,99 +159,4 @@
             </div>
         </div>
     </div>
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Process settlement
-                document.querySelectorAll('.process-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const settlementId = this.dataset.settlementId;
-                        processSettlement(settlementId);
-                    });
-                });
-
-                // Reject settlement - open modal
-                document.querySelectorAll('.reject-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const settlementId = this.dataset.settlementId;
-                        document.getElementById('settlementIdToReject').value = settlementId;
-                        document.getElementById('rejectModal').classList.remove('hidden');
-                    });
-                });
-
-                // Confirm rejection
-                document.getElementById('confirmRejectBtn').addEventListener('click', function() {
-                    const settlementId = document.getElementById('settlementIdToReject').value;
-                    const reason = document.getElementById('rejectionReason').value;
-                    rejectSettlement(settlementId, reason);
-                });
-
-                // Cancel rejection
-                document.getElementById('cancelRejectBtn').addEventListener('click', function() {
-                    document.getElementById('rejectModal').classList.add('hidden');
-                });
-
-                // Process settlement function
-                function processSettlement(settlementId) {
-                    fetch(`/settlements/${settlementId}/process`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Settlement processed successfully', 'success');
-                                // In a real app, you would update the UI or reload the data
-                                setTimeout(() => window.location.reload(), 1500);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showToast('An error occurred', 'error');
-                        });
-                }
-
-                // Reject settlement function
-                function rejectSettlement(settlementId, reason) {
-                    fetch(`/settlements/${settlementId}/reject`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                reason: reason
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Settlement rejected', 'success');
-                                document.getElementById('rejectModal').classList.add('hidden');
-                                // In a real app, you would update the UI or reload the data
-                                setTimeout(() => window.location.reload(), 1500);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showToast('An error occurred', 'error');
-                            document.getElementById('rejectModal').classList.add('hidden');
-                        });
-                }
-
-                // Toast notification function
-                function showToast(message, type = 'info') {
-                    // Implement your toast notification here
-                    console.log(`${type}: ${message}`);
-                    // Example: Using Alpine.js or another toast library
-                }
-            });
-        </script>
-    @endpush
 @endsection

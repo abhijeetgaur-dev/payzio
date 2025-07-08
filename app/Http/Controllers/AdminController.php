@@ -30,7 +30,10 @@ class AdminController extends Controller
 
     public function generateQr()
     {
-        $vendors = Vendor::select('id', 'vendor_name', 'email', 'phone')->get();
+        $vendors = Vendor::where('status', '1')
+            ->select('id', 'vendor_name', 'email', 'phone','status')
+            ->get();
+
         return view('admin.generateQR', compact('vendors'));
     }
 
