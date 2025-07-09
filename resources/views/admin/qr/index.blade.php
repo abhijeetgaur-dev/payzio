@@ -2,6 +2,7 @@
 
 @section('title', 'QR Codes List')
 
+
 @section('content')
     <div class="p-6">
         <!-- Page Header -->
@@ -25,7 +26,7 @@
         <!-- Search and Filter Bar -->
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-            <form action="" method="GET">
+            <form action="{{ route('admin.qr.index') }}" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Vendor Filter -->
                     <div>
@@ -34,7 +35,8 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input type="text" id="search-input" placeholder="Search QR codes by vendor name or token..."
+                            <input type="text" id="search-input" value="{{ request('search') }}" name="search"
+                                placeholder="Search QR codes by vendor name or token..."
                                 class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
                         </div>
                     </div>
@@ -54,9 +56,12 @@
                     </div>
                 </div>
 
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                <input type="hidden" name="direction" value="{{ request('direction') }}">
+
                 <div class="mt-4 flex justify-end space-x-2">
-                    <a href="{{ route('admin.reports.commissions') }}"
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
+                    <button type="reset"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</button>
                     <button type="submit"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
                         Filters</button>
@@ -77,7 +82,16 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Vendor
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'vendor_name', 'direction' => request('sort') == 'vendor_name' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Vendor
+                                    @if (request('sort') == 'vendor_name')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -85,11 +99,29 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Generated On
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('sort') == 'created_at' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Generated On
+                                    @if (request('sort') == 'created_at')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'is_active', 'direction' => request('sort') == 'is_active' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Status
+                                    @if (request('sort') == 'is_active')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -191,8 +223,9 @@
                     </tbody>
                 </table>
             </div>
-
-
+        </div>
+        <div class="mt-4">
+            {{ $qrCodes->links() }}
         </div>
     </div>
 
