@@ -33,10 +33,10 @@
                         <select name="category"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="">All Categories</option>
-                            @foreach ($categories as $category)
+                            {{-- @foreach ($categories as $category)
                                 <option value="{{ $category }}"
                                     {{ request('category') == $category ? 'selected' : '' }}>{{ $category }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
 
@@ -46,10 +46,10 @@
                         <select name="priority"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="">All Priorities</option>
-                            @foreach ($priorities as $priority)
+                            {{-- @foreach ($priorities as $priority)
                                 <option value="{{ $priority }}"
                                     {{ request('priority') == $priority ? 'selected' : '' }}>{{ $priority }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -100,15 +100,15 @@
                         @forelse($tickets as $ticket)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $ticket['reference'] }}
+                                    {{ $ticket['reference_id'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                     {{ $ticket['subject'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                        {{ $ticket['customer_name'] }}</div>
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $ticket['customer_email'] }}
+                                        {{ $ticket['vendor']['vendor_name'] }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $ticket['vendor']['email'] }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
@@ -117,10 +117,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $ticket['priority'] === 'High' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
-                                {{ $ticket['priority'] === 'Medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
-                                {{ $ticket['priority'] === 'Low' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
-                                {{ $ticket['priority'] === 'Critical' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}">
+                                        {{ $ticket['priority'] === 'High' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
+                                        {{ $ticket['priority'] === 'Medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
+                                        {{ $ticket['priority'] === 'Low' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
+                                        {{ $ticket['priority'] === 'Critical' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}">
                                         {{ $ticket['priority'] }}
                                     </span>
                                 </td>
@@ -134,20 +134,25 @@
                                         {{ $ticket['status'] }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ \Carbon\Carbon::parse($ticket['created_at'])->format('M d, Y H:i') }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 dark:text-white">
+                                        {{ $ticket['created_at']->format('d M Y') }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $ticket['created_at']->format('h:i A') }} </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="#"
+                                    <a href="{{ route('admin.tickets.view', $ticket['id']) }}"
                                         class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">View</a>
-                                    <a href="#"
-                                        class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">Assign</a>
+                                    @if (!$ticket['assigned_to'])
+                                        <a href="{{ route('admin.tickets.view', $ticket['id']) }}"
+                                            class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">Assign</a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-300">
-                                    No tickets found matching your criteria
+                                    No Raised Tickets Found
                                 </td>
                             </tr>
                         @endforelse

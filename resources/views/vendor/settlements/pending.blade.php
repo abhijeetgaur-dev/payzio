@@ -5,7 +5,7 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-800">Pending Settlements</h1>
             <div class="text-lg text-gray-800 font-bold">
-                Total Pending: ₹{{ number_format($totalAmount, 2) }}
+                {{-- Total Pending: ₹{{ number_format($totalAmount, 2) }} --}}
             </div>
         </div>
 
@@ -71,48 +71,90 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                QR Code</th>
+                                Transaction ID
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Period</th>
+                                Payment Method
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Reference</th>
+                                Amount
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Transactions</th>
+                                Commission
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Amount</th>
+                                Date & Time
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Account</th>
+                                Status
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Settlement
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse($settlements as $settlement)
-                            <tr>
+                        @forelse($transactions as $transaction)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                        <img src="{{ $settlement['qr_code'] }}" alt="QR Code" class="w-10 h-10">
+                                    <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                                        #{{ $transaction->id }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">Machine Id :
+                                        {{ $transaction->cust_machine_id }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-gray-900 dark:text-white uppercase">
+                                        {{ $transaction->paid_by }}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ $settlement['period_start'] }} to {{ $settlement['period_end'] }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                        ₹{{ $transaction->amount }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        Commission
+                                        {{ $transaction->commission }}%
+                                    </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $settlement['reference'] }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                        ₹{{ number_format(($transaction->amount * $transaction->commission) / 100, 2) }}
+                                    </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ $settlement['transactions_count'] }} transactions
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 dark:text-white">
+                                        {{ $transaction->created_at->format('d M Y') }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $transaction->created_at->format('h:i A') }} </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-white">
-                                    ₹{{ number_format($settlement['amount'], 2) }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if ((int) $transaction->status === 1)
+                                        <span
+                                            class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                            Approved
+                                        </span>
+                                    @elseif((int) $transaction->status === 2)
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                                            Rejected
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                            Pending
+                                        </span>
+                                    @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ $settlement['account_number'] }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
                                 </td>
-
                             </tr>
                         @empty
                             <tr>

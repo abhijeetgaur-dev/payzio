@@ -4,8 +4,13 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-800">Tickets Raised</h1>
-            <div class="text-sm text-gray-500 dark:text-gray-400">
-                Total Tickets: <span class="font-semibold">{{ count($tickets) }}</span>
+            <div class="flex space-x-3">
+
+                <a href={{ route('vendor.tickets.create') }}
+                    class="cursor-pointer flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>
+                    Raise Ticket
+                </a>
             </div>
         </div>
 
@@ -33,10 +38,10 @@
                         <select name="category"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="">All Categories</option>
-                            @foreach ($categories as $category)
+                            {{-- @foreach ($categories as $category)
                                 <option value="{{ $category }}"
                                     {{ request('category') == $category ? 'selected' : '' }}>{{ $category }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
 
@@ -46,10 +51,10 @@
                         <select name="priority"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="">All Priorities</option>
-                            @foreach ($priorities as $priority)
+                            {{-- @foreach ($priorities as $priority)
                                 <option value="{{ $priority }}"
                                     {{ request('priority') == $priority ? 'selected' : '' }}>{{ $priority }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -81,12 +86,6 @@
                                 Category</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Priority</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Created</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -97,7 +96,7 @@
                         @forelse($tickets as $ticket)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $ticket['reference'] }}
+                                    {{ $ticket['reference_id'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                     {{ $ticket['subject'] }}
@@ -105,15 +104,11 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                     {{ $ticket['category'] }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $ticket['priority'] === 'High' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
-                                {{ $ticket['priority'] === 'Medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
-                                {{ $ticket['priority'] === 'Low' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
-                                {{ $ticket['priority'] === 'Critical' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}">
-                                        {{ $ticket['priority'] }}
-                                    </span>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 dark:text-white">
+                                        {{ $ticket['created_at']->format('d M Y') }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $ticket['created_at']->format('h:i A') }} </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <span
@@ -125,19 +120,11 @@
                                         {{ $ticket['status'] }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ \Carbon\Carbon::parse($ticket['created_at'])->format('M d, Y H:i') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                                        Pending
-                                    </div>
-                                </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-300">
-                                    No tickets found matching your criteria
+                                    All tickets resolved
                                 </td>
                             </tr>
                         @endforelse

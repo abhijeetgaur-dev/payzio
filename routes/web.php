@@ -7,12 +7,14 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\QrController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
 use App\Http\Controllers\Admin\SettlementController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Vendor\QrController as VendorQrController;
 use App\Http\Controllers\Vendor\TransactionController as VendorTransactionController;
 use App\Http\Controllers\Vendor\SettlementController as VendorSettlementController;
 use App\Http\Controllers\Vendor\ReportController as VendorReportController;
+use App\Http\Controllers\Vendor\TicketController as VendorTicketController;
 use App\Http\Controllers\Vendor\VendorAuthController;
 use App\Http\Controllers\Vendor\VendorController;
 use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
@@ -71,8 +73,12 @@ use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
             Route::get('/settlements/process/{vendorId}', [SettlementController::class, 'processShow'])->name('admin.settlements.process.show');
             Route::post('/settlements/process/{vendorId}', [SettlementController::class, 'processSettlement'])->name('admin.settlements.process');
 
-            Route::get('/tickets/raised', [AdminController::class, 'ticketsRaised'])->name('admin.tickets.raised');
-            Route::get('/tickets/closed', [AdminController::class, 'ticketsClosed'])->name('admin.tickets.closed');
+            Route::get('/tickets/raised', [AdminTicketController::class, 'ticketsRaised'])->name('admin.tickets.raised');
+            Route::get('/tickets/closed', [AdminTicketController::class, 'ticketsClosed'])->name('admin.tickets.closed');
+            Route::get('/tickets/view/{ticketId}', [AdminTicketController::class, 'ticketsView'])->name('admin.tickets.view');
+            Route::put('/tickets/view/update-status/{ticketId}', [AdminTicketController::class, 'updateStatus'])->name('admin.tickets.update-status');
+            Route::put('/tickets/view/assign-ticket/{ticketId}', [AdminTicketController::class, 'assignTicket'])->name('admin.tickets.assign-ticket');
+            Route::put('/tickets/view/assign-priority/{ticketId}', [AdminTicketController::class, 'assignPriority'])->name('admin.tickets.update-priority');
         });
 
     Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
@@ -108,8 +114,10 @@ use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
                 Route::get('/reports/commissions', [VendorReportController::class, 'commissionReport'])->name('vendor.reports.commissions');
                 Route::get('/reports/vendorpayment', [VendorReportController::class, 'vendorReport'])->name('vendor.reports.vendorpayment');
 
-                Route::get('/tickets/raised', [VendorController::class, 'ticketsRaised'])->name('vendor.tickets.raised');
-                Route::get('/tickets/closed', [VendorController::class, 'ticketsClosed'])->name('vendor.tickets.closed');
+                Route::get('/tickets/raised', [VendorTicketController::class, 'ticketsRaised'])->name('vendor.tickets.raised');
+                Route::get('/tickets/closed', [VendorTicketController::class, 'ticketsClosed'])->name('vendor.tickets.closed');
+                Route::get('/tickets/create', [VendorTicketController::class, 'ticketsCreate'])->name('vendor.tickets.create');
+                Route::post('/tickets/create', [VendorTicketController::class, 'ticketsCreateStore'])->name('vendor.tickets.store');
 
                 Route::get('/settings/edit', [VendorSettingController::class, 'edit'])->name('vendor.settings.edit');
                 Route::post('/settings/edit', [VendorSettingController::class, 'update'])->name('vendor.settings.update');
