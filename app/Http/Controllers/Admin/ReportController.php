@@ -13,6 +13,7 @@ class ReportController extends Controller
 {
     public function commissionReport(Request $request)
     {
+        $allVendors = Vendor::all();
         $settlements = Settlement::with('vendor')->latest();
 
         // Filters
@@ -24,13 +25,10 @@ class ReportController extends Controller
             $settlements->whereDate('settled_at', '<=', $request->date_to);
         }
 
-        if ($request->has('amount_min')) {
-            $settlements->where('total_amount', '>=', $request->amount_min);
+        if ($request->filled('vendor_id')) {
+            $settlements->where('vendor_id', $request->get('vendor_id'));
         }
-
-        if ($request->has('amount_max')) {
-            $settlements->where('total_amount', '<=', $request->amount_max);
-        }
+        $paginatedSettlements = $settlements->paginate(10)->appends($request->all());
 
         $settlements = $settlements->get();
 
@@ -101,40 +99,40 @@ class ReportController extends Controller
         $transactionChange = $lastMonthTransactions > 0 ? round((($thisMonthTransactions - $lastMonthTransactions) / $lastMonthTransactions) * 100, 2) : 0;
         $amountChange = $lastMonthAmount > 0 ? round((($thisMonthAmount - $lastMonthAmount) / $lastMonthAmount) * 100, 2) : 0;
         $commissionChange = $lastMonthCommission > 0 ? round((($thisMonthCommission - $lastMonthCommission) / $lastMonthCommission) * 100, 2) : 0;
-
-        return view('admin.reports.commissions', compact(
-            'settlementData',
-            'thisMonthTransactions',
-            'thisMonthAmount',
-            'thisMonthCommission',
-            'transactionChange',
-            'amountChange',
-            'commissionChange'));
+        return view('admin.reports.commissions', [
+            'paginatedSettlements' => $paginatedSettlements,
+            'settlementData' => $settlementData,
+            'thisMonthTransactions' => $thisMonthTransactions,
+            'thisMonthAmount' => $thisMonthAmount,
+            'thisMonthCommission' => $thisMonthCommission,
+            'transactionChange' => $transactionChange,
+            'amountChange' => $amountChange,
+            'commissionChange' => $commissionChange,
+            'allVendors' => $allVendors,
+        ]);
     }
 
     public function vendorReport(Request $request)
     {
+        $allVendors = Vendor::all();
+
         $settlements = Settlement::with('admin', 'vendor')->latest();
 
-        // Filters
-        if ($request->has('date_from')) {
+        // Use filled() instead of has()
+        if ($request->filled('date_from')) {
             $settlements->whereDate('settled_at', '>=', $request->date_from);
         }
 
-        if ($request->has('date_to')) {
+        if ($request->filled('date_to')) {
             $settlements->whereDate('settled_at', '<=', $request->date_to);
         }
 
-        if ($request->has('amount_min')) {
-            $settlements->where('total_amount', '>=', $request->amount_min);
+        if ($request->filled('vendor_id')) {
+            $settlements->where('vendor_id', $request->vendor_id);
         }
 
-        if ($request->has('amount_max')) {
-            $settlements->where('total_amount', '<=', $request->amount_max);
-        }
+        $settlements = $settlements->paginate(10)->appends($request->all());
 
-        $settlements = $settlements->get();
-
-        return view('admin.reports.vendorPayment', compact('settlements'));
+        return view('admin.reports.vendorPayment', compact('settlements', 'allVendors'));
     }
 }

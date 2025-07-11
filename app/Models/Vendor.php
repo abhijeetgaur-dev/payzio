@@ -46,7 +46,8 @@ class Vendor extends Authenticatable
         'company_header',
         'company_footer',
         'alternate_contact_person',
-        'other_certificates'
+        'other_certificates',
+        'vendor_bank_qr_code'
     ];
 
     protected $casts = [

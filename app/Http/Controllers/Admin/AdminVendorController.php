@@ -22,6 +22,7 @@ class AdminVendorController extends Controller
      */
 public function index(Request $request)
 {
+    $allVendors = Vendor::all();
     $query = Vendor::query();
     
     // Search functionality
@@ -34,6 +35,10 @@ public function index(Request $request)
         });
     }
     
+    if ($request->filled('vendor_id')) {
+    $query->where('id', $request->get('vendor_id'));
+}
+
     // Date filtering
     if ($request->filled('date_from')) {
         $query->whereDate('created_at', '>=', $request->get('date_from'));
@@ -62,11 +67,10 @@ public function index(Request $request)
     $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? $sortDirection : 'desc';
     
     $query->orderBy($sortField, $sortDirection);
-    
     // Paginate results and append query parameters
     $vendors = $query->paginate(10)->appends($request->query());
     
-    return view('admin.vendors.index', compact('vendors'));
+    return view('admin.vendors.index', compact('vendors','allVendors'));
 }
     /**
      * Show the form for creating a new resource.

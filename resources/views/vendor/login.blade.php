@@ -11,6 +11,16 @@
 
 <body
     class="min-h-screen bg-gradient-to-br from-slate-300 to-gray-700 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class='absolute left-0 top-0 p-4 px-8'>
+        <a href="{{ route('home') }}"
+            class="font-semibold bg-gradient-to-br from-purple-500 to-pink-600 
+            hover:from-zinc-800 hover:to-zinc-900 
+            rounded-sm cursor-pointer text-sm text-zinc-200 
+            hover:text-white mr-4 px-3 py-2 
+            transition duration-200 ease-in-out">
+            Home
+        </a>
+    </div>
     <div class='absolute top-0 right-0 p-4'>
         <a href="{{ route('vendor.signup') }}"
             class="font-semibold bg-gradient-to-br from-purple-500 to-pink-600 

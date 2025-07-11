@@ -30,6 +30,14 @@
             ],
         ],
         [
+            'text' => 'Settlements',
+            'icon' => 'fa-solid fa-hand-holding-dollar',
+            'subItems' => [
+                ['text' => 'Pending', 'icon' => 'fas fa-hourglass-half', 'path' => '/admin/settlements/pending'],
+                ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/admin/settlements/completed'],
+            ],
+        ],
+        [
             'text' => 'Reports',
             'icon' => 'fa-solid fa-chart-pie',
             'subItems' => [
@@ -39,14 +47,6 @@
                     'icon' => 'fa-solid fa-medal',
                     'path' => '/admin/reports/vendorpayment',
                 ],
-            ],
-        ],
-        [
-            'text' => 'Settlements',
-            'icon' => 'fa-solid fa-hand-holding-dollar',
-            'subItems' => [
-                ['text' => 'Pending', 'icon' => 'fas fa-hourglass-half', 'path' => '/admin/settlements/pending'],
-                ['text' => 'Completed', 'icon' => 'fas fa-check-circle', 'path' => '/admin/settlements/completed'],
             ],
         ],
         [

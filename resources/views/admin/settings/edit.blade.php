@@ -209,18 +209,6 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div>
-                                    <label for="contact_person"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact
-                                        Person</label>
-                                    <input type="text" id="contact_person" name="contact_person"
-                                        value="{{ old('contact_person', $adminDetails->contact_person ?? '') }}"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                                    @error('contact_person')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
 
                                 @php
                                     $selectedType = old('admin_type', $adminDetails->admin_type ?? '');

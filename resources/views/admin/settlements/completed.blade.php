@@ -11,30 +11,21 @@
 
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-            <form action="" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <!-- Vendor Filter -->
+            <form action="{{ route('admin.settlements.completed') }}" method="GET">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Search Input -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
-                        <div class="relative flex-1 md:mr-4">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
-                            </div>
-                            <input type="text" id="search-input" placeholder="Search QR codes by vendor name or token..."
-                                class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Min Amount</label>
-                        <input type="number" name="amount_min" value="{{ request('amount_min') }}" placeholder="₹0.00"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Vendor</label>
+                        <select name="vendor_id" id="vendor_id"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Max Amount</label>
-                        <input type="number" name="amount_max" value="{{ request('amount_max') }}" placeholder="₹10,000.00"
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">All Vendors</option>
+                            @foreach ($allVendors as $vendor)
+                                <option value="{{ $vendor->id }}"
+                                    {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
+                                    {{ $vendor->vendor_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Date From -->
@@ -52,16 +43,19 @@
                     </div>
                 </div>
 
+                <!-- Hidden inputs to maintain sort parameters -->
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                <input type="hidden" name="direction" value="{{ request('direction') }}">
+
                 <div class="mt-4 flex justify-end space-x-2">
-                    <a href="{{ route('admin.reports.commissions') }}"
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
+                    <button type="reset"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</button>
                     <button type="submit"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
                         Filters</button>
                 </div>
             </form>
         </div>
-
         <div>
             @include('partials.flash')
         </div>

@@ -30,17 +30,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Vendor Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
-                        <div class="relative flex-1 md:mr-4">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
-                            </div>
-                            <input type="text" id="search-input" value="{{ request('search') }}" name="search"
-                                placeholder="Search QR codes by vendor name or token..."
-                                class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Vendor</label>
+                        <select name="vendor_id" id="vendor_id"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">All Vendors</option>
+                            @foreach ($allVendors as $vendor)
+                                <option value="{{ $vendor->id }}"
+                                    {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
+                                    {{ $vendor->vendor_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-
                     <!-- Date From -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">From Date</label>
@@ -92,10 +93,6 @@
                                         <i class="fas fa-sort ml-1 text-gray-400"></i>
                                     @endif
                                 </a>
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Token
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -161,13 +158,6 @@
                                     @else
                                         <span class="text-sm text-gray-500 dark:text-gray-400">Vendor not found</span>
                                     @endif
-                                </td>
-
-                                <!-- Token -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 dark:text-white font-mono">
-                                        {{ \Illuminate\Support\Str::limit($qrCode->qr_code_token, 10) }}
-                                    </div>
                                 </td>
 
                                 <!-- Date -->

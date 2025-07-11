@@ -45,7 +45,7 @@
                         Commission Rate (%)
                     </label>
                     <input type="number" id="commission" name="commission" value="" min="0" max="100"
-                        step="0.1"
+                        step="0.01"
                         class="text-gray-200 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Enter commission rate" required>
                     @error('commission')

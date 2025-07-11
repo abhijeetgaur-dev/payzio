@@ -72,7 +72,7 @@ class SettingController extends Controller
 
         'company_name' => 'required|string|max:255',
         // Organization Details
-        'contact_person' => 'nullable|string|max:255',
+        'contact_person' => 'required|string|max:255',
         'designation' => 'nullable|string|max:255',
         'website' => 'nullable|url|max:255',
         'address' => 'nullable|string|max:500',

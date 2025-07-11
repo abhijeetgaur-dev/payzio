@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\Admin;
+use App\Models\Vendor;
 use App\Models\TicketStatusLog;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -16,26 +17,35 @@ class TicketController extends Controller
 
     public function ticketsRaised(Request $request)
     {
+        $allVendors = Vendor::all();
         $admin = auth('admin')->user();
-        $tickets = Ticket::with('vendor')
-            ->where('status', '!=', 'Resolved')
-            ->get()
-            ->map(function ($ticket) {
-                return [
-                    'id' => $ticket->id,
-                    'reference_id' => $ticket->reference_id,
-                    'subject' => $ticket->subject,
-                    'status' => $ticket->status,
-                    'category' => $ticket->category,
-                    'created_at' => $ticket->created_at,
-                    'priority' => $ticket->priority,
-                    'vendor' => $ticket->vendor,
-                    'assigned_to' => $ticket->assigned_to,
-                    'assigned_by' => $ticket->assigned_by,
-                ];
-            });
 
-        return view('admin.tickets.raised', compact('tickets'));
+        $query = Ticket::with('vendor')->where('status', '!=', 'Resolved');
+
+        // Apply Filters
+        if ($request->filled('vendor_id')) {
+            $query->where('vendor_id', $request->vendor_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $tickets = $query->latest()->paginate(10)->appends($request->all());
+
+        return view('admin.tickets.raised', compact('tickets', 'allVendors'));
     }
 
     public function ticketsView($ticketId, Request $request)
@@ -120,53 +130,83 @@ class TicketController extends Controller
 
         return redirect()->back()->with('success', 'Ticket Priority Updated Successfully.');
     }
+
     public function ticketsClosed(Request $request)
     {
+        $allVendors = Vendor::all();
         $admin = auth('admin')->user();
 
-        $tickets = Ticket::with('vendor', 'assignedTo', 'assignedBy')
-            ->where('status', 'Resolved')
-            ->get()
-            ->map(function ($ticket) {
-                $timeToResolve = null;
+        $query = Ticket::with('vendor', 'assignedTo', 'assignedBy')->where('status', 'Resolved');
 
-                if ($ticket->resolved_at && $ticket->created_at) {
-                    $diff = $ticket->created_at->diff($ticket->resolved_at);
+        // Apply Filters
+        if ($request->filled('vendor_id')) {
+            $query->where('vendor_id', $request->vendor_id);
+        }
 
-                    $parts = [];
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
 
-                    if ($diff->d > 0) {
-                        $parts[] = $diff->d . ' day' . ($diff->d > 1 ? 's' : '');
-                    }
-                    if ($diff->h > 0) {
-                        $parts[] = $diff->h . ' hr' . ($diff->h > 1 ? 's' : '');
-                    }
-                    if ($diff->i > 0) {
-                        $parts[] = $diff->i . ' min' . ($diff->i > 1 ? 's' : '');
-                    }
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
 
-                    $timeToResolve = implode(' ', $parts) ?: 'Less than 1 min';
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Paginate results
+        $paginatedTickets = $query->latest()->paginate(10)->appends($request->all());
+
+        // Map each ticket to include time-to-resolve info
+        $tickets = $paginatedTickets->map(function ($ticket) {
+            $timeToResolve = null;
+
+            if ($ticket->resolved_at && $ticket->created_at) {
+                $diff = $ticket->created_at->diff($ticket->resolved_at);
+                $parts = [];
+
+                if ($diff->d > 0) {
+                    $parts[] = $diff->d . ' day' . ($diff->d > 1 ? 's' : '');
+                }
+                if ($diff->h > 0) {
+                    $parts[] = $diff->h . ' hr' . ($diff->h > 1 ? 's' : '');
+                }
+                if ($diff->i > 0) {
+                    $parts[] = $diff->i . ' min' . ($diff->i > 1 ? 's' : '');
                 }
 
-                return [
-                    'id' => $ticket->id,
-                    'reference_id' => $ticket->reference_id,
-                    'subject' => $ticket->subject,
-                    'status' => $ticket->status,
-                    'category' => $ticket->category,
-                    'created_at' => $ticket->created_at,
-                    'priority' => $ticket->priority,
-                    'vendor' => $ticket->vendor,
-                    'assigned_to' => $ticket->assignedTo,
-                    'assigned_by' => $ticket->assignedBy,
-                    'resolution' => $ticket->resolution,
-                    'resolved_at' => $ticket->resolved_at,
-                    'time_to_resolve' => $timeToResolve,
-                ];
-            });
+                $timeToResolve = implode(' ', $parts) ?: 'Less than 1 min';
+            }
 
-        $totalClosedTickets = $tickets->count();
+            return [
+                'id' => $ticket->id,
+                'reference_id' => $ticket->reference_id,
+                'subject' => $ticket->subject,
+                'status' => $ticket->status,
+                'category' => $ticket->category,
+                'created_at' => $ticket->created_at,
+                'priority' => $ticket->priority,
+                'vendor' => $ticket->vendor,
+                'assigned_to' => $ticket->assignedTo,
+                'assigned_by' => $ticket->assignedBy,
+                'resolution' => $ticket->resolution,
+                'resolved_at' => $ticket->resolved_at,
+                'time_to_resolve' => $timeToResolve,
+            ];
+        });
 
-        return view('admin.tickets.closed', compact('tickets', 'totalClosedTickets'));
+        $totalClosedTickets = $query->count();
+
+        return view('admin.tickets.closed', [
+            'tickets' => $tickets,
+            'totalClosedTickets' => $totalClosedTickets,
+            'allVendors' => $allVendors,
+            'pagination' => $paginatedTickets, // for rendering pagination links
+        ]);
     }
 }

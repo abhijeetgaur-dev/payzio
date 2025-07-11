@@ -76,9 +76,12 @@ class QrController extends Controller
             return false;
         }
     }
+
     public function index(Request $request)
     {
         // Initialize base query with relationship
+
+        $allVendors= Vendor::all();
         $query = QrCode::query()->with('vendor');
 
 
@@ -98,6 +101,10 @@ class QrController extends Controller
 
         if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->date_to);
+        }
+    
+        if ($request->filled('vendor_id')) {
+            $query->where('vendor_id', $request->get('vendor_id'));
         }
 
         // Sorting setup
@@ -119,8 +126,9 @@ class QrController extends Controller
         // Paginate with query strings preserved
         $qrCodes = $query->paginate(10)->appends($request->all());
 
-        return view('admin.qr.index', compact('qrCodes'));
+        return view('admin.qr.index', compact('qrCodes', 'allVendors'));
     }
+
     public function show($qrCodeId)
     {
         $qr = QrCode::findOrFail($qrCodeId);

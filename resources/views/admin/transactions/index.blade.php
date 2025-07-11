@@ -19,31 +19,21 @@
 
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-            <form action="" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <form action="{{ route($link) }}" method="GET">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Vendor Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vendor</label>
-                        <div class="relative flex-1 md:mr-4">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
-                            </div>
-                            <input type="text" id="search-input" name="search" value="{{ request('search') }}"
-                                placeholder="Search transactions by ID, vendor, or customer..."
-                                class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Min Amount</label>
-                        <input type="number" name="amount_min" value="{{ request('amount_min') }}" placeholder="₹0.00"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Vendor</label>
+                        <select name="vendor_id" id="vendor_id"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Max Amount</label>
-                        <input type="number" name="amount_max" value="{{ request('amount_max') }}" placeholder="₹10,000.00"
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">All Vendors</option>
+                            @foreach ($allVendors as $vendor)
+                                <option value="{{ $vendor->id }}"
+                                    {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
+                                    {{ $vendor->vendor_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Date From -->
@@ -62,8 +52,8 @@
                 </div>
 
                 <div class="mt-4 flex justify-end space-x-2">
-                    <a href="{{ route('admin.reports.commissions') }}"
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</a>
+                    <button type="reset"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Reset</button>
                     <button type="submit"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Apply
                         Filters</button>
@@ -172,19 +162,55 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Amount
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'amount', 'direction' => request('sort') == 'amount' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Amount
+                                    @if (request('sort') == 'amount')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Commission
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'commission_total', 'direction' => request('sort') == 'commission_total' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Commission
+                                    @if (request('sort') == 'commission_total')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Date & Time
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('sort') == 'created_at' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Date And Time
+                                    @if (request('sort') == 'created_at')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'status', 'direction' => request('sort') == 'status' && request('direction') == 'asc' ? 'desc' : 'asc']) }}"
+                                    class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    Status
+                                    @if (request('sort') == 'status')
+                                        <i
+                                            class="fas fa-chevron-{{ request('direction') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-600 dark:text-indigo-400"></i>
+                                    @else
+                                        <i class="fas fa-sort ml-1 text-gray-400"></i>
+                                    @endif
+                                </a>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -299,6 +325,9 @@
                 </table>
             </div>
 
+        </div>
+        <div class="mt-6 text-gray-800">
+            {{ $transactions->links() }}
         </div>
     </div>
 

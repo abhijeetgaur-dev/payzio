@@ -89,32 +89,22 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
             <form action="{{ route('admin.vendors') }}" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Search Input -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search
-                            Vendors</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
-                            </div>
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="Search by name, email, or phone..."
-                                class="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                    </div>
-
-                    <!-- Status Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                        <select name="status"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Vendor</label>
+                        <select name="vendor_id" id="vendor_id"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="">All Status</option>
-                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Pending</option>
-                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inactive</option>
+                            <option value="">All Vendors</option>
+                            @foreach ($allVendors as $vendor)
+                                <option value="{{ $vendor->id }}"
+                                    {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
+                                    {{ $vendor->vendor_name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
+
 
                     <!-- Date From -->
                     <div>
@@ -217,6 +207,9 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Set Commission
                             </th>
+
+                            <!-- Commission Column (Sortable) -->
+
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Actions
@@ -232,7 +225,13 @@
                                         <div class="flex items-center">
                                             <div
                                                 class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-                                                <i class="fas fa-user"></i>
+                                                @if ($vendor->company_logo)
+                                                    <img src="{{ asset('storage/' . $vendor->company_logo) }}"
+                                                        class="w-10 h-10 object-cover rounded-full border border-gray-300 dark:border-gray-600" />
+                                                @else
+                                                    <i class="fas fa-user"></i>
+                                                @endif
+
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900 dark:text-white">

@@ -18,12 +18,16 @@ use App\Http\Controllers\Vendor\TicketController as VendorTicketController;
 use App\Http\Controllers\Vendor\VendorAuthController;
 use App\Http\Controllers\Vendor\VendorController;
 use App\Http\Controllers\Vendor\SettingController as VendorSettingController;
+use App\Http\Controllers\CustomerTicketController;
 
 
 
     Route::get('/', function () {
         return view('landingpage');
     })->name('home');
+
+    Route::get('/raise-ticket', [CustomerTicketController::class, 'index'])->name('raise-ticket.index');
+    Route::post('/raise-ticket', [CustomerTicketController::class, 'store'])->name('raise-ticket.store');
 
 
     Route::prefix('admin')

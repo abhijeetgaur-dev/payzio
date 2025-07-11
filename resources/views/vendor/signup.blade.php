@@ -107,9 +107,31 @@
                         <h2 class="text-2xl font-bold text-gray-800 mb-1">Business Information</h2>
                         <p class="text-gray-800 mb-6">Tell us about your business</p>
 
+                        <div class="md:col-span-2 mb-3">
+                            <label for="company_logo" class="block text-sm font-medium text-gray-700  mb-1">Company
+                                Logo <span class="text-red-500">*</span></label>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex gap-6">
+                                    <!-- Placeholder div instead of broken img when no logo exists -->
+                                    <div id="company-logo-preview"
+                                        class="h-16 w-16 rounded-full bg-gray-200 border-2 border-gray-300 flex items-center justify-center">
+                                        <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <input type="file" id="company_logo" name="company_logo"
+                                        class="cursor-pointer block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Name *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Name <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="vendor_name"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="Your business name" value="{{ old('vendor_name') }}">
@@ -119,7 +141,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Type *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Type <span
+                                        class="text-red-500">*</span></label>
                                 <select name="vendor_type"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border bg-white">
                                     <option value="">Select Type</option>
@@ -137,7 +160,8 @@
                         </div>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Business Category *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Business Category <span
+                                    class="text-red-500">*</span></label>
                             <input type="text" name="business_category"
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="e.g. Retail, Restaurant, Services" value="{{ old('business_category') }}">
@@ -178,7 +202,8 @@
 
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Person *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Person <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="contact_person"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="Full name" value="{{ old('contact_person') }}">
@@ -197,7 +222,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email <span
+                                        class="text-red-500">*</span></label>
                                 <input type="email" name="email"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="business@example.com" value="{{ old('email') }}">
@@ -207,7 +233,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone <span
+                                        class="text-red-500">*</span></label>
                                 <input type="tel" name="phone"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="+91 9876543210" value="{{ old('phone') }}">
@@ -230,7 +257,8 @@
                         <p class="text-gray-600 mb-6">Where is your business located?</p>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Address <span
+                                    class="text-red-500">*</span></label>
                             <textarea rows="3" name="address"
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="Street address, building, floor, etc.">{{ old('address') }}</textarea>
@@ -241,7 +269,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">City <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="city"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="City" value="{{ old('city') }}">
@@ -251,7 +280,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">State <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="state"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="State" value="{{ old('state') }}">
@@ -263,7 +293,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Country *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Country <span
+                                        class="text-red-500">*</span></label>
                                 <select name="country"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border bg-white">
                                     <option value="">Select Country</option>
@@ -284,7 +315,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="postal_code"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="PIN/ZIP Code" value="{{ old('postal_code') }}">
@@ -329,7 +361,8 @@
 
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">PAN Number *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">PAN Number <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="pan_number"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="ABCDE1234F" value="{{ old('pan_number') }}">
@@ -352,7 +385,8 @@
                         <p class="text-gray-600 mb-6">Where should we transfer your settlements?</p>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Bank Name *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Bank Name <span
+                                    class="text-red-500">*</span></label>
                             <input type="text" name="bank_name"
                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                 placeholder="e.g. State Bank of India" value="{{ old('bank_name') }}">
@@ -363,7 +397,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Account Number *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Account Number <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="account_number"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="1234567890" value="{{ old('account_number') }}">
@@ -374,7 +409,7 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Account Holder Name
-                                    *</label>
+                                    <span class="text-red-500">*</span></label>
                                 <input type="text" name="account_holder"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="As per bank records" value="{{ old('account_holder') }}">
@@ -386,7 +421,8 @@
 
                         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">IFSC Code *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">IFSC Code <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text" name="ifsc_code"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="SBIN0001234" value="{{ old('ifsc_code') }}">
@@ -400,6 +436,25 @@
                                 <input type="text" name="branch_name"
                                     class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-200 px-4 py-3 border"
                                     placeholder="Main Branch" value="{{ old('branch_name') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-1">Bank Account QR Code for Payments</h3>
+
+                        <div class="mt-4">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload QR Code </label>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    Please upload a clear image or scan of your bank account’s UPI QR code. This will be
+                                    used to send payments to your account.
+                                </p>
+                                <input type="file" name="vendor_bank_qr_code"
+                                    class="cursor-pointer block w-full text-sm text-gray-500 file-upload"
+                                    accept=".pdf,.jpg,.jpeg,.png">
+                                @error('vendor_bank_qr_code')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -438,7 +493,8 @@
 
                         <div class="space-y-6">
                             <div class="border border-gray-200 rounded-lg p-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">PAN Card *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">PAN Card <span
+                                        class="text-red-500">*</span></label>
                                 <p class="text-xs text-gray-500 mb-3">Upload clear scan of your PAN card (PDF, JPG,
                                     PNG)</p>
                                 <input type="file" name="pan_card_file"
@@ -469,7 +525,8 @@
                             </div>
 
                             <div class="border border-gray-200 rounded-lg p-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Cancelled Cheque *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cancelled Cheque <span
+                                        class="text-red-500">*</span></label>
                                 <p class="text-xs text-gray-500 mb-3">Upload clear image/scan of a cancelled cheque
                                     with your account details</p>
                                 <input type="file" name="cancelled_cheque_file"

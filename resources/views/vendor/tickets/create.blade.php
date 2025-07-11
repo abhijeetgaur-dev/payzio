@@ -41,13 +41,13 @@
                             required>
                             <option value="" disabled {{ old('category') == '' ? 'selected' : '' }}>Select Category
                             </option>
-                            <option value="technical" {{ old('category') == 'payment' ? 'selected' : '' }}>Payment
+                            <option value="Technical" {{ old('category') == 'Technical' ? 'selected' : '' }}>Technical
                             </option>
-                            <option value="billing" {{ old('category') == 'technical' ? 'selected' : '' }}>Technical
+                            <option value="Payment" {{ old('category') == 'Payment' ? 'selected' : '' }}>Payment
                             </option>
-                            <option value="general" {{ old('category') == 'account' ? 'selected' : '' }}>Account
+                            <option value="Account" {{ old('category') == 'Account' ? 'selected' : '' }}>Account
                             </option>
-                            <option value="feature_request" {{ old('category') == 'other' ? 'selected' : '' }}>
+                            <option value="Other" {{ old('category') == 'Other' ? 'selected' : '' }}>
                                 Other</option>
                         </select>
                         @error('category')

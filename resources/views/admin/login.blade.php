@@ -11,14 +11,14 @@
 
 <body
     class="min-h-screen bg-gradient-to-br from-indigo-50 to-white dark:from-gray-900 dark:to-gray-700 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    <div class='absolute top-0 right-0 p-4'>
-        <a href="{{ route('vendor.signup') }}"
+    <div class='absolute top-0 left-0 p-4'>
+        <a href="{{ route('home') }}"
             class="font-semibold bg-gradient-to-br from-purple-500 to-pink-600 
             hover:from-zinc-800 hover:to-zinc-900 
             rounded-sm cursor-pointer text-sm text-zinc-200 
             hover:text-white mr-4 px-3 py-2 
             transition duration-200 ease-in-out">
-            Vendor Sign Up
+            Home
         </a>
     </div>
 

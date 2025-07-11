@@ -108,6 +108,10 @@ class VendorController extends Controller
             'registration_doc_file' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
             'cancelled_cheque_file' => 'required|file|mimes:pdf,jpg,png|max:2048',
 
+            'vendor_bank_qr_code' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+
+            'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+
         ]);
 
         if ($validator->fails()) {
@@ -120,24 +124,34 @@ class VendorController extends Controller
             'pan_card_file',
             'gst_certificate_file',
             'registration_doc_file',
-            'cancelled_cheque_file'
+            'cancelled_cheque_file',
+            'vendor_bank_qr_code',
+            'company_logo'
         ]);
 
         // Handle file uploads
         if ($request->hasFile('pan_card_file')) {
-            $data['pan_card_file'] = $request->file('pan_card_file')->store('vendor_documents', 'public');
+            $data['pan_card_file'] = $request->file('pan_card_file')->store('documents/vendor', 'public');
         }
 
         if ($request->hasFile('gst_certificate_file')) {
-            $data['gst_certificate_file'] = $request->file('gst_certificate_file')->store('vendor_documents', 'public');
+            $data['gst_certificate_file'] = $request->file('gst_certificate_file')->store('documents/vendor', 'public');
         }
 
         if ($request->hasFile('registration_doc_file')) {
-            $data['registration_doc_file'] = $request->file('registration_doc_file')->store('vendor_documents', 'public');
+            $data['registration_doc_file'] = $request->file('registration_doc_file')->store('documents/vendor', 'public');
         }
 
         if ($request->hasFile('cancelled_cheque_file')) {
-            $data['cancelled_cheque_file'] = $request->file('cancelled_cheque_file')->store('vendor_documents', 'public');
+            $data['cancelled_cheque_file'] = $request->file('cancelled_cheque_file')->store('documents/vendor', 'public');
+        }
+
+        if ($request->hasFile('vendor_bank_qr_code')) {
+            $data['vendor_bank_qr_code'] = $request->file('vendor_bank_qr_code')->store('documents/vendor', 'public');
+        }
+
+        if ($request->hasFile('company_logo')) {
+            $data['company_logo'] = $request->file('company_logo')->store('documents/vendor', 'public');
         }
 
 
@@ -150,10 +164,10 @@ class VendorController extends Controller
 
             if ($this->sendVendorSignUpMail($vendor, $plainPassword)) {
                 Log::info('Mail sent to vendor successfully');
-                return redirect()->back()->with('success', 'You have Registered Successfully. A mail has been sent to your registered email address.');
+                return redirect()->route('home')->with('success', 'You have Registered Successfully. A mail has been sent to your registered email address.');
             } else {
                 Log::error('Mail not sent to vendor');
-                return redirect()->back()->with('error', 'You have Registered Successfully. However, there was an error sending the confirmation email. Please contact support.');
+                return redirect()->route('home')->with('error', 'You have Registered Successfully. However, there was an error sending the confirmation email. Please contact support.');
             }
         } catch (\Exception $e) {
             Log::error('Vendor Registration Error: ' . $e->getMessage());
